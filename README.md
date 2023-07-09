@@ -1,4 +1,4 @@
-# TP-Link HS1x0 Protocol Implementation for Delphi 10.3, 10.4, 11.3
+# TP-Link HS1x0 Protocol Implementation for Delphi 10.3.x, 10.4.x, Alexandria 11.x
 (Models: HS110, HS100, hardware: V1 and V2)
 
 Based on :
