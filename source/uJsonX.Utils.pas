@@ -1,5 +1,14 @@
 unit uJsonX.Utils;
 
+///
+///  Author:  Laurent Meyer
+///  Contact: HS1x0@ea4d.com
+///
+///  https://github.com/bnzbnz/HS1x0 :
+///
+///  License: MPL 1.1 / GPL 2.1
+///
+
 interface
 uses Sysutils, Classes;
 
