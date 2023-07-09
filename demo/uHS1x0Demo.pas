@@ -163,7 +163,7 @@ begin
       var Rule := THS1x0_Rule(untypedRule);
       if Rule.Fid = Id then
       begin
-        Rule.
+        Rule.Fsact := not Rule.Fsact;
         Req := THS1x0_EditRuleRequest.Create(Rule);
         Res := HS.Schedule_EditRule(Req);
         Exit;
