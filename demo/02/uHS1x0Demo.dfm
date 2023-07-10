@@ -28,13 +28,14 @@ object HSForm: THSForm
       853
       33)
     object PBar: TProgressBar
-      Left = 1
+      Left = 4
       Top = 10
       Width = 746
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Max = 255
       TabOrder = 0
+      ExplicitWidth = 742
     end
   end
   object Button1: TButton
