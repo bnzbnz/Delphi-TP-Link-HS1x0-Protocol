@@ -4,7 +4,7 @@ unit uHS1x0;
 ///  Author:  Laurent Meyer
 ///  Contact: HS1x0@ea4d.com
 ///
-///  https://github.com/bnzbnz/HS1x0 :
+///  https://github.com/bnzbnz/Delphi-TP-Link-HS1x0-Protocol
 ///
 ///  License: MPL 1.1 / GPL 2.1
 ///

@@ -1,5 +1,14 @@
 unit uHS1x0Hlp;
 
+///
+///  Author:  Laurent Meyer
+///  Contact: HS1x0@ea4d.com
+///
+///  https://github.com/bnzbnz/Delphi-TP-Link-HS1x0-Protocol
+///
+///  License: MPL 1.1 / GPL 2.1
+///
+
 interface
   uses uHS1x0;
 
