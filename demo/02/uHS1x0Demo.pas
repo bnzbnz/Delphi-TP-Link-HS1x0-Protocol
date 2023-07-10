@@ -342,11 +342,19 @@ end;
 
 procedure THSForm.GridSClick(Sender: TObject);
 begin
+  var HS1x0: THS1x0 := nil;
+  var Schedule: THS1x0_Schedule := nil;
   var Ip := Grid.Cells[0, Grid.Row ];
   var Id := GridS.Cells[0, GridS.Row ];
-  var HS1x0 := THS1x0.Create(IP);
-  HS1x0.Schedule_GetRule(Id).Free;
-  HS1x0.Free;
+  try
+    HS1x0 := THS1x0.Create(IP);
+    if HS1x0 = nil then Exit;
+    Schedule := HS1x0.Schedule_GetRule(Id);
+    if Schedule = nil then Exit;
+  finally
+    Schedule.Free;
+    HS1x0.Free;
+  end;
 end;
 
 procedure THSForm.GridSelectCell(Sender: TObject; ACol, ARow: Integer;

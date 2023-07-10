@@ -99,7 +99,7 @@ object HSForm: THSForm
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goFixedRowDefAlign]
         TabOrder = 1
         OnClick = GRidCClick
-        ExplicitLeft = 6
+        ExplicitWidth = 516
         ColWidths = (
           64
           64
