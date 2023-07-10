@@ -66,6 +66,8 @@ type
   public
     //class function NewInstance: TObject; override;
     //procedure FreeInstance; override;
+    procedure ClonePropertiesTo(T : TJsonXBaseExType); virtual;
+    function Clone: TJsonXBaseExType; virtual;
   end;
 
   TJsonXBaseEx2Type = class(TJsonXBaseExType)
@@ -82,7 +84,7 @@ type
   end;
 
 implementation
-uses RTTI, uJsonX.RTTI, SysUtils;
+uses RTTI, uJsonX.RTTI, SysUtils, Variants;
 
 
 { TJsonXSystemParameters }
@@ -158,6 +160,28 @@ begin
   NilVarCount := 0;
   DecodeCount := 0;
   DecodeMs := 0;
+end;
+
+{ TJsonXBaseExType }
+
+function TJsonXBaseExType.Clone: TJsonXBaseExType;
+begin
+  Result := TJsonXBaseExType(Self.ClassType.Create);
+  Self.ClonePropertiesTo(Result);
+end;
+
+procedure TJsonXBaseExType.ClonePropertiesTo(T: TJsonXBaseExType);
+begin
+  if T = nil then exit;
+  var rttictx := TRttiContext.Create();
+  var rttitype := rttictx.GetType(Self.ClassType);
+  for var field in rttitype.GetFields do
+    if field.FieldType.TypeKind = tkVariant then
+    begin
+      var v :=  field.GetValue(Self);
+      if not VarIsEmpty(v.AsVariant) then field.SetValue(T, v);
+    end;
+  rttictx.Free;
 end;
 
 end.

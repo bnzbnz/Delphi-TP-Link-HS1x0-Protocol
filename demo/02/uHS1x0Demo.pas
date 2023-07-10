@@ -65,6 +65,8 @@ type
     procedure Rename1Click(Sender: TObject);
     procedure Enable1Click(Sender: TObject);
     procedure ONOFF1Click(Sender: TObject);
+    procedure GRidCClick(Sender: TObject);
+    procedure GridSClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -90,7 +92,7 @@ var
   HSForm : THSForm;
 
 implementation
-uses uNetUtils, DateUtils;
+uses uNetUtils, DateUtils, uHS1x0Hlp;
 
 {$R *.dfm}
 
@@ -160,7 +162,7 @@ begin
     if not assigned(Rules) then Exit;
     for var untypedRule in Rules.Fschedule.Fget_5Frules.Frule_5Flist do
     begin
-      var Rule := THS1x0_Rule(untypedRule);
+      var Rule := THS1x0_Schedule(untypedRule);
       if Rule.Fid = Id then
       begin
         Rule.Fsact := not Rule.Fsact;
@@ -277,7 +279,7 @@ begin
     if not assigned(Rules) then Exit;
     for var untypedRule in Rules.Fschedule.Fget_5Frules.Frule_5Flist do
     begin
-      var Rule := THS1x0_Rule(untypedRule);
+      var Rule := THS1x0_Schedule(untypedRule);
       if Rule.Fid = Id then
       begin
         Rule.Fenable := not Rule.Fenable;
@@ -326,6 +328,25 @@ begin
   Stop;
   Scanner.Free;
   HSTrealTimeList.Free;
+end;
+
+procedure THSForm.GRidCClick(Sender: TObject);
+begin
+  var Ip := Grid.Cells[0, Grid.Row ];
+  var Id := GridC.Cells[0, GridS.Row ];
+  var HS1x0 := THS1x0.Create(IP);
+  HS1x0.Countdown_GetRule(Id).Free;
+  HS1x0.Free;
+
+end;
+
+procedure THSForm.GridSClick(Sender: TObject);
+begin
+  var Ip := Grid.Cells[0, Grid.Row ];
+  var Id := GridS.Cells[0, GridS.Row ];
+  var HS1x0 := THS1x0.Create(IP);
+  HS1x0.Schedule_GetRule(Id).Free;
+  HS1x0.Free;
 end;
 
 procedure THSForm.GridSelectCell(Sender: TObject; ACol, ARow: Integer;
@@ -454,7 +475,7 @@ begin
     var Row := 1;
     for var uRule in Scheds.Fschedule.Fget_5Frules.Frule_5Flist do
     begin
-      var Rule := THS1x0_Rule(uRule);
+      var Rule := THS1x0_Schedule(uRule);
       GridS.Cells[0, Row] := Rule.FId;
       GridS.Cells[1, Row] := Rule.FName;
       if Rule.Fenable then GridS.Cells[2, Row] := 'Enabled' else GridS.Cells[2, Row] := 'Disabled';

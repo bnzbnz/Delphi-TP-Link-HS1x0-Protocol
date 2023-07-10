@@ -535,7 +535,7 @@ type
 
   // Schedule: Get Rules List
 
-  THS1x0_Rule = class(TJsonXBaseEx2Type)
+  THS1x0_Schedule = class(TJsonXBaseEx2Type)
     Fid: variant;
     Fstime_opt: variant;
     Fwday: TJsonXVarListType;
@@ -554,10 +554,11 @@ type
     Fforce: variant;
     Femin: variant;
     constructor Create;
+    function Clone: TJsonXBaseExType; override;
   end;
 
   THS1x0_Type0129 = class(THS1x0_GenericError)
-    [AJsonXClassType(THS1x0_Rule)]
+    [AJsonXClassType(THS1x0_Schedule)]
     Frule_5Flist: TJsonXObjListType;
     Fversion: variant;
     Fenable: variant;
@@ -574,7 +575,7 @@ type
   // Schedule: Add Rule
 
   THS1x0_Type0131 = class(TJsonXBaseEx2Type)
-    Fadd_5Frule: THS1x0_Rule;
+    Fadd_5Frule: THS1x0_Schedule;
     constructor Create;
   end;
 
@@ -599,7 +600,7 @@ type
   // Schedule: Edit Rule
 
   THS1x0_Type0136 = class(TJsonXBaseEx2Type)
-    Fedit_5Frule : THS1x0_Rule;
+    Fedit_5Frule : THS1x0_Schedule;
     constructor Create;
   end;
 
@@ -607,7 +608,7 @@ type
     Fschedule : THS1x0_Type0136;
     constructor Create; overload;
     constructor Create(Id: string; aRule: THS1x0_AddRuleRequest); overload;
-    constructor Create(Rule: THS1x0_Rule); overload;
+    constructor Create(Rule: THS1x0_Schedule); overload;
   end;
 
   THS1x0_Type0139 = class(THS1x0_GenericError)
@@ -1449,7 +1450,7 @@ end;
 constructor THS1x0_Type0131.Create;
 begin
   inherited;
-  Self.Fadd_5Frule := THS1x0_Rule.Create;
+  Self.Fadd_5Frule := THS1x0_Schedule.Create;
 end;
 
 constructor THS1x0_AddRuleRequest.Create;
@@ -1458,10 +1459,18 @@ begin
   Self.Fschedule := THS1x0_Type0131.Create;
 end;
 
-constructor THS1x0_Rule.Create;
+constructor THS1x0_Schedule.Create;
 begin
   inherited;
   Self.Fwday := TJsonXVarListType.Create;
+end;
+
+function THS1x0_Schedule.Clone: TJsonXBaseExType;
+begin
+  var R := THS1x0_Schedule(inherited Clone);
+  R.Fwday := TJsonXVarListType.Create;
+  for var Value in Self.Fwday do R.Fwday.Add(Value);
+  REsult := R;
 end;
 
 function THS1x0.Schedule_AddRule(Rule: THS1x0_AddRuleRequest): THS1x0_AddRuleResponse;
@@ -1479,7 +1488,7 @@ end;
 constructor THS1x0_Type0136.Create;
 begin
   Inherited;
-  Self.Fedit_5Frule := THS1x0_Rule.Create;
+  Self.Fedit_5Frule := THS1x0_Schedule.Create;
 end;
 
 constructor THS1x0_EditRuleRequest.Create;
@@ -1514,7 +1523,7 @@ begin
   Self.Fschedule.Fedit_5Frule.Femin:= aRule.Fschedule.Fadd_5Frule.Femin;
 end;
 
-constructor THS1x0_EditRuleRequest.Create(Rule: THS1x0_Rule);
+constructor THS1x0_EditRuleRequest.Create(Rule: THS1x0_Schedule);
 begin
   Create;
   Self.Fschedule.Fedit_5Frule.Fid := Rule.Fid;
