@@ -14,6 +14,7 @@ type
     Refresh: TButton;
     procedure FormShow(Sender: TObject);
     procedure RefreshClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -56,6 +57,12 @@ begin
     Info.Free;
     HS1x0.Free;
   end;
+end;
+
+procedure THSScanFrm.FormCreate(Sender: TObject);
+begin
+  if debugHook <> 0 then
+    ShowMessage('You are running in the IDE : Due to an Editor Bug, the initial port scanning is going to be slow...');
 end;
 
 procedure THSScanFrm.FormShow(Sender: TObject);

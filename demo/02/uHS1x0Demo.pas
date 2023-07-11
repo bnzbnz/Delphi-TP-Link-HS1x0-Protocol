@@ -4,11 +4,11 @@
 ///  Author:  Laurent Meyer
 ///  Contact: HS1x0@ea4d.com
 ///
-///  https://github.com/bnzbnz/HS1x0 :
+///  https://github.com/bnzbnz/Delphi-TP-Link-HS1x0-Protocol
 ///
 ///  License: MPL 1.1 / GPL 2.1
 ///
-///
+
 interface
 
 uses
@@ -127,7 +127,6 @@ begin
   TH.Priority := tpIdle;
   Grid.RowCount := Grid.RowCount + 1;
   TH.Start;
-
 end;
 
 procedure THSForm.LedOFF1Click(Sender: TObject);
@@ -299,6 +298,9 @@ end;
 procedure THSForm.FormCreate(Sender: TObject);
 begin
 
+  if debugHook <> 0 then
+    ShowMessage('You are running in the IDE : Due to an Editor Bug, the initial port scanning is going to be slow...');
+
   PBar.Position := 0;
   Grid.RowCount := 1;
   RowThreadCnt  := 0;
@@ -366,11 +368,9 @@ begin
   GridD.ColWidths[0] := 80;
   GridD.ColWidths[1] := 240;
 
-  var Info:THS1x0_SystemInfoResponse := Nil;
-  var Sched: THS1x0_GetRulesListResponse := Nil;
   var IP := Grid.Cells[0, ARow];
   var HS1x0 := THS1x0.Create(IP);
-  Info := HS1x0.System_GetSysinfo;
+  var Info := HS1x0.System_GetSysinfo;
   if Info <> Nil then
   begin
     GridD.Cells[0, 0] := 'Device :';
@@ -560,7 +560,7 @@ begin
       end;
       HS1x0.Free;
     except; end;
-    while ((Start + 1500) > GetTickCount) and not Terminated do sleep(250);
+    while ((Start + 1100) > GetTickCount) and not Terminated do sleep(150);
   end;
 end;
 

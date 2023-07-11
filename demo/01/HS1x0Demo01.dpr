@@ -1,4 +1,4 @@
-program HS1x0Demo;
+program HS1x0Demo01;
 
 uses
   Vcl.Forms,

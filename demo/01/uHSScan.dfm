@@ -10,9 +10,8 @@ object HSScanFrm: THSScanFrm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
+  OnCreate = FormCreate
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object ListBox1: TListBox
     Left = 0
@@ -22,8 +21,8 @@ object HSScanFrm: THSScanFrm
     Align = alClient
     ItemHeight = 13
     TabOrder = 0
-    ExplicitWidth = 635
-    ExplicitHeight = 258
+    ExplicitWidth = 321
+    ExplicitHeight = 172
   end
   object Panel1: TPanel
     Left = 0
@@ -32,7 +31,7 @@ object HSScanFrm: THSScanFrm
     Height = 41
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 635
+    ExplicitWidth = 321
     DesignSize = (
       325
       41)
@@ -44,7 +43,7 @@ object HSScanFrm: THSScanFrm
       Anchors = [akLeft, akTop, akRight]
       Max = 255
       TabOrder = 0
-      ExplicitWidth = 504
+      ExplicitWidth = 190
     end
     object Refresh: TButton
       Left = 231
@@ -55,7 +54,7 @@ object HSScanFrm: THSScanFrm
       Caption = 'Refresh'
       TabOrder = 1
       OnClick = RefreshClick
-      ExplicitLeft = 541
+      ExplicitLeft = 227
     end
   end
 end

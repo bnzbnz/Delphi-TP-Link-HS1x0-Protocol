@@ -28,7 +28,7 @@ object HSForm: THSForm
       853
       33)
     object PBar: TProgressBar
-      Left = 4
+      Left = 1
       Top = 10
       Width = 746
       Height = 17
