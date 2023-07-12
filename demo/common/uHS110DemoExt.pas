@@ -52,7 +52,6 @@ end;
 
 procedure THS1x0Discovery.Start;
 begin
-  var ScannedCnt := 0;
   var NumThread := 4;
   if DebugHook = 0 then NumThread := 64;
   for var i := 0 to NumThread - 1 do

@@ -78,9 +78,7 @@ object HSForm: THSForm
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goFixedRowDefAlign]
         PopupMenu = PopupScheds
         TabOrder = 0
-        OnClick = GridSClick
-        ExplicitLeft = 6
-        ExplicitTop = 5
+        ExplicitWidth = 516
         ColWidths = (
           64
           64
@@ -99,7 +97,6 @@ object HSForm: THSForm
         FixedCols = 0
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goFixedRowDefAlign]
         TabOrder = 1
-        OnClick = GRidCClick
         ExplicitWidth = 516
         ColWidths = (
           64

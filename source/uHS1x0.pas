@@ -962,7 +962,7 @@ begin
   FTCP.Host := FIP;
   FTCP.Port := 9999;
   FTCP.ConnectTimeout := 250;
-  FTCP.ReadTimeout := 10000;
+  FTCP.ReadTimeout := 1000;
 end;
 
 destructor THS1x0.Destroy;
@@ -1019,11 +1019,11 @@ begin
       FTCP.IOHandler.ReadStream(Stream, ResSize);
       Result := Decrypt(Stream);
       LRes := Result;
-      FTCP.Disconnect;
     except
       Result := '';
     end;
   finally
+    FTCP.Disconnect;
     LRes := Result;
     Stream.Free;
   end;

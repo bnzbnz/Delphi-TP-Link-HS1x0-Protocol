@@ -65,8 +65,6 @@ type
     procedure Rename1Click(Sender: TObject);
     procedure Enable1Click(Sender: TObject);
     procedure ONOFF1Click(Sender: TObject);
-    procedure GRidCClick(Sender: TObject);
-    procedure GridSClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -98,6 +96,8 @@ uses uNetUtils, DateUtils, uHS1x0Hlp;
 
 const
   BInt: array[boolean] of integer = (0, 1);
+  BEnable: array[boolean] of string = ('Disable', 'Enable');
+  BOnOff: array[boolean] of string = ('OFF', 'ON');
 
 function IIF(C: Boolean; A, B: variant): variant;
 begin
@@ -146,35 +146,46 @@ begin
   HS1x0.Free
 end;
 
+procedure THSForm.Enable1Click(Sender: TObject);
+begin
+  var HS: THS1x0 := Nil;
+  var Rule: THS1x0_Schedule := Nil;
+  var Req: THS1x0_EditRuleRequest := Nil;
+  var IP := Grid.Cells[0, Grid.Row ];
+  var ID := GridS.Cells[0, Grids.Row ];
+  try
+    HS := THS1x0.Create(IP);
+    if HS = nil then Exit;
+    Rule := HS.Schedule_GetRule(ID);
+    if Rule = nil then Exit;
+    Rule.Fenable := IIF(Rule.Fenable = 0, 1 ,0);
+    Req := THS1x0_EditRuleRequest.Create(Rule);
+    HS.Schedule_EditRule(Req).Free;
+  finally
+    Req.Free;
+    Rule.Free;
+    HS.Free;
+  end;
+end;
+
 procedure THSForm.ONOFF1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
-  var Rules: THS1x0_GetRulesListResponse := Nil;
+  var Rule: THS1x0_Schedule := Nil;
   var Req: THS1x0_EditRuleRequest := Nil;
-  var Res: THS1x0_EditRuleResponse := Nil;
-
-  var Ip := Grid.Cells[0, Grid.Row ];
-  var Id := GridS.Cells[0, Grids.Row ];
+  var IP := Grid.Cells[0, Grid.Row ];
+  var ID := GridS.Cells[0, Grids.Row ];
   try
     HS := THS1x0.Create(IP);
-    if not assigned(HS) then Exit;
-    Rules := HS.Schedule_GetRulesList;
-    if not assigned(Rules) then Exit;
-    for var untypedRule in Rules.Fschedule.Fget_5Frules.Frule_5Flist do
-    begin
-      var Rule := THS1x0_Schedule(untypedRule);
-      if Rule.Fid = Id then
-      begin
-        Rule.Fsact := not Rule.Fsact;
-        Req := THS1x0_EditRuleRequest.Create(Rule);
-        Res := HS.Schedule_EditRule(Req);
-        Exit;
-      end;
-    end;
+    if HS = nil then Exit;
+    Rule := HS.Schedule_GetRule(ID);
+    if Rule = nil then Exit;
+    Rule.Fsact := IIF(Rule.Fsact = 0, 1 ,0);
+    Req := THS1x0_EditRuleRequest.Create(Rule);
+    HS.Schedule_EditRule(Req).Free;
   finally
-    Res.Free;
     Req.Free;
-    Rules.Free;
+    Rule.Free;
     HS.Free;
   end;
 end;
@@ -263,44 +274,11 @@ begin
   Scanner.Start;
 end;
 
-procedure THSForm.Enable1Click(Sender: TObject);
-begin
-  var HS: THS1x0 := Nil;
-  var Rules: THS1x0_GetRulesListResponse := Nil;
-  var Req: THS1x0_EditRuleRequest := Nil;
-  var Res: THS1x0_EditRuleResponse := Nil;
-
-  var Ip := Grid.Cells[0, Grid.Row ];
-  var Id := GridS.Cells[0, Grids.Row ];
-  try
-    HS := THS1x0.Create(IP);
-    if not assigned(HS) then Exit;
-    Rules := HS.Schedule_GetRulesList;
-    if not assigned(Rules) then Exit;
-    for var untypedRule in Rules.Fschedule.Fget_5Frules.Frule_5Flist do
-    begin
-      var Rule := THS1x0_Schedule(untypedRule);
-      if Rule.Fid = Id then
-      begin
-        Rule.Fenable := not Rule.Fenable;
-        Req := THS1x0_EditRuleRequest.Create(Rule);
-        Res := HS.Schedule_EditRule(Req);
-        Exit;
-      end;
-    end;
-  finally
-    Res.Free;
-    Req.Free;
-    Rules.Free;
-    HS.Free;
-  end;
-end;
-
 procedure THSForm.FormCreate(Sender: TObject);
 begin
 
   if debugHook <> 0 then
-    ShowMessage('You are running in the IDE : Due to an Editor Bug, the initial port scanning is going to be slow...');
+    ShowMessage('You are running in the IDE : Due to a Debugger Bug while multi-threading, the port scanning feature is going to be slow...');
 
   PBar.Position := 0;
   Grid.RowCount := 1;
@@ -331,33 +309,6 @@ begin
   Stop;
   Scanner.Free;
   HSTrealTimeList.Free;
-end;
-
-procedure THSForm.GRidCClick(Sender: TObject);
-begin
-  var Ip := Grid.Cells[0, Grid.Row ];
-  var Id := GridC.Cells[0, GridS.Row ];
-  var HS1x0 := THS1x0.Create(IP);
-  HS1x0.Countdown_GetRule(Id).Free;
-  HS1x0.Free;
-
-end;
-
-procedure THSForm.GridSClick(Sender: TObject);
-begin
-  var HS1x0: THS1x0 := nil;
-  var Schedule: THS1x0_Schedule := nil;
-  var Ip := Grid.Cells[0, Grid.Row ];
-  var Id := GridS.Cells[0, GridS.Row ];
-  try
-    HS1x0 := THS1x0.Create(IP);
-    if HS1x0 = nil then Exit;
-    Schedule := HS1x0.Schedule_GetRule(Id);
-    if Schedule = nil then Exit;
-  finally
-    Schedule.Free;
-    HS1x0.Free;
-  end;
 end;
 
 procedure THSForm.GridSelectCell(Sender: TObject; ACol, ARow: Integer;
@@ -475,7 +426,7 @@ begin
 
     GridS.Cells[0, 0] := 'Id';    GridS.ColWidths[0] := 0;
     GridS.Cells[1, 0] := 'Schedule';  GridS.ColWidths[1] := 128;
-    GridS.Cells[2, 0] := 'Satus'; GridS.ColWidths[2] := 68;
+    GridS.Cells[2, 0] := 'Status'; GridS.ColWidths[2] := 68;
     GridS.Cells[3, 0] := 'Power'; GridS.ColWidths[3] := 68;
     GridS.Cells[4, 0] := 'Time';  GridS.ColWidths[4] := 68;
     GridS.Cells[5, 0] := 'Days';  GridS.ColWidths[5] := 200;
@@ -487,8 +438,8 @@ begin
       var Rule := THS1x0_Schedule(uRule);
       GridS.Cells[0, Row] := Rule.FId;
       GridS.Cells[1, Row] := Rule.FName;
-      if Rule.Fenable then GridS.Cells[2, Row] := 'Enabled' else GridS.Cells[2, Row] := 'Disabled';
-      if Rule.Fsact then GridS.Cells[3, Row] := 'ON' else GridS.Cells[3, Row] := 'OFF';
+      GridS.Cells[2, Row] := BEnable[Boolean(Rule.Fenable)];
+      GridS.Cells[3, Row] := BOnOff[Boolean(Rule.Fsact)];
       GridS.Cells[4, Row] :=Inttostr(Rule.Fsmin div 60) + ':'+  Inttostr(Rule.Fsmin mod 60) ;
       var CDay := 1;
       var DayTxt := '';
@@ -511,7 +462,7 @@ begin
 
     GridC.Cells[0, 0] := 'Id';        GridC.ColWidths[0] := 0;
     GridC.Cells[1, 0] := 'Countdown'; GridC.ColWidths[1] := 128;
-    GridC.Cells[2, 0] := 'Satus';     GridC.ColWidths[2] := 68;
+    GridC.Cells[2, 0] := 'Power';     GridC.ColWidths[2] := 68;
     GridC.Cells[3, 0] := 'Delay';     GridC.ColWidths[3] := 68;
     GridC.Cells[4, 0] := 'Remaining'; GridC.ColWidths[4] := 68;
     GridC.RowCount := CntDwn.Fcount_5Fdown.Fget_5Frules.Frule_5Flist.Count + 1;
@@ -520,8 +471,8 @@ begin
     begin
       var Countdown := THS1x0_Countdown(uCountdown);
       GridC.Cells[0, Row] := Countdown.FId;
-      GridC.Cells[1, Row] := Countdown.FName;
-      GridC.Cells[2, Row] := IIF(Countdown.Fenable, 'Enabled', 'Disabled');
+      GridC.Cells[1, Row] := BEnable[Boolean(Countdown.Fenable)];
+      GridC.Cells[2, Row] := BOnOff[Boolean(Countdown.Fact)];
       GridC.Cells[3, Row] := secToDHMS(Countdown.Fdelay, False);
       GridC.Cells[4, Row] := secToDHMS(Countdown.Fremain, False);
       Inc(Row);
@@ -561,7 +512,7 @@ begin
       end;
       HS1x0.Free;
     except; end;
-    while ((Start + 1100) > GetTickCount) and not Terminated do sleep(150);
+    while ((Start + 1000) > GetTickCount) and not Terminated do sleep(250);
   end;
 end;
 
