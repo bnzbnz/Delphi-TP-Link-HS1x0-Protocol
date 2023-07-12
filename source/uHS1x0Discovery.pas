@@ -1,4 +1,4 @@
-unit uHS110DemoExt;
+unit uHS1x0Discovery;
 
 interface
 uses Classes, System.Generics.Collections;
@@ -13,6 +13,7 @@ type
   public
     Index: integer;
     IP: string;
+    IPs: TList<Cardinal>;
     ScanNumTh: Integer;
     StartIP, EndIP: Integer;
     FOnScanned: THS1x0ScannedCallback;
@@ -21,11 +22,15 @@ type
   end;
 
   THS1x0Discovery = class(TObject)
-  public
+  private
     FOnScanned: THS1x0ScannedCallback;
     FOnFound: THS1x0FoundCallback;
+    IPs: TList<Cardinal>;
     ScannedCnt: Integer;
     ScanThreadList: TObjectList<TDiscoveryThread>;
+    procedure   JustWaitFor;
+  public
+    class function Call: TList<Cardinal>;
     procedure   Start;
     procedure   Stop;
     constructor Create; overload;
@@ -50,6 +55,18 @@ begin
   inherited;
 end;
 
+class function THS1x0Discovery.Call: TList<Cardinal>;
+begin
+  var T := THS1x0Discovery.Create;
+  T.IPs:= TList<Cardinal>.Create;
+  T.Start;
+  T.JustWaitFor;
+  T.Stop;
+  T.IPs.Sort;
+  Result := T.IPs;
+  T.Free;
+end;
+
 procedure THS1x0Discovery.Start;
 begin
   var NumThread := 4;
@@ -63,6 +80,7 @@ begin
     TH.EndIP := (i + 1) * (256 div NumThread) - 1;
     TH.FOnScanned := FOnScanned;
     TH.FOnFound := FOnFound;
+    TH.IPs := IPs;
     ScanThreadList.Add(Th);
     Th.Start;
   end;
@@ -78,6 +96,12 @@ begin
     Th.Free;
   end;
   ScanThreadList.Clear;
+end;
+
+procedure THS1x0Discovery.JustWaitFor;
+begin
+  for var Th in ScanThreadList do
+   Th.WaitFor;
 end;
 
 procedure TDiscoveryThread.Execute;
@@ -96,7 +120,10 @@ begin
     if HS110 <> Nil then
     begin
       if HS110.ping then
+      begin
         Synchronize( procedure begin if assigned(FOnFound) then FOnFound(BaseIP + Abs(i)); end );
+        Synchronize( procedure begin if assigned(IPs) then IPs.Add(BaseIP + Abs(i)) end );
+      end;
       HS110.Free;
     end;
   end;

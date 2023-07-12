@@ -115,7 +115,7 @@
         <DCCReference Include="..\..\source\JsonDataObjects.pas"/>
         <DCCReference Include="..\..\source\uJsonX.Utils.pas"/>
         <DCCReference Include="..\..\source\uHS1x0.pas"/>
-        <DCCReference Include="..\common\uHS110DemoExt.pas"/>
+        <DCCReference Include="..\..\source\uHS1x0Discovery.pas"/>
         <DCCReference Include="..\..\source\uHS1x0Hlp.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

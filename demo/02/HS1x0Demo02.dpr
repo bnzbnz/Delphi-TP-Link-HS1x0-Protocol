@@ -19,7 +19,7 @@ uses
   JsonDataObjects in '..\..\source\JsonDataObjects.pas',
   uJsonX.Utils in '..\..\source\uJsonX.Utils.pas',
   uHS1x0 in '..\..\source\uHS1x0.pas',
-  uHS110DemoExt in '..\common\uHS110DemoExt.pas',
+  uHS1x0Discovery in '..\..\source\uHS1x0Discovery.pas',
   uHS1x0Hlp in '..\..\source\uHS1x0Hlp.pas';
 
 {$R *.res}

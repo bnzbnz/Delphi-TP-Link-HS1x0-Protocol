@@ -13,7 +13,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, uHS110DemoExt,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, uHS1x0Discovery,
   Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Grids, System.Generics.Collections,
   uHS1x0, Vcl.Menus;
 
