@@ -4,14 +4,16 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.StdCtrls, uHS110DemoExt;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.StdCtrls, uHS110DemoExt,
+  Vcl.Samples.Spin;
 
 type
   THSScanFrm = class(TForm)
     ListBox1: TListBox;
     Panel1: TPanel;
-    PBar: TProgressBar;
     Refresh: TButton;
+    Panel2: TPanel;
+    PBar: TProgressBar;
     procedure FormShow(Sender: TObject);
     procedure RefreshClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -62,7 +64,7 @@ end;
 procedure THSScanFrm.FormCreate(Sender: TObject);
 begin
   if debugHook <> 0 then
-    ShowMessage('You are running in the IDE : Due to an Editor Bug, the initial port scanning is going to be slow...');
+    ShowMessage('You are running in the IDE : Due to a Debugger Bug while multi-threading, the port scanning feature is going to be slow...');
 end;
 
 procedure THSScanFrm.FormShow(Sender: TObject);

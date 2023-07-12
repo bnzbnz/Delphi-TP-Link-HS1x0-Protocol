@@ -10,7 +10,8 @@ uses
   uJsonX.Types in '..\..\source\uJsonX.Types.pas',
   uJsonX.Utils in '..\..\source\uJsonX.Utils.pas',
   uNetUtils in '..\..\source\uNetUtils.pas',
-  uHS1x0Hlp in '..\..\source\uHS1x0Hlp.pas';
+  uHS1x0Hlp in '..\..\source\uHS1x0Hlp.pas',
+  JsonDataObjects in '..\..\source\JsonDataObjects.pas';
 
 {$R *.res}
 

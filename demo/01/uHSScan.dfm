@@ -1,8 +1,9 @@
 object HSScanFrm: THSScanFrm
   Left = 0
   Top = 0
+  BorderStyle = bsSingle
   Caption = 'HS Scan'
-  ClientHeight = 214
+  ClientHeight = 353
   ClientWidth = 325
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -10,19 +11,19 @@ object HSScanFrm: THSScanFrm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   OnCreate = FormCreate
   OnShow = FormShow
+  PixelsPerInch = 96
   TextHeight = 13
   object ListBox1: TListBox
     Left = 0
-    Top = 41
+    Top = 73
     Width = 325
-    Height = 173
+    Height = 280
     Align = alClient
     ItemHeight = 13
     TabOrder = 0
-    ExplicitWidth = 321
-    ExplicitHeight = 172
   end
   object Panel1: TPanel
     Left = 0
@@ -30,31 +31,42 @@ object HSScanFrm: THSScanFrm
     Width = 325
     Height = 41
     Align = alTop
+    BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 321
     DesignSize = (
       325
       41)
-    object PBar: TProgressBar
-      Left = 9
-      Top = 12
-      Width = 194
-      Height = 17
-      Anchors = [akLeft, akTop, akRight]
-      Max = 255
-      TabOrder = 0
-      ExplicitWidth = 190
-    end
     object Refresh: TButton
-      Left = 231
-      Top = 9
-      Width = 75
+      Left = 9
+      Top = 10
+      Width = 312
       Height = 25
       Anchors = [akTop, akRight]
-      Caption = 'Refresh'
-      TabOrder = 1
+      Caption = 'Scan'
+      TabOrder = 0
       OnClick = RefreshClick
-      ExplicitLeft = 227
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Top = 41
+    Width = 325
+    Height = 32
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 2
+    DesignSize = (
+      325
+      32)
+    object PBar: TProgressBar
+      Left = 9
+      Top = 8
+      Width = 312
+      Height = 17
+      Anchors = [akLeft, akTop, akRight]
+      BorderWidth = 2
+      Max = 255
+      TabOrder = 0
     end
   end
 end

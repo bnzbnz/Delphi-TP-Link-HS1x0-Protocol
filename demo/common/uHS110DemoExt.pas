@@ -53,15 +53,15 @@ end;
 procedure THS1x0Discovery.Start;
 begin
   var ScannedCnt := 0;
-  var NumPScan := 16;
-  if DebugHook = 0 then NumPScan := 2;
-  for var i := 0 to (256 div NumPScan) - 1 do
+  var NumThread := 4;
+  if DebugHook = 0 then NumThread := 64;
+  for var i := 0 to NumThread - 1 do
   begin
     var Th := TDiscoveryThread.Create(True);
     Th.Priority := tpIdle;
     Th.FreeOnTerminate := False;
-    TH.StartIP := i *  NumPScan;
-    TH.EndIP := ((i + 1) *  NumPScan) - 1;
+    TH.StartIP :=  i * (256 div NumThread);
+    TH.EndIP := (i + 1) * (256 div NumThread) - 1;
     TH.FOnScanned := FOnScanned;
     TH.FOnFound := FOnFound;
     ScanThreadList.Add(Th);
@@ -93,10 +93,10 @@ begin
     end;
     IP := IpAddrToStr(BaseIP + Abs(i));
     Synchronize( procedure begin  if assigned(FOnScanned) then FOnScanned; ; end );
-    var HS110 := THS1x0.Connect(IP);
+    var HS110 := THS1x0.Create(IP);
     if HS110 <> Nil then
     begin
-      if  HS110.ping then
+      if HS110.ping then
         Synchronize( procedure begin if assigned(FOnFound) then FOnFound(BaseIP + Abs(i)); end );
       HS110.Free;
     end;

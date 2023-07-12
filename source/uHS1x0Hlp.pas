@@ -16,8 +16,10 @@ type
 
   THS1x0Hlp = class Helper  for THS1x0
 
+    // Badly missing functioons
     function Schedule_GetRule(Id: string): THS1x0_Schedule;
     function Countdown_GetRule(Id: string): THS1x0_Countdown;
+    function AntiTheft_GetRule(Id: string): THS1x0_AntiTheft;
 
   end;
 
@@ -31,7 +33,7 @@ begin
   try
     for var uRule in Rules.Fschedule.Fget_5Frules.Frule_5Flist do
     begin
-      var Rule := THS1x0_Countdown(uRule);
+      var Rule := THS1x0_Schedule(uRule);
       if Rule.Fid = Id then
       begin
         Result := THS1x0_Schedule(Rule.Clone);
@@ -55,6 +57,26 @@ begin
       if Rule.Fid = Id then
       begin
         Result := THS1x0_Countdown(Rule.Clone);
+        Exit;
+      end;
+    end;
+  finally
+    Rules.Free;
+  end;
+end;
+
+function THS1x0Hlp.AntiTheft_GetRule(Id: string): THS1x0_AntiTheft;
+begin
+  Result := Nil;
+  var Rules := Self.AntiTheft_GetRulesList;
+  if Rules = nil then Exit;
+  try
+    for var uRule in Rules.Fanti_5Ftheft.Fget_5Frules.Frule_5Flist do
+    begin
+      var Rule := THS1x0_AntiTheft(uRule);
+      if Rule.Fid = Id then
+      begin
+        Result := THS1x0_AntiTheft(Rule.Clone);
         Exit;
       end;
     end;

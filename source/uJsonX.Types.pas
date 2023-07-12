@@ -57,7 +57,11 @@ type
   TJsonXBaseType      = class(TObject)
   end;
 
-  TJsonXVarListType   = class(TList<variant>);
+  TJsonXVarListType   = class;
+  TJsonXVarListType   = class(TList<variant>)
+    function CLone: TJsonXVarListType;
+  end;
+
   TJsonXObjListType   = class(TObjectList<TObject>); // Requires AJsonXClassType Attribute(Object class type)
   TJsonXVarVarDicType = class(TDictionary<variant, variant>);
   TJsonXVarObjDicType = class(TObjectDictionary<variant, TObject>);  // Requires AJsonXClassType Attribute(Object class type)
@@ -86,6 +90,12 @@ type
 implementation
 uses RTTI, uJsonX.RTTI, SysUtils, Variants;
 
+
+function TJsonXVarListType.CLone: TJsonXVarListType;
+begin
+  Result := TJsonXVarListType.create;
+  for var v in Self do Result.add(v);
+end;
 
 { TJsonXSystemParameters }
 
@@ -180,7 +190,18 @@ begin
     begin
       var v :=  field.GetValue(Self);
       if not VarIsEmpty(v.AsVariant) then field.SetValue(T, v);
-    end;
+    end else
+    if field.FieldType.TypeKind in [tkClass] then
+      begin
+        var Instance := field.FieldType.AsInstance;
+
+       if Instance.MetaclassType = TJsonXVarListType then
+         field.SetValue(T,  TJsonXVarListType(field.GetValue(Self).AsObject).Clone)
+       else
+         asm int 3 end; // TODO: Missing Type Cloning
+
+
+      end;
   rttictx.Free;
 end;
 

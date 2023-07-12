@@ -30,16 +30,16 @@ object HSForm: THSForm
     object PBar: TProgressBar
       Left = 1
       Top = 10
-      Width = 746
+      Width = 742
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Max = 255
       TabOrder = 0
-      ExplicitWidth = 742
+      ExplicitWidth = 738
     end
   end
   object Button1: TButton
-    Left = 770
+    Left = 766
     Top = 10
     Width = 75
     Height = 17
@@ -47,7 +47,7 @@ object HSForm: THSForm
     Caption = 'Refresh'
     TabOrder = 1
     OnClick = Button1Click
-    ExplicitLeft = 766
+    ExplicitLeft = 762
   end
   object Panel2: TPanel
     Left = 0
@@ -79,7 +79,8 @@ object HSForm: THSForm
         PopupMenu = PopupScheds
         TabOrder = 0
         OnClick = GridSClick
-        ExplicitWidth = 516
+        ExplicitLeft = 6
+        ExplicitTop = 5
         ColWidths = (
           64
           64

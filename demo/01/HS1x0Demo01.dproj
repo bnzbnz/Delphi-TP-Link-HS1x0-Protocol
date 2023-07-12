@@ -5,7 +5,7 @@
         <FrameworkType>VCL</FrameworkType>
         <MainSource>HS1x0Demo01.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -112,6 +112,7 @@
         <DCCReference Include="..\..\source\uJsonX.Utils.pas"/>
         <DCCReference Include="..\..\source\uNetUtils.pas"/>
         <DCCReference Include="..\..\source\uHS1x0Hlp.pas"/>
+        <DCCReference Include="..\..\source\JsonDataObjects.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

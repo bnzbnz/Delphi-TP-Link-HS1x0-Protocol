@@ -127,6 +127,7 @@ begin
   TH.Priority := tpIdle;
   Grid.RowCount := Grid.RowCount + 1;
   TH.Start;
+  Grid.Refresh;
 end;
 
 procedure THSForm.LedOFF1Click(Sender: TObject);

@@ -554,7 +554,7 @@ type
     Fforce: variant;
     Femin: variant;
     constructor Create;
-    function Clone: TJsonXBaseExType; override;
+    //function Clone: TJsonXBaseExType; override;
   end;
 
   THS1x0_Type0129 = class(THS1x0_GenericError)
@@ -752,13 +752,11 @@ type
     Fyear: variant;
     Fmonth: variant;
     Fday: variant;
-
     Fduration: variant;
     Flastfor: variant;
     FLongitude: variant;
     Flatitude: variant;
     Fforce: variant;
-
     constructor Create;
   end;
 
@@ -866,7 +864,6 @@ type
     function  DoRequest(JsonBody: string): string;
   public
 
-    class function  Connect(IP: string): THS1x0; static;
     constructor     Create(IP: string); overload;
     destructor      Destroy; override;
 
@@ -957,18 +954,6 @@ uses StrUtils, SysUtils, DateUtils, IdGlobal, IdIOHandler, Variants;
 
 {$REGION 'THS1x0 Core'}
 
-class function THS1x0.Connect(IP: string): THS1x0;
-begin
-  Result := THS1x0.Create(IP);
-  Result.FIP := IP;
-  if Result = nil then exit;
-  try
-    Result.FTCP.Connect;
-  except
-    FreeAndNil(Result);
-  end;
-end;
-
 constructor THS1x0.Create(IP: string);
 begin
   inherited Create;
@@ -976,8 +961,8 @@ begin
   FIP := IP;
   FTCP.Host := FIP;
   FTCP.Port := 9999;
-  FTCP.ConnectTimeout := 500;
-  FTCP.ReadTimeout := 1000;
+  FTCP.ConnectTimeout := 250;
+  FTCP.ReadTimeout := 10000;
 end;
 
 destructor THS1x0.Destroy;
@@ -1024,7 +1009,7 @@ begin
   LReq := JsonBody;
   try
     try
-      if not FTCP.Connected then FTCP.Connect;
+      FTCP.Connect;
       Stream := Encrypt(JsonBody);
       FTCP.IOHandler.Write(Integer(Stream.Size), True);
       FTCP.IOHandler.Write(Stream);
@@ -1034,6 +1019,7 @@ begin
       FTCP.IOHandler.ReadStream(Stream, ResSize);
       Result := Decrypt(Stream);
       LRes := Result;
+      FTCP.Disconnect;
     except
       Result := '';
     end;
@@ -1465,13 +1451,12 @@ begin
   Self.Fwday := TJsonXVarListType.Create;
 end;
 
+{
 function THS1x0_Schedule.Clone: TJsonXBaseExType;
 begin
-  var R := THS1x0_Schedule(inherited Clone);
-  R.Fwday := TJsonXVarListType.Create;
-  for var Value in Self.Fwday do R.Fwday.Add(Value);
-  REsult := R;
+  Result := THS1x0_Schedule(inherited Clone);
 end;
+}
 
 function THS1x0.Schedule_AddRule(Rule: THS1x0_AddRuleRequest): THS1x0_AddRuleResponse;
 begin
