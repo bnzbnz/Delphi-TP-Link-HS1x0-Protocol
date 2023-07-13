@@ -31,7 +31,7 @@ type
     procedure   JustWaitFor;
   public
     class function Call: TList<Cardinal>;
-    procedure   Start;
+    procedure   Start(FromPort: Byte = 0; ToPort: Byte = 255);
     procedure   Stop;
     constructor Create; overload;
     destructor  Destroy; override;
@@ -67,8 +67,23 @@ begin
   T.Free;
 end;
 
-procedure THS1x0Discovery.Start;
+procedure  THS1x0Discovery.Start(FromPort, ToPort: Byte);
 begin
+  if (FromPort <> 0) and (ToPort <>255) then
+  begin
+    var Th := TDiscoveryThread.Create(True);
+    Th.Priority := tpIdle;
+    Th.FreeOnTerminate := False;
+    TH.StartIP := FromPort;
+    TH.EndIP := ToPort;
+    TH.FOnScanned := FOnScanned;
+    TH.FOnFound := FOnFound;
+    TH.IPs := IPs;
+    ScanThreadList.Add(Th);
+    Th.Start;
+    Exit;
+  end;
+
   var NumThread := 4;
   if DebugHook = 0 then NumThread := 64;
   for var i := 0 to NumThread - 1 do

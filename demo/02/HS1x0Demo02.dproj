@@ -88,6 +88,7 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <DCC_ExeOutput>..\</DCC_ExeOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <DCC_Define> LMRDEV;$(DCC_Define)</DCC_Define>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -117,6 +118,10 @@
         <DCCReference Include="..\..\source\uHS1x0.pas"/>
         <DCCReference Include="..\..\source\uHS1x0Discovery.pas"/>
         <DCCReference Include="..\..\source\uHS1x0Hlp.pas"/>
+        <DCCReference Include="uEditCntDwnFrm.pas">
+            <Form>EditCntDwnFrm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -152,6 +157,12 @@
                 </DeployFile>
                 <DeployFile LocalName="..\HS1x0Demo.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="..\HS1x0Demo.exe" Configuration="Release" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\HS1x0Demo02.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>HS1x0Demo02.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Win32\Debug\HS1x0Demo.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">

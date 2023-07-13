@@ -30,16 +30,16 @@ object HSForm: THSForm
     object PBar: TProgressBar
       Left = 1
       Top = 10
-      Width = 742
+      Width = 730
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Max = 255
       TabOrder = 0
-      ExplicitWidth = 738
+      ExplicitWidth = 726
     end
   end
   object Button1: TButton
-    Left = 766
+    Left = 754
     Top = 10
     Width = 75
     Height = 17
@@ -47,7 +47,7 @@ object HSForm: THSForm
     Caption = 'Refresh'
     TabOrder = 1
     OnClick = Button1Click
-    ExplicitLeft = 762
+    ExplicitLeft = 750
   end
   object Panel2: TPanel
     Left = 0
@@ -93,13 +93,12 @@ object HSForm: THSForm
         Width = 520
         Height = 95
         Align = alBottom
-        ColCount = 6
         FixedCols = 0
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goFixedRowDefAlign]
+        PopupMenu = PopupCntDwn
         TabOrder = 1
         ExplicitWidth = 516
         ColWidths = (
-          64
           64
           64
           64
@@ -193,6 +192,21 @@ object HSForm: THSForm
     object ONOFF1: TMenuItem
       Caption = 'ON / OFF'
       OnClick = ONOFF1Click
+    end
+  end
+  object PopupCntDwn: TPopupMenu
+    Left = 746
+    Top = 448
+    object Edit1: TMenuItem
+      Caption = 'Enable/Disable'
+      OnClick = Edit1Click
+    end
+    object N4: TMenuItem
+      Caption = '-'
+    end
+    object Edit2: TMenuItem
+      Caption = 'Edit'
+      OnClick = Edit2Click
     end
   end
 end

@@ -961,7 +961,7 @@ begin
   FIP := IP;
   FTCP.Host := FIP;
   FTCP.Port := 9999;
-  FTCP.ConnectTimeout := 250;
+  FTCP.ConnectTimeout := 500;
   FTCP.ReadTimeout := 1000;
 end;
 

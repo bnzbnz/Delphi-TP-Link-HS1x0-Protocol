@@ -104,7 +104,6 @@
             <Form>HSScanFrm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\common\uHS110DemoExt.pas"/>
         <DCCReference Include="..\..\source\uHS1x0.pas"/>
         <DCCReference Include="..\..\source\uJsonX.pas"/>
         <DCCReference Include="..\..\source\uJsonX.RTTI.pas"/>
@@ -113,6 +112,7 @@
         <DCCReference Include="..\..\source\uNetUtils.pas"/>
         <DCCReference Include="..\..\source\uHS1x0Hlp.pas"/>
         <DCCReference Include="..\..\source\JsonDataObjects.pas"/>
+        <DCCReference Include="..\..\source\uHS1x0Discovery.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -142,6 +142,12 @@
             <Deployment Version="4">
                 <DeployFile LocalName="..\HS1x0Demo.exe" Configuration="Release" Class="ProjectOutput"/>
                 <DeployFile LocalName="..\HS1x0Demo01.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\HS1x0Demo01.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>HS1x0Demo01.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Win32\Debug\HS1x0Demo.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="Win32\Release\HS1x0Demo01.exe" Configuration="Release" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">

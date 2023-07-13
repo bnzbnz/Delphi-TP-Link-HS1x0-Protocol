@@ -15,7 +15,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, uHS1x0Discovery,
   Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Grids, System.Generics.Collections,
-  uHS1x0, Vcl.Menus;
+  uHS1x0, Vcl.Menus, uEditCntDwnFrm;
 
 type
 
@@ -50,6 +50,10 @@ type
     GridS: TStringGrid;
     GRidC: TStringGrid;
     ONOFF1: TMenuItem;
+    PopupCntDwn: TPopupMenu;
+    Edit1: TMenuItem;
+    N4: TMenuItem;
+    Edit2: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -65,6 +69,8 @@ type
     procedure Rename1Click(Sender: TObject);
     procedure Enable1Click(Sender: TObject);
     procedure ONOFF1Click(Sender: TObject);
+    procedure Edit1Click(Sender: TObject);
+    procedure Edit2Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -106,10 +112,7 @@ end;
 
 procedure OnScanned;
 begin
-  HSForm.Grid.OnSelectCell := nil;
   HSForm.PBar.Position := HSForm.PBar.Position + 1;
-  if HSForm.PBar.Position=255 then
-    HSForm.Grid.OnSelectCell := HSForm.GridSelectCell;
 end;
 
 procedure OnFound(nIP: Cardinal);
@@ -144,6 +147,51 @@ begin
   var HS1x0 := THS1x0.Create(IP);
   HS1x0.System_LedOn;
   HS1x0.Free
+end;
+
+procedure THSForm.Edit1Click(Sender: TObject);
+begin
+  var HS: THS1x0 := Nil;
+  var Rule: THS1x0_CountDown := Nil;
+  var Req: THS1x0_CountdownEditRuleRequest := Nil;
+  var IP := Grid.Cells[0, Grid.Row ];
+  var ID := GridC.Cells[0, Grids.Row ];
+  try
+    HS := THS1x0.Create(IP);
+    if HS = nil then Exit;
+    Rule := HS.Countdown_GetRule(ID);
+    if Rule = nil then Exit;
+    Rule.Fenable := IIF(Rule.Fenable = 0, 1 ,0);
+    Req := THS1x0_CountdownEditRuleRequest.Create(Rule);
+    HS.CountDown_EditRule(Req).Free;
+  finally
+    Req.Free;
+    Rule.Free;
+    HS.Free;
+  end;
+end;
+
+procedure THSForm.Edit2Click(Sender: TObject);
+begin
+  var HS: THS1x0 := Nil;
+  var Rule: THS1x0_CountDown := Nil;
+  var Req: THS1x0_CountdownEditRuleRequest := Nil;
+  var IP := Grid.Cells[0, Grid.Row ];
+  var ID := GridC.Cells[0, Grids.Row ];
+  try
+    HS := THS1x0.Create(IP);
+    if HS = nil then Exit;
+    Rule := HS.Countdown_GetRule(ID);
+    if Rule = nil then Exit;
+    EditCntDwnFrm.ShowAsModal(Rule);
+
+    Req := THS1x0_CountdownEditRuleRequest.Create(Rule);
+    HS.CountDown_EditRule(Req).Free;
+  finally
+    Req.Free;
+    Rule.Free;
+    HS.Free;
+  end;
 end;
 
 procedure THSForm.Enable1Click(Sender: TObject);
@@ -289,6 +337,7 @@ begin
   Scanner := THS1x0Discovery.Create;
   Scanner.OnScanned := OnScanned;
   Scanner.OnFound := OnFound;
+  // Scanner.Start(12, 20); // DEV Only;
   Scanner.Start;
 
   Grid.Cells[0,0] := 'IP'; Grid.ColWidths[0] := 80;
@@ -314,9 +363,12 @@ end;
 procedure THSForm.GridSelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
 begin
+  if (ACol = 0) and (ARow = 0)  then
+    Exit;
   for var i := 0  to GridD.ColCount do
     for var J := 0  to GridD.RowCount do
       GridD.Cells[i, j] := '';
+
   GridD.ColWidths[0] := 80;
   GridD.ColWidths[1] := 240;
 
@@ -456,6 +508,19 @@ begin
   if (CntDwn <> Nil) and (Index = Grid.Row)  then
   begin
 
+    if CntDwn.Fcount_5Fdown.Fget_5Frules.Frule_5Flist.Count = 0 then
+    begin
+      // ?? Bug ?? We Should have at least 1 rule...
+      var AddCDRule := THS1x0_CountdownAddRuleRequest.Create;
+      AddCDRule.Fcount_5Fdown.Fadd_5Frule.Fid := 0;
+      AddCDRule.Fcount_5Fdown.Fadd_5Frule.Fenable := 0;
+      AddCDRule.Fcount_5Fdown.Fadd_5Frule.Fname := 'Default Countdown';
+      AddCDRule.Fcount_5Fdown.Fadd_5Frule.Fdelay := 30*60;
+      AddCDRule.Fcount_5Fdown.Fadd_5Frule.Fact := 0;
+      HS1x0.Countdown_AddRule(AddCDRule).Free;
+      AddCDrule.Free;
+    end;
+
     for var i := 0  to GridC.ColCount do
      for var J := 0  to GridC.RowCount do
         GridC.Cells[i, j] := '';
@@ -463,7 +528,7 @@ begin
     GridC.Cells[0, 0] := 'Id';        GridC.ColWidths[0] := 0;
     GridC.Cells[1, 0] := 'Countdown'; GridC.ColWidths[1] := 128;
     GridC.Cells[2, 0] := 'Power';     GridC.ColWidths[2] := 68;
-    GridC.Cells[3, 0] := 'Delay';     GridC.ColWidths[3] := 68;
+    GridC.Cells[3, 0] := 'Delay (H/M)';     GridC.ColWidths[3] := 72;
     GridC.Cells[4, 0] := 'Remaining'; GridC.ColWidths[4] := 68;
     GridC.RowCount := CntDwn.Fcount_5Fdown.Fget_5Frules.Frule_5Flist.Count + 1;
     var Row := 1;
@@ -473,7 +538,12 @@ begin
       GridC.Cells[0, Row] := Countdown.FId;
       GridC.Cells[1, Row] := BEnable[Boolean(Countdown.Fenable)];
       GridC.Cells[2, Row] := BOnOff[Boolean(Countdown.Fact)];
-      GridC.Cells[3, Row] := secToDHMS(Countdown.Fdelay, False);
+
+      var Dd: integer := Countdown.Fdelay div 86400;
+      var Hd: integer := (Countdown.Fdelay - Dd * 86400) div 60 div 60;
+      var Md: integer := (Countdown.Fdelay - Dd * 86400 -  Hd * 3600) div 60;
+      var Sd: integer := Countdown.Fdelay - Dd * 86400 - Hd * 3600 - Md * 60;
+      GridC.Cells[3, Row] := Format('%.2d:%.2d', [Hd, Md]);
       GridC.Cells[4, Row] := secToDHMS(Countdown.Fremain, False);
       Inc(Row);
     end;
@@ -512,7 +582,7 @@ begin
       end;
       HS1x0.Free;
     except; end;
-    while ((Start + 1000) > GetTickCount) and not Terminated do sleep(250);
+    while ((Start + 1500) > GetTickCount) and not Terminated do sleep(250);
   end;
 end;
 
