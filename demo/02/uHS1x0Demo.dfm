@@ -30,16 +30,16 @@ object HSForm: THSForm
     object PBar: TProgressBar
       Left = 1
       Top = 10
-      Width = 730
+      Width = 726
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Max = 255
       TabOrder = 0
-      ExplicitWidth = 726
+      ExplicitWidth = 722
     end
   end
   object Button1: TButton
-    Left = 754
+    Left = 750
     Top = 10
     Width = 75
     Height = 17
@@ -47,7 +47,7 @@ object HSForm: THSForm
     Caption = 'Refresh'
     TabOrder = 1
     OnClick = Button1Click
-    ExplicitLeft = 750
+    ExplicitLeft = 746
   end
   object Panel2: TPanel
     Left = 0
@@ -77,8 +77,8 @@ object HSForm: THSForm
         FixedCols = 0
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goFixedRowDefAlign]
         PopupMenu = PopupScheds
+        ScrollBars = ssVertical
         TabOrder = 0
-        ExplicitWidth = 516
         ColWidths = (
           64
           64
@@ -97,6 +97,7 @@ object HSForm: THSForm
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goFixedRowDefAlign]
         PopupMenu = PopupCntDwn
         TabOrder = 1
+        OnDblClick = GRidCDblClick
         ExplicitWidth = 516
         ColWidths = (
           64
@@ -189,9 +190,20 @@ object HSForm: THSForm
       Caption = 'Enable / Disable'
       OnClick = Enable1Click
     end
-    object ONOFF1: TMenuItem
-      Caption = 'ON / OFF'
-      OnClick = ONOFF1Click
+    object N5: TMenuItem
+      Caption = '-'
+    end
+    object Add1: TMenuItem
+      Caption = 'Add'
+      OnClick = Add1Click
+    end
+    object Edit3: TMenuItem
+      Caption = 'Edit'
+      OnClick = Edit3Click
+    end
+    object Delete1: TMenuItem
+      Caption = 'Delete'
+      OnClick = Delete1Click
     end
   end
   object PopupCntDwn: TPopupMenu

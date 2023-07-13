@@ -1451,13 +1451,6 @@ begin
   Self.Fwday := TJsonXVarListType.Create;
 end;
 
-{
-function THS1x0_Schedule.Clone: TJsonXBaseExType;
-begin
-  Result := THS1x0_Schedule(inherited Clone);
-end;
-}
-
 function THS1x0.Schedule_AddRule(Rule: THS1x0_AddRuleRequest): THS1x0_AddRuleResponse;
 begin
   Result := nil;

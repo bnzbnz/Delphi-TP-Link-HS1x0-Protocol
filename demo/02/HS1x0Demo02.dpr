@@ -21,7 +21,8 @@ uses
   uHS1x0 in '..\..\source\uHS1x0.pas',
   uHS1x0Discovery in '..\..\source\uHS1x0Discovery.pas',
   uHS1x0Hlp in '..\..\source\uHS1x0Hlp.pas',
-  uEditCntDwnFrm in 'uEditCntDwnFrm.pas' {EditCntDwnFrm};
+  uEditCntDwnFrm in 'uEditCntDwnFrm.pas' {EditCntDwnFrm},
+  uEditScheduleFrm in 'uEditScheduleFrm.pas' {EditScheduleFrm};
 
 {$R *.res}
 
@@ -31,5 +32,6 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(THSForm, HSForm);
   Application.CreateForm(TEditCntDwnFrm, EditCntDwnFrm);
+  Application.CreateForm(TEditScheduleFrm, EditScheduleFrm);
   Application.Run;
 end.
