@@ -57,6 +57,9 @@ type
     Add1: TMenuItem;
     Edit3: TMenuItem;
     Delete1: TMenuItem;
+    N6: TMenuItem;
+    DevTEST1: TMenuItem;
+    DeleteALL1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -77,6 +80,9 @@ type
     procedure Delete1Click(Sender: TObject);
     procedure Add1Click(Sender: TObject);
     procedure Edit3Click(Sender: TObject);
+    procedure GridSDblClick(Sender: TObject);
+    procedure DevTEST1Click(Sender: TObject);
+    procedure DeleteALL1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -90,11 +96,11 @@ type
                 Thread: THSRealTime;
                 Index: Integer;
                 HS1x0: THS1x0;
-                Info: THS1x0_SystemInfoResponse;
-                RealTime: THS1x0_GetRealtimeCVResponse;
-                MonthStats, PrevMonthStats: THS1x0_GetDayStatResponse;
-                Scheds: THS1x0_GetRulesListResponse;
-                CntDwn: THS1x0_CountdownGetRulesResponse
+                Info: THS1x0_System_SystemInfoResponse;
+                RealTime: THS1x0_EMEter_GetRealtimeCVResponse;
+                MonthStats, PrevMonthStats: THS1x0_EMeter_GetDayStatResponse;
+                Scheds: THS1x0_Schedule_GetRulesListResponse;
+                CntDwn: THS1x0_Countdown_GetRulesResponse
               );
   end;
 
@@ -158,7 +164,7 @@ end;
 procedure THSForm.Delete1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
-  var Res: THS1x0_DeleteRuleResponse := Nil;
+  var Res: THS1x0_Schedule_DeleteRuleResponse := Nil;
   var IP := Grid.Cells[0, Grid.Row ];
   var ID := GridS.Cells[0, Grids.Row ];
   try
@@ -172,11 +178,41 @@ begin
   end;
 end;
 
+procedure THSForm.DeleteALL1Click(Sender: TObject);
+begin
+  var HS: THS1x0 := Nil;
+  var Res: THS1x0_Netif_GetScanInfoResponse := Nil;
+  var IP := Grid.Cells[0, Grid.Row ];
+  try
+    HS := THS1x0.Create(IP);
+    if HS = Nil then Exit;
+    HS.Schedule_DeleteAllRules.Free;
+  finally
+    HS.Free;
+  end;
+end;
+
+procedure THSForm.DevTEST1Click(Sender: TObject);
+begin
+  var HS: THS1x0 := Nil;
+  var Res: THS1x0_Netif_GetScanInfoResponse := Nil;
+  var IP := Grid.Cells[0, Grid.Row ];
+  var ID := GridC.Cells[0, Grids.Row ];
+  try
+    HS := THS1x0.Create(IP);
+    if HS = Nil then Exit;
+    Res := HS.Netif_GetScanInfo(1);
+  finally
+    Res.Free;
+    HS.Free;
+  end;
+end;
+
 procedure THSForm.Edit1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
   var Rule: THS1x0_CountDown := Nil;
-  var Req: THS1x0_CountdownEditRuleRequest := Nil;
+  var Req: THS1x0_Countdown_EditRuleRequest := Nil;
   var IP := Grid.Cells[0, Grid.Row ];
   var ID := GridC.Cells[0, Grids.Row ];
   try
@@ -185,7 +221,7 @@ begin
     Rule := HS.Countdown_GetRule(ID);
     if Rule = nil then Exit;
     Rule.Fenable := IIF(Rule.Fenable = 0, 1 ,0);
-    Req := THS1x0_CountdownEditRuleRequest.Create(Rule);
+    Req := THS1x0_Countdown_EditRuleRequest.Create(Rule);
     HS.CountDown_EditRule(Req).Free;
   finally
     Req.Free;
@@ -198,9 +234,9 @@ procedure THSForm.Edit2Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
   var Rule: THS1x0_CountDown := Nil;
-  var Req: THS1x0_CountdownEditRuleRequest := Nil;
+  var Req: THS1x0_Countdown_EditRuleRequest := Nil;
   var IP := Grid.Cells[0, Grid.Row ];
-  var ID := GridC.Cells[0, Grids.Row ];
+  var ID := GridC.Cells[0, GridC.Row ];
   try
     HS := THS1x0.Create(IP);
     if HS = nil then Exit;
@@ -208,7 +244,7 @@ begin
     if Rule = nil then Exit;
     EditCntDwnFrm.ShowAsModal(Rule);
 
-    Req := THS1x0_CountdownEditRuleRequest.Create(Rule);
+    Req := THS1x0_Countdown_EditRuleRequest.Create(Rule);
     HS.CountDown_EditRule(Req).Free;
   finally
     Req.Free;
@@ -221,7 +257,7 @@ procedure THSForm.Edit3Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
   var Rule: THS1x0_Schedule := Nil;
-  var Req: THS1x0_EditRuleRequest;
+  var Req: THS1x0_Schedule_EditRuleRequest := Nil;
   var IP := Grid.Cells[0, Grid.Row ];
   var ID := GridS.Cells[0, Grids.Row ];
   try
@@ -231,7 +267,7 @@ begin
     if Rule = nil then EXit;
     if EditScheduleFrm.ShowAsModal(Rule) then
     begin
-      Req := THS1x0_EditRuleRequest.Create(Rule);
+      Req := THS1x0_Schedule_EditRuleRequest.Create(Rule);
       HS.Schedule_EditRule(Req).Free;
     end;
   finally
@@ -245,7 +281,7 @@ procedure THSForm.Enable1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
   var Rule: THS1x0_Schedule := Nil;
-  var Req: THS1x0_EditRuleRequest := Nil;
+  var Req: THS1x0_Schedule_EditRuleRequest := Nil;
   var IP := Grid.Cells[0, Grid.Row ];
   var ID := GridS.Cells[0, Grids.Row ];
   try
@@ -254,7 +290,7 @@ begin
     Rule := HS.Schedule_GetRule(ID);
     if Rule = nil then Exit;
     Rule.Fenable := IIF(Rule.Fenable = 0, 1 ,0);
-    Req := THS1x0_EditRuleRequest.Create(Rule);
+    Req := THS1x0_Schedule_EditRuleRequest.Create(Rule);
     HS.Schedule_EditRule(Req).Free;
   finally
     Req.Free;
@@ -344,10 +380,10 @@ end;
 procedure THSForm.Add1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
-  var Rule: THS1x0_AddRuleRequest := Nil;
+  var Rule: THS1x0_Schedule_AddRuleRequest := Nil;
   var IP := Grid.Cells[0, Grid.Row ];
   try
-    Rule := THS1x0_AddRuleRequest.Create;
+    Rule := THS1x0_Schedule_AddRuleRequest.Create;
 
     Rule.Fschedule.Fadd_5Frule.Fid := '';
     Rule.Fschedule.Fadd_5Frule.Fstime_opt := 0;
@@ -401,13 +437,16 @@ begin
   Grid.RowCount := 1;
   RowThreadCnt  := 0;
 
-  HSTrealTimeList := TObjectList<THSRealTime>.Create(False);
+  HSTRealTimeList := TObjectList<THSRealTime>.Create(False);
 
   Scanner := THS1x0Discovery.Create;
   Scanner.OnScanned := OnScanned;
   Scanner.OnFound := OnFound;
-  // Scanner.Start(12, 20); // Dev Only;
-  Scanner.Start;
+
+  if (GetKeyState(VK_CONTROL) < 0 )  and (GetKeyState(VK_SHIFT) < 0) then
+    Scanner.Start(12, 20) // Dev Only;
+  else
+    Scanner.Start;
 
   Grid.Cells[0,0] := 'IP'; Grid.ColWidths[0] := 80;
   Grid.Cells[1,0] := 'Alias'; Grid.ColWidths[1] := 128;
@@ -432,6 +471,11 @@ end;
 procedure THSForm.GRidCDblClick(Sender: TObject);
 begin
   Edit2Click(Self);
+end;
+
+procedure THSForm.GridSDblClick(Sender: TObject);
+begin
+  Edit3Click(Self);
 end;
 
 procedure THSForm.GridSelectCell(Sender: TObject; ACol, ARow: Integer;
@@ -461,6 +505,8 @@ begin
     GridD.Cells[1, 3] := 'v' + Info.Fsystem.Fget_5Fsysinfo.Fsw_5Fver;
     GridD.Cells[0, 4] := 'MAC :';
     GridD.Cells[1, 4] := Info.Fsystem.Fget_5Fsysinfo.Fmac;
+    GridD.Cells[0, 5] := 'rssi :';
+    GridD.Cells[1, 5] := Info.Fsystem.Fget_5Fsysinfo.Frssi;
     Info.Free;
   end;
 
@@ -485,11 +531,11 @@ end;
 procedure THSForm.SyncGrid(
                     Thread: THSRealTime;
                     Index: Integer; HS1x0:
-                    THS1x0; Info: THS1x0_SystemInfoResponse;
-                    RealTime: THS1x0_GetRealtimeCVResponse;
-                    MonthStats, PrevMonthStats: THS1x0_GetDayStatResponse;
-                    Scheds: THS1x0_GetRulesListResponse;
-                    CntDwn: THS1x0_CountdownGetRulesResponse
+                    THS1x0; Info: THS1x0_System_SystemInfoResponse;
+                    RealTime: THS1x0_EMeter_GetRealtimeCVResponse;
+                    MonthStats, PrevMonthStats: THS1x0_EMeter_GetDayStatResponse;
+                    Scheds: THS1x0_Schedule_GetRulesListResponse;
+                    CntDwn: THS1x0_Countdown_GetRulesResponse
                   );
 var
   H, M, S, Ms:  Word;
@@ -566,7 +612,7 @@ begin
       GridS.Cells[1, Row] := Rule.FName;
       GridS.Cells[2, Row] := BEnable[Boolean(Rule.Fenable)];
       GridS.Cells[3, Row] := BOnOff[Boolean(Rule.Fsact)];
-      GridS.Cells[4, Row] :=Inttostr(Rule.Fsmin div 60) + ':'+  Inttostr(Rule.Fsmin mod 60) ;
+      GridS.Cells[4, Row] := Format('%.2d:%.2d', [Integer(Rule.Fsmin div 60), Integer(Rule.Fsmin mod 60)]) ;
       var CDay := 1;
       var DayTxt := '';
       for var Day in Rule.Fwday do
@@ -585,7 +631,7 @@ begin
     if CntDwn.Fcount_5Fdown.Fget_5Frules.Frule_5Flist.Count = 0 then
     begin
       // ?? Bug ?? We Should have at least 1 rule...
-      var AddCDRule := THS1x0_CountdownAddRuleRequest.Create;
+      var AddCDRule := THS1x0_Countdown_AddRuleRequest.Create;
       AddCDRule.Fcount_5Fdown.Fadd_5Frule.Fid := 0;
       AddCDRule.Fcount_5Fdown.Fadd_5Frule.Fenable := 0;
       AddCDRule.Fcount_5Fdown.Fadd_5Frule.Fname := 'Default Countdown';

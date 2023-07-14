@@ -143,39 +143,39 @@ type
     Fget_5Fmonthstat: THS1x0_Type071;
   end;
 
-  THS1x0_SetRelayStateResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_SetRelayStateResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type050;
   end;
 
-  THS1x0_SystemInfoResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_SystemInfoResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type051;
   end;
 
-  THS1x0_SetLedResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_SetLedResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type052;
   end;
 
-  THS1x0_GetRealtimeCVResponse = class(TJsonXBaseEx2Type)
+  THS1x0_EMeter_GetRealtimeCVResponse = class(TJsonXBaseEx2Type)
     Femeter: THS1x0_Type054;
   end;
 
-  THS1x0_SetDeviceAliasResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_SetDeviceAliasResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type055;
   end;
 
-  THS1x0_RebootResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_RebootResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type056;
   end;
 
-  THS1x0_SystemResetResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_SystemResetResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type057;
   end;
 
-  THS1x0_GetDayStatResponse = class(TJsonXBaseEx2Type)
+  THS1x0_EMeter_GetDayStatResponse = class(TJsonXBaseEx2Type)
     Femeter: THS1x0_Type058;
   end;
 
-  THS1x0_GetMonthStatResponse = class(TJsonXBaseEx2Type)
+  THS1x0_EmEter_GetMonthStatResponse = class(TJsonXBaseEx2Type)
     Femeter: THS1x0_Type070;
   end;
 
@@ -198,7 +198,7 @@ type
     Fget_5Ftime: THS1x0_Type081;
   end;
 
-  THS1x0_GetTimeResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_GetTimeResponse = class(TJsonXBaseEx2Type)
     Ftime: THS1x0_Type082;
   end;
 
@@ -212,7 +212,7 @@ type
     Fget_5Ftimezone: THS1x0_Type083;
   end;
 
-  THS1x0_GetTimezoneResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_GetTimezoneResponse = class(TJsonXBaseEx2Type)
     Ftime: THS1x0_Type084;
   end;
 
@@ -233,7 +233,7 @@ type
     constructor Create; overload;
   end;
 
-  THS1x0_SetTimezoneRequest = class(TJsonXBaseEx2Type)
+  THS1x0_System_SetTimezoneRequest = class(TJsonXBaseEx2Type)
     Ftime: THS1x0_Type086;
     constructor Create; overload;
   end;
@@ -242,7 +242,7 @@ type
     Fset_5Ftimezone: THS1x0_GenericError;
   end;
 
-  THS1x0_SetTimezoneResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_SetTimezoneResponse = class(TJsonXBaseEx2Type)
     Ftime: THS1x0_Type088;
   end;
 
@@ -252,7 +252,7 @@ type
     Fset_5Fmac_5Faddr: THS1x0_GenericError;
   end;
 
-  THS1x0_SetMACAdressResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_SetMACAdressResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type089;
   end;
 
@@ -262,7 +262,7 @@ type
     Fset_5Fdevice_5Fid: THS1x0_GenericError;
   end;
 
-  THS1x0_SetDeviceIDResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_SetDeviceIDResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type090;
   end;
 
@@ -272,7 +272,7 @@ type
     Fset_5Fhw_5Fid: THS1x0_GenericError;
   end;
 
-  THS1x0_SetHardwareIDResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_SetHardwareIDResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type091;
   end;
 
@@ -282,7 +282,7 @@ type
     Fset_5Fdev_5Flocation: THS1x0_GenericError;
   end;
 
-  THS1x0_SetDeviceLocationResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_SetDeviceLocationResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type092;
   end;
 
@@ -292,7 +292,7 @@ type
     Ftest_5Fcheck_5Fuboot: THS1x0_GenericError;
   end;
 
-  THS1x0_TestCheckUBootResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_TestCheckUBootResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type093;
   end;
 
@@ -307,7 +307,7 @@ type
     Fget_5Fdev_5Ficon: THS1x0_Type094;
   end;
 
-  THS1x0_GetDeviceIconResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_GetDeviceIconResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type095;
   end;
 
@@ -317,7 +317,7 @@ type
     Fset_5Fdev_5Ficon: THS1x0_GenericError;
   end;
 
-  THS1x0_SetDeviceIconResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_SetDeviceIconResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type096;
   end;
 
@@ -327,7 +327,7 @@ type
     Fset_5Ftest_5Fmode: THS1x0_GenericError;
   end;
 
-  THS1x0_SetTestModeResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_SetTestModeResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type097;
   end;
 
@@ -337,7 +337,7 @@ type
     Fdownload_5Ffirmware: THS1x0_GenericError;
   end;
 
-  THS1x0_DowloadFirmwareResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_DowloadFirmwareResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type098;
   end;
 
@@ -354,7 +354,7 @@ type
     Fget_5Fdownload_5Fstate: THS1x0_Type099;
   end;
 
-  THS1x0_GetDownloadStateResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_GetDownloadStateResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type100;
   end;
 
@@ -364,7 +364,7 @@ type
     Fflash_5Ffirmware: THS1x0_GenericError;
   end;
 
-  THS1x0_FlashFirmwareResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_FlashFirmwareResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type0102;
   end;
 
@@ -375,7 +375,7 @@ type
     Fcheck_5Fnew_5Fconfig: THS1x0_GenericError;
   end;
 
-  THS1x0_CheckConfigResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_CheckConfigResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type104;
   end;
 
@@ -395,7 +395,7 @@ type
     Fget_5Fscaninfo: THS1x0_Type106;
   end;
 
-  THS1x0_GetScanInfoResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Netif_GetScanInfoResponse = class(TJsonXBaseEx2Type)
     Fnetif: THS1x0_Type105;
   end;
 
@@ -405,7 +405,7 @@ type
     Fset_5Fstainfo: THS1x0_GenericError;
   end;
 
-  THS1x0_SetStaInfoResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Netif_SetStaInfoResponse = class(TJsonXBaseEx2Type)
     Fnetif: THS1x0_Type108;
   end;
 
@@ -428,7 +428,7 @@ type
     Fget_5Finfo: THS1x0_Type110
   end;
 
-  THS1x0_GetCloudInfoResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Cloud_GetCloudInfoResponse = class(TJsonXBaseEx2Type)
     FcnCloud : THS1x0_Type109;
   end;
 
@@ -447,7 +447,7 @@ type
     Fget_5Fintl_5Ffw_5Flist: THS1x0_Type113
   end;
 
-  THS1x0_GetIntlFwListResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Cloud_GetIntlFwListResponse = class(TJsonXBaseEx2Type)
     FcnCloud : THS1x0_Type112;
   end;
 
@@ -457,7 +457,7 @@ type
     Fset_5Fserver_5Furl: THS1x0_GenericError;
   end;
 
-  THS1x0_SetServerURLResponse= class(TJsonXBaseEx2Type)
+  THS1x0_Cloud_SetServerURLResponse= class(TJsonXBaseEx2Type)
     FcnCloud : THS1x0_Type115;
   end;
 
@@ -467,7 +467,7 @@ type
     Fbind: THS1x0_GenericError;
   end;
 
-  THS1x0_BindResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Cloud_BindResponse = class(TJsonXBaseEx2Type)
     FcnCloud : THS1x0_Type0117;
   end;
 
@@ -477,7 +477,7 @@ type
     Funbind: THS1x0_GenericError;
   end;
 
-  THS1x0_UnbindResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Cloud_UnbindResponse = class(TJsonXBaseEx2Type)
     FcnCloud : THS1x0_Type0119;
   end;
 
@@ -529,7 +529,7 @@ type
     Fget_5Fnext_5Faction: THS1x0_Type0127;
   end;
 
-  THS1x0_GetNextActionResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Schedule_GetNextActionResponse = class(TJsonXBaseEx2Type)
     Fschedule : THS1x0_Type0126;
   end;
 
@@ -568,7 +568,7 @@ type
     Fget_5Frules: THS1x0_Type0129;
   end;
 
-  THS1x0_GetRulesListResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Schedule_GetRulesListResponse = class(TJsonXBaseEx2Type)
     Fschedule : THS1x0_Type0128;
   end;
 
@@ -579,7 +579,7 @@ type
     constructor Create;
   end;
 
-  THS1x0_AddRuleRequest = class(TJsonXBaseEx2Type)
+  THS1x0_Schedule_AddRuleRequest = class(TJsonXBaseEx2Type)
     Fschedule : THS1x0_Type0131;
     constructor Create;
   end;
@@ -593,7 +593,7 @@ type
     Fadd_5Frule: THS1x0_Type0135;
   end;
 
-  THS1x0_AddRuleResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Schedule_AddRuleResponse = class(TJsonXBaseEx2Type)
     Fschedule : THS1x0_Type0134;
   end;
 
@@ -604,10 +604,10 @@ type
     constructor Create;
   end;
 
-  THS1x0_EditRuleRequest = class(TJsonXBaseEx2Type)
+  THS1x0_Schedule_EditRuleRequest = class(TJsonXBaseEx2Type)
     Fschedule : THS1x0_Type0136;
     constructor Create; overload;
-    constructor Create(Id: string; aRule: THS1x0_AddRuleRequest); overload;
+    constructor Create(Id: string; aRule: THS1x0_Schedule_AddRuleRequest); overload;
     constructor Create(Rule: THS1x0_Schedule); overload;
   end;
 
@@ -619,7 +619,7 @@ type
     Fedit_5Frule : THS1x0_Type0139;
   end;
 
-  THS1x0_EditRuleResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Schedule_EditRuleResponse = class(TJsonXBaseEx2Type)
     Fschedule : THS1x0_Type0138;
   end;
 
@@ -630,7 +630,7 @@ type
     Fdelete_5Frule : THS1x0_GenericError;
   end;
 
-  THS1x0_DeleteRuleResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Schedule_DeleteRuleResponse = class(TJsonXBaseEx2Type)
     Fschedule : THS1x0_Type0140;
   end;
 
@@ -640,7 +640,7 @@ type
     Fdelete_5Fall_5Frules : THS1x0_GenericError;
   end;
 
-  THS1x0_DeleteAllRulesResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Schedule_DeleteAllRulesResponse = class(TJsonXBaseEx2Type)
     Fschedule : THS1x0_Type0142;
   end;
 
@@ -664,7 +664,7 @@ type
     Fget_5Frules : THS1x0_Type0145;
   end;
 
-  THS1x0_CountdownGetRulesResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Countdown_GetRulesResponse = class(TJsonXBaseEx2Type)
     Fcount_5Fdown : THS1x0_Type0144;
   end;
 
@@ -675,7 +675,7 @@ type
     constructor Create;
   end;
 
-  THS1x0_CountdownAddRuleRequest = class(TJsonXBaseEx2Type)
+  THS1x0_Countdown_AddRuleRequest = class(TJsonXBaseEx2Type)
     Fcount_5Fdown : THS1x0_Type0146;
     constructor Create;
   end;
@@ -689,7 +689,7 @@ type
     Fadd_5Frule: THS1x0_Type0148;
   end;
 
-  THS1x0_CountdownAddRuleResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Countdown_AddRuleResponse = class(TJsonXBaseEx2Type)
     Fcount_5Fdown : THS1x0_Type0147;
   end;
 
@@ -700,7 +700,7 @@ type
     constructor Create;
   end;
 
-  THS1x0_CountdownEditRuleRequest = class(TJsonXBaseEx2Type)
+  THS1x0_Countdown_EditRuleRequest = class(TJsonXBaseEx2Type)
     Fcount_5Fdown : THS1x0_Type0151;
     constructor Create; overload;
     constructor Create(Countdown: THS1x0_Countdown); overload;
@@ -710,7 +710,7 @@ type
     Fadd_5Frule: THS1x0_GenericError;
   end;
 
-  THS1x0_CountdownEditRuleResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Countdown_EditRuleResponse = class(TJsonXBaseEx2Type)
     Fcount_5Fdown : THS1x0_Type0149;
   end;
 
@@ -720,7 +720,7 @@ type
     Fdelete_5Frule: THS1x0_GenericError;
   end;
 
-  THS1x0_CountdownDeleteRuleResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Countdown_DeleteRuleResponse = class(TJsonXBaseEx2Type)
     Fcount_5Fdown : THS1x0_Type0152;
   end;
 
@@ -730,7 +730,7 @@ type
     Fdelete_5Fall_5Frules: THS1x0_GenericError;
   end;
 
-  THS1x0_CountdownDeleteAllRulesResponse = class(TJsonXBaseEx2Type)
+  THS1x0_Countdown_DeleteAllRulesResponse = class(TJsonXBaseEx2Type)
     Fcount_5Fdown : THS1x0_Type0155;
   end;
 
@@ -851,7 +851,7 @@ type
 
 {$ENDREGION}
 
-{$REGION 'HS1x0 Intf}
+{$REGION 'HS1x0 Intf'}
 
   THS1x0 = class(TObject)
   private
@@ -870,9 +870,9 @@ type
     // Custom Commands
     function        Ping: Boolean;
     // System Commands
-    function        System_GetSysinfo: THS1x0_SystemInfoResponse;
-    function        System_Reboot: THS1x0_RebootResponse;
-    function        System_Reset(DelaySec: Integer): THS1x0_SystemResetResponse;
+    function        System_GetSysinfo: THS1x0_System_SystemInfoResponse;
+    function        System_Reboot: THS1x0_System_RebootResponse;
+    function        System_Reset(DelaySec: Integer): THS1x0_System_SystemResetResponse;
     function        System_PowerOn: Boolean;
     function        System_PowerOff: Boolean;
     function        System_LedOn: Boolean;
@@ -887,17 +887,17 @@ type
     function        System_SetDeviceIcon(Icon, Hash: string): Boolean;
     function        System_SetTestMode: Boolean; // (command only accepted coming from IP 192.168.1.100)
     function        System_DownloadFrimware(Uri: string): Boolean;
-    function        System_GetDownloadState: THS1x0_GetDownloadStateResponse;
-    function        System_FlashFirmware: THS1x0_FlashFirmwareResponse;
-    function        System_CheckConfig: THS1x0_CheckConfigResponse;
+    function        System_GetDownloadState: THS1x0_System_GetDownloadStateResponse;
+    function        System_FlashFirmware: THS1x0_System_FlashFirmwareResponse;
+    function        System_CheckConfig: THS1x0_System_CheckConfigResponse;
 
     // WLAN/Netif Commands
-    function        Netif_GetScanInfo(Refresh: Integer = 1): THS1x0_GetScanInfoResponse;
+    function        Netif_GetScanInfo(Refresh: Integer = 1): THS1x0_Netif_GetScanInfoResponse;
     function        Netif_SetStaInfo(Ssid, Password: string; KeyType: Integer): Boolean;
 
     // Cloud Commands
-    function        Cloud_GetInfo: THS1x0_GetCloudInfoResponse;
-    function        Cloud_GetIntlFwList: THS1x0_GetIntlFwListResponse;
+    function        Cloud_GetInfo: THS1x0_Cloud_GetCloudInfoResponse;
+    function        Cloud_GetIntlFwList: THS1x0_Cloud_GetIntlFwListResponse;
     function        Cloud_SetServerURL(URL: string = 'devs.tplinkcloud.com'): Boolean;
     function        Cloud_Bind(Username, Password: string): Boolean;
     function        Cloud_Unbind: Boolean;
@@ -908,29 +908,29 @@ type
     function        Time_SetTimezone(DateTime: TDateTime; TimeZoneIndex: Integer): Boolean;
 
     // Emeter Commands
-    function        Emeter_GetRealtime: THS1x0_GetRealtimeCVResponse;
+    function        Emeter_GetRealtime: THS1x0_EMeter_GetRealtimeCVResponse;
     function        Emeter_GetVGainIGain: THS1x0_GetVGainIGainResponse;
     function        Emeter_SetVGainIGain(VGain, IGain: Integer): Boolean;
     function        Emeter_StartCalibration(VTarget, ITarget: Integer): Boolean;
-    function        Emeter_GetDayStat(Month, Year: Integer): THS1x0_GetDayStatResponse; overload;
-    function        Emeter_GetDayStat(Date: TDateTime): THS1x0_GetDayStatResponse; overload;
-    function        Emeter_GetMonthStat(Date: TDateTime): THS1x0_GetMonthStatResponse;
+    function        Emeter_GetDayStat(Month, Year: Integer): THS1x0_EMeter_GetDayStatResponse; overload;
+    function        Emeter_GetDayStat(Date: TDateTime): THS1x0_EMeter_GetDayStatResponse; overload;
+    function        Emeter_GetMonthStat(Date: TDateTime): THS1x0_EMeter_GetMonthStatResponse;
     function        Emeter_Reset: Boolean;
 
     // Schedule Commands
-    function        Schedule_GetNextAction: THS1x0_GetNextActionResponse;
-    function        Schedule_GetRulesList: THS1x0_GetRulesListResponse;
-    function        Schedule_AddRule(Rule: THS1x0_AddRuleRequest): THS1x0_AddRuleResponse;
-    function        Schedule_EditRule(Rule: THS1x0_EditRuleRequest): THS1x0_EditRuleResponse;
-    function        Schedule_DeleteRule(Id: string): THS1x0_DeleteRuleResponse;
-    function        Schedule_DeleteAllRules: THS1x0_DeleteAllRulesResponse;
+    function        Schedule_GetNextAction: THS1x0_Schedule_GetNextActionResponse;
+    function        Schedule_GetRulesList: THS1x0_Schedule_GetRulesListResponse;
+    function        Schedule_AddRule(Rule: THS1x0_Schedule_AddRuleRequest): THS1x0_Schedule_AddRuleResponse;
+    function        Schedule_EditRule(Rule: THS1x0_Schedule_EditRuleRequest): THS1x0_Schedule_EditRuleResponse;
+    function        Schedule_DeleteRule(Id: string): THS1x0_Schedule_DeleteRuleResponse;
+    function        Schedule_DeleteAllRules: THS1x0_Schedule_DeleteAllRulesResponse;
 
     // Countdown Commands                                        x`
-    function        Countdown_GetRulesList: THS1x0_CountdownGetRulesResponse;
-    function        Countdown_AddRule(Rule: THS1x0_CountdownAddRuleRequest): THS1x0_CountdownAddRuleResponse;
-    function        Countdown_EditRule(Rule: THS1x0_CountdownEditRuleRequest): THS1x0_CountdownEditRuleResponse;
-    function        Countdown_DeleteRule(Id: string): THS1x0_CountdownDeleteRuleResponse;
-    function        Countdown_DeleteAllRules: THS1x0_CountdownDeleteAllRulesResponse;
+    function        Countdown_GetRulesList: THS1x0_Countdown_GetRulesResponse;
+    function        Countdown_AddRule(Rule: THS1x0_Countdown_AddRuleRequest): THS1x0_Countdown_AddRuleResponse;
+    function        Countdown_EditRule(Rule: THS1x0_Countdown_EditRuleRequest): THS1x0_Countdown_EditRuleResponse;
+    function        Countdown_DeleteRule(Id: string): THS1x0_Countdown_DeleteRuleResponse;
+    function        Countdown_DeleteAllRules: THS1x0_Countdown_DeleteAllRulesResponse;
 
     // AntiTheft Commands
     function        AntiTheft_GetRulesList: THS1x0_AnitTheftGetRulesResponse;
@@ -963,6 +963,7 @@ begin
   FTCP.Port := 9999;
   FTCP.ConnectTimeout := 500;
   FTCP.ReadTimeout := 1000;
+  FTCP.ReuseSocket := rsOSDependent;
 end;
 
 destructor THS1x0.Destroy;
@@ -1042,10 +1043,10 @@ end;
 
 {$REGION 'System Commands'}
 
-function THS1x0.System_GetSysinfo: THS1x0_SystemInfoResponse;
+function THS1x0.System_GetSysinfo: THS1x0_System_SystemInfoResponse;
 begin
   Result :=
-    TJsonX.Parser<THS1x0_SystemInfoResponse>(
+    TJsonX.Parser<THS1x0_System_SystemInfoResponse>(
       DoRequest('{"system":{"get_sysinfo":{}}}')
     );
 end;
@@ -1056,7 +1057,7 @@ begin
   Result :=  False;
   var Response := DoRequest('{"system":{"set_led_off":{"off":0}}}');
   if Response = '' then Exit;
-  var Led := TJsonX.Parser<THS1x0_SetLedResponse>(Response);
+  var Led := TJsonX.Parser<THS1x0_System_SetLedResponse>(Response);
   if Led <> nil then
   begin
     Result := Led.FSystem.Fset_5Fled_5Foff.Ferr_5Fcode = 0;
@@ -1069,7 +1070,7 @@ begin
   Result :=  False;
   var Response := DoRequest('{"system":{"set_led_off":{"off":1}}}');
   if Response = '' then Exit;
-  var Led := TJsonX.Parser<THS1x0_SetLedResponse>(Response);
+  var Led := TJsonX.Parser<THS1x0_System_SetLedResponse>(Response);
   if Led <> nil then
   begin
     Result := Led.FSystem.Fset_5Fled_5Foff.Ferr_5Fcode = 0;
@@ -1081,7 +1082,7 @@ function THS1x0.System_PowerOn: Boolean;
 begin
   Result := False;
   var Response := DoRequest('{"system":{"set_relay_state":{"state":1}}}');
-  var RelayState := TJsonX.Parser<THS1x0_SetRelayStateResponse>(Response);
+  var RelayState := TJsonX.Parser<THS1x0_System_SetRelayStateResponse>(Response);
   if RelayState <> nil then
   begin
     Result := RelayState.Fsystem.Fset_5Frelay_5Fstate.Ferr_5Fcode = 0;
@@ -1094,7 +1095,7 @@ begin
   Result := False;
   var Response := DoRequest('{"system":{"set_relay_state":{"state":0}}}');
   if Response = '' then Exit;
-  var RelayState := TJsonX.Parser<THS1x0_SetRelayStateResponse>(Response);
+  var RelayState := TJsonX.Parser<THS1x0_System_SetRelayStateResponse>(Response);
   if RelayState <> nil then
   begin
     Result := RelayState.Fsystem.Fset_5Frelay_5Fstate.Ferr_5Fcode = 0;
@@ -1102,18 +1103,18 @@ begin
   end;
 end;
 
-function THS1x0.System_Reboot: THS1x0_RebootResponse;
+function THS1x0.System_Reboot: THS1x0_System_RebootResponse;
 begin
   Result :=
-    TJsonX.Parser<THS1x0_RebootResponse>(
+    TJsonX.Parser<THS1x0_System_RebootResponse>(
       DoRequest('{"system":{"reboot":{"delay":1}}}')
     );
 end;
 
-function THS1x0.System_Reset(DelaySec: Integer): THS1x0_SystemResetResponse;
+function THS1x0.System_Reset(DelaySec: Integer): THS1x0_System_SystemResetResponse;
 begin
   Result :=
-    TJsonX.Parser<THS1x0_SystemResetResponse>(
+    TJsonX.Parser<THS1x0_System_SystemResetResponse>(
       DoRequest(Format('{"system":{"reset":{"delay":%d}}}', [DelaySec]))
     );
 end;
@@ -1123,7 +1124,7 @@ begin
   Result := False;
   var ResJSON := DoRequest(Format('{"system":{"set_dev_alias":{"alias":"%s"}}}', [NewAlias]));
   if ResJSON = '' then Exit;
-  var Response := TJsonX.Parser<THS1x0_SetDeviceAliasResponse>(ResJSON);
+  var Response := TJsonX.Parser<THS1x0_System_SetDeviceAliasResponse>(ResJSON);
   if Response <> nil then
   begin
     Result := Response.Fsystem.Fset_5Fdev_5Falias.Ferr_5Fcode = 0;
@@ -1136,7 +1137,7 @@ begin
   Result := False;
   var ResJSON := DoRequest(Format('{"system":{"set_mac_addr":{"mac":"%s"}}}}', [MAC]));
   if ResJSON = '' then Exit;
-  var Response  := TJsonX.Parser<THS1x0_SetMACAdressResponse>(ResJSON);
+  var Response  := TJsonX.Parser<THS1x0_System_SetMACAdressResponse>(ResJSON);
   if Response <> nil then
   begin
     Result := Response.Fsystem.Fset_5Fmac_5Faddr.Ferr_5Fcode = 0;
@@ -1149,7 +1150,7 @@ begin
   Result := False;
   var ResJSON := DoRequest(Format('{"system":{"test_check_uboot":null}}}', []));
   if ResJSON = '' then Exit;
-  var Response  := TJsonX.Parser<THS1x0_TestCheckUBootResponse>(ResJSON);
+  var Response  := TJsonX.Parser<THS1x0_System_TestCheckUBootResponse>(ResJSON);
   if Response <> nil then
   begin
     Result := Response.Fsystem.Ftest_5Fcheck_5Fuboot.Ferr_5Fcode = 0;
@@ -1162,7 +1163,7 @@ begin
   Result := False;
   var ResJSON := DoRequest(Format('{"system":{"get_dev_icon":null}}', []));
     if ResJSON = '' then Exit;
-  var Response := TJsonX.Parser<THS1x0_GetDEviceIconResponse>(ResJSON);
+  var Response := TJsonX.Parser<THS1x0_System_GetDEviceIconResponse>(ResJSON);
   if Response <> nil then
   begin
     Result := Response.Fsystem.Fget_5Fdev_5Ficon.Ferr_5Fcode = 0;
@@ -1175,7 +1176,7 @@ begin
   Result := False;
   var ResJSON := DoRequest(Format('{"system":{"set_device_id":{"deviceId":"%s"}}}}', [DeviceID]));
   if ResJSON = '' then Exit;
-  var Response  := TJsonX.Parser<THS1x0_SetDeviceIDResponse>(ResJSON);
+  var Response  := TJsonX.Parser<THS1x0_System_SetDeviceIDResponse>(ResJSON);
   if Response <> nil then
   begin
     Result := Response.Fsystem.Fset_5Fdevice_5Fid.Ferr_5Fcode = 0;
@@ -1188,7 +1189,7 @@ begin
   Result := False;
   var ResJSON := DoRequest(Format('{"system":{"set_hw_id":{"hwId":"%s"}}}}', [HardwareID]));
   if ResJSON = '' then Exit;
-  var Response  := TJsonX.Parser<THS1x0_SetHardwareIDResponse>(ResJSON);
+  var Response  := TJsonX.Parser<THS1x0_System_SetHardwareIDResponse>(ResJSON);
   if Response <> nil then
   begin
     Result := Response.Fsystem.Fset_5Fhw_5Fid.Ferr_5Fcode = 0;
@@ -1201,7 +1202,7 @@ begin
   Result := False;
   var ResJSON := DoRequest(Format('{"system":{"set_dev_location":{"longitude":%.6f,"latitude":%.6f}}}', [Longitude, Latitude]));
   if ResJSON = '' then Exit;
-  var Response  := TJsonX.Parser<THS1x0_SetDeviceLocationResponse>(ResJSON);
+  var Response  := TJsonX.Parser<THS1x0_System_SetDeviceLocationResponse>(ResJSON);
   if Response <> nil then
   begin
     Result := Response.Fsystem.Fset_5Fdev_5Flocation.Ferr_5Fcode = 0;
@@ -1214,7 +1215,7 @@ begin
   Result := False;
   var ResJSON := DoRequest(Format('{"system":{"set_dev_icon":{"icon":"%S","hash":"%s"}}}', [Icon, Hash]));
   if ResJSON = '' then Exit;
-  var Response  := TJsonX.Parser<THS1x0_SetDeviceIconResponse>(ResJSON);
+  var Response  := TJsonX.Parser<THS1x0_System_SetDeviceIconResponse>(ResJSON);
   if Response <> nil then
   begin
     Result := Response.Fsystem.Fset_5Fdev_5Ficon.Ferr_5Fcode = 0;
@@ -1227,7 +1228,7 @@ begin
   Result := False;
   var ResJSON := DoRequest(Format('{"system":{"set_test_mode":{"enable":1}}}', []));
   if ResJSON = '' then Exit;
-  var Response  := TJsonX.Parser<THS1x0_SetTestModeResponse>(ResJSON);
+  var Response  := TJsonX.Parser<THS1x0_System_SetTestModeResponse>(ResJSON);
   if Response <> nil then
   begin
     Result := Response.Fsystem.Fset_5Ftest_5Fmode.Ferr_5Fcode = 0;
@@ -1240,7 +1241,7 @@ begin
   Result := False;
   var ResJSON := DoRequest(Format('{"system":{"download_firmware":{"url":"%s"}}}', [Uri]));
   if ResJSON = '' then Exit;
-  var Response  := TJsonX.Parser<THS1x0_DowloadFirmwareResponse>(ResJSON);
+  var Response  := TJsonX.Parser<THS1x0_System_DowloadFirmwareResponse>(ResJSON);
   if Response <> nil then
   begin
     Result := Response.Fsystem.Fdownload_5Ffirmware.Ferr_5Fcode = 0;
@@ -1248,40 +1249,40 @@ begin
   end;
 end;
 
-function THS1x0.System_GetDownloadState: THS1x0_GetDownloadStateResponse;
+function THS1x0.System_GetDownloadState: THS1x0_System_GetDownloadStateResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest(Format('{"system":{"get_download_state":{}}}', []));
   if ResJSON = '' then Exit;
-  Result :=  TJsonX.Parser<THS1x0_GetDownloadStateResponse>(ResJSON);
+  Result :=  TJsonX.Parser<THS1x0_System_GetDownloadStateResponse>(ResJSON);
 end;
 
-function THS1x0.System_FlashFirmware: THS1x0_FlashFirmwareResponse;
+function THS1x0.System_FlashFirmware: THS1x0_System_FlashFirmwareResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest(Format('{"system":{"flash_firmware":{}}}', []));
   if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_FlashFirmwareResponse>(ResJSON);
+  Result := TJsonX.Parser<THS1x0_System_FlashFirmwareResponse>(ResJSON);
 end;
 
-function THS1x0.System_CheckConfig: THS1x0_CheckConfigResponse;
+function THS1x0.System_CheckConfig: THS1x0_System_CheckConfigResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest(Format('{"system":{"check_new_config":null}}', []));
   if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_CheckConfigResponse>(ResJSON);
+  Result := TJsonX.Parser<THS1x0_System_CheckConfigResponse>(ResJSON);
 end;
 
 {$ENDREGION}
 
 {$REGION 'WLAN Commands'}
 
-function  THS1x0.Netif_GetScanInfo(Refresh: Integer): THS1x0_GetScanInfoResponse;
+function  THS1x0.Netif_GetScanInfo(Refresh: Integer): THS1x0_Netif_GetScanInfoResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest( Format('{"netif":{"get_scaninfo":{"refresh":%d}}}}',[Refresh]));
   if ResJSON = '' then Exit;
-  Result :=  TJsonX.Parser<THS1x0_GetScanInfoResponse>(ResJSON);
+  Result :=  TJsonX.Parser<THS1x0_Netif_GetScanInfoResponse>(ResJSON);
 end;
 
 function THS1x0.Netif_SetStaInfo(Ssid, Password: string; KeyType: Integer): Boolean;
@@ -1289,7 +1290,7 @@ begin
   Result := False;
   var ResJSON := DoRequest( Format('{"netif":{"set_stainfo":{"ssid":"%s","password":"%s","key_type":%d}}}',[Ssid, Password, KeyType]));
   if ResJSON = '' then Exit;
-   var Response := TJsonX.Parser<THS1x0_SetStaInfoResponse>(ResJSON);
+   var Response := TJsonX.Parser<THS1x0_Netif_SetStaInfoResponse>(ResJSON);
   if Response <> nil then
   begin
     Result := Response.Fnetif.Fset_5Fstainfo.Ferr_5Fcode = 0;
@@ -1301,12 +1302,12 @@ end;
 
 {$REGION 'Emeter Commands'}
 
-function THS1x0.Emeter_GetRealtime: THS1x0_GetRealtimeCVResponse;
+function THS1x0.Emeter_GetRealtime: THS1x0_EMeter_GetRealtimeCVResponse;
 begin
   Result := nil;
   var Response := DoRequest('{"emeter":{"get_realtime":{}}}');
   if Response = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_GetRealtimeCVResponse>(Response);
+  Result := TJsonX.Parser<THS1x0_EMeter_GetRealtimeCVResponse>(Response);
   if Result = nil then Exit;
   if Result.Femeter.Fget_5Frealtime.Ferr_5Fcode <> 0 then Exit;
    // Compat hw v1.0/2.0
@@ -1361,12 +1362,12 @@ begin
   end;
 end;
 
-function THS1x0.Emeter_GetDayStat(Month, Year: Integer): THS1x0_GetDayStatResponse;
+function THS1x0.Emeter_GetDayStat(Month, Year: Integer): THS1x0_EMeter_GetDayStatResponse;
 begin
   Result := nil;
   var Response := DoRequest( Format('{"emeter":{"get_daystat":{"month":%d,"year":%d}}}',[Month,Year]));
   if Response = '' then Exit;
-  Result :=  TJsonX.Parser<THS1x0_GetDayStatResponse>(Response);
+  Result :=  TJsonX.Parser<THS1x0_EMeter_GetDayStatResponse>(Response);
   if Result = nil then Exit;
   if Result.Femeter.Fget_5Fdaystat.Ferr_5Fcode <> 0 then Exit;
   // Compat hw v1.0/2.0
@@ -1379,7 +1380,7 @@ begin
   end;
 end;
 
-function THS1x0.Emeter_GetDayStat(Date: TDateTime): THS1x0_GetDayStatResponse;
+function THS1x0.Emeter_GetDayStat(Date: TDateTime): THS1x0_EMeter_GetDayStatResponse;
 var
   Y, M, D: Word;
 begin
@@ -1387,7 +1388,7 @@ begin
   Result := Emeter_GetDayStat(M, Y);
 end;
 
-function THS1x0.Emeter_GetMonthStat(Date: TDateTime): THS1x0_GetMonthStatResponse;
+function THS1x0.Emeter_GetMonthStat(Date: TDateTime): THS1x0_EMeter_GetMonthStatResponse;
 var
   Y, M, D: Word;
 begin
@@ -1395,7 +1396,7 @@ begin
   DecodeDate(Date, Y, M, D);
   var Response := DoRequest( Format('{"emeter":{"get_monthstat":{"year":Y}}}',[Y]));
   if Response = '' then Exit;
-  Result :=  TJsonX.Parser<THS1x0_GetMonthStatResponse>(Response);
+  Result :=  TJsonX.Parser<THS1x0_EMeter_GetMonthStatResponse>(Response);
   if Result = nil then Exit;
   if Result.Femeter.Fget_5Fmonthstat.Ferr_5Fcode <> 0 then Exit;
   // Compat hw v1.0/2.0
@@ -1417,20 +1418,20 @@ end;
 
 {$REGION 'Schedule Commands'}
 
-function THS1x0.Schedule_GetNextAction: THS1x0_GetNextActionResponse;
+function THS1x0.Schedule_GetNextAction: THS1x0_Schedule_GetNextActionResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest( Format('{"schedule":{"get_next_action":null}}', []));
   if ResJSON = '' then Exit;
-  Result :=  TJsonX.Parser<THS1x0_GetNextActionResponse>(ResJSON);
+  Result :=  TJsonX.Parser<THS1x0_Schedule_GetNextActionResponse>(ResJSON);
 end;
 
-function THS1x0.Schedule_GetRulesList: THS1x0_GetRulesListResponse;
+function THS1x0.Schedule_GetRulesList: THS1x0_Schedule_GetRulesListResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest( Format('{"schedule":{"get_rules":null}}', []));
   if ResJSON = '' then Exit;
-  Result :=  TJsonX.Parser<THS1x0_GetRulesListResponse>(ResJSON);
+  Result :=  TJsonX.Parser<THS1x0_Schedule_GetRulesListResponse>(ResJSON);
 end;
 
 constructor THS1x0_Type0131.Create;
@@ -1439,7 +1440,7 @@ begin
   Self.Fadd_5Frule := THS1x0_Schedule.Create;
 end;
 
-constructor THS1x0_AddRuleRequest.Create;
+constructor THS1x0_Schedule_AddRuleRequest.Create;
 begin
   inherited;
   Self.Fschedule := THS1x0_Type0131.Create;
@@ -1451,14 +1452,14 @@ begin
   Self.Fwday := TJsonXVarListType.Create;
 end;
 
-function THS1x0.Schedule_AddRule(Rule: THS1x0_AddRuleRequest): THS1x0_AddRuleResponse;
+function THS1x0.Schedule_AddRule(Rule: THS1x0_Schedule_AddRuleRequest): THS1x0_Schedule_AddRuleResponse;
 begin
   Result := nil;
   var ReqJSON := TJsonX.Writer(Rule);
   if ReqJSON = '' then Exit;
   var ResJSON := DoRequest(ReqJSON);
   if ResJSON = '' then Exit;
-  Result :=  TJsonX.Parser<THS1x0_AddRuleResponse>(ResJSON);
+  Result :=  TJsonX.Parser<THS1x0_Schedule_AddRuleResponse>(ResJSON);
   if (Result <> nil) and (Result.Fschedule.Fadd_5Frule.Ferr_5Fcode = 0) then
     Rule.Fschedule.Fadd_5Frule.Fid := Result.Fschedule.Fadd_5Frule.Fid;
 end;
@@ -1469,13 +1470,13 @@ begin
   Self.Fedit_5Frule := THS1x0_Schedule.Create;
 end;
 
-constructor THS1x0_EditRuleRequest.Create;
+constructor THS1x0_Schedule_EditRuleRequest.Create;
 begin
   Inherited;
   Self.Fschedule := THS1x0_Type0136.Create;
 end;
 
-constructor THS1x0_EditRuleRequest.Create(Id: string; aRule: THS1x0_AddRuleRequest);
+constructor THS1x0_Schedule_EditRuleRequest.Create(Id: string; aRule: THS1x0_Schedule_AddRuleRequest);
 begin
   Create;
   Self.Fschedule.Fedit_5Frule.Fid := Id;
@@ -1501,7 +1502,7 @@ begin
   Self.Fschedule.Fedit_5Frule.Femin:= aRule.Fschedule.Fadd_5Frule.Femin;
 end;
 
-constructor THS1x0_EditRuleRequest.Create(Rule: THS1x0_Schedule);
+constructor THS1x0_Schedule_EditRuleRequest.Create(Rule: THS1x0_Schedule);
 begin
   Create;
   Self.Fschedule.Fedit_5Frule.Fid := Rule.Fid;
@@ -1527,43 +1528,42 @@ begin
   Self.Fschedule.Fedit_5Frule.Femin:= Rule.Femin;
 end;
 
-function THS1x0.Schedule_EditRule(Rule: THS1x0_EditRuleRequest): THS1x0_EditRuleResponse;
+function THS1x0.Schedule_EditRule(Rule: THS1x0_Schedule_EditRuleRequest): THS1x0_Schedule_EditRuleResponse;
 begin
   Result := Nil;
   var ReqJSON := TJsonX.Writer(Rule);
   if ReqJSON = '' then Exit;
   var ResJSON := DoRequest(ReqJSON);
   if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_EditRuleResponse>(ResJSON);
+  Result := TJsonX.Parser<THS1x0_Schedule_EditRuleResponse>(ResJSON);
 end;
 
-function THS1x0.Schedule_DeleteRule(Id: string): THS1x0_DeleteRuleResponse;
+function THS1x0.Schedule_DeleteRule(Id: string): THS1x0_Schedule_DeleteRuleResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest( Format('{"schedule":{"delete_rule":{"id":"%s"}}}', [Id]));
   if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_DeleteRuleResponse>(ResJSON);
+  Result := TJsonX.Parser<THS1x0_Schedule_DeleteRuleResponse>(ResJSON);
 end;
 
-function THS1x0.Schedule_DeleteAllRules: THS1x0_DeleteAllRulesResponse;
+function THS1x0.Schedule_DeleteAllRules: THS1x0_Schedule_DeleteAllRulesResponse;
+begin
+  Result := nil;
+  var ResJSON := DoRequest('{"schedule":{"delete_all_rules":null}}');
+  if ResJSON = '' then Exit;
+  Result := TJsonX.Parser<THS1x0_Schedule_DeleteAllRulesResponse>(ResJSON);
+end;
 
 {$ENDREGION}
 
-begin
-  Result := nil;
-  var ResJSON := DoRequest('{"count_down":{"delete_all_rules":null}}');
-  if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_DeleteAllRulesResponse>(ResJSON);
-end;
-
 {$REGION 'Countdown Commands'}
 
-function THS1x0.Countdown_GetRulesList: THS1x0_CountdownGetRulesResponse;
+function THS1x0.Countdown_GetRulesList: THS1x0_Countdown_GetRulesResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest('{"count_down":{"get_rules":null}}');
   if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_CountdownGetRulesResponse>(ResJSON);
+  Result := TJsonX.Parser<THS1x0_Countdown_GetRulesResponse>(ResJSON);
 end;
 
 constructor THS1x0_Type0146.Create;
@@ -1572,20 +1572,20 @@ begin
   Self.Fadd_5Frule := THS1x0_Countdown.Create;
 end;
 
-constructor THS1x0_CountdownAddRuleRequest.Create;
+constructor THS1x0_Countdown_AddRuleRequest.Create;
 begin
   Inherited;
   Self.Fcount_5Fdown := THS1x0_Type0146.Create;
 end;
 
-function THS1x0.Countdown_AddRule(Rule: THS1x0_CountdownAddRuleRequest): THS1x0_CountdownAddRuleResponse;
+function THS1x0.Countdown_AddRule(Rule: THS1x0_Countdown_AddRuleRequest): THS1x0_Countdown_AddRuleResponse;
 begin
   Result := nil;
   var ReqJSON := TJsonX.Writer(Rule);
   if ReqJSON = '' then Exit;
   var ResJSON := DoRequest(ReqJSON);
   if ResJSON = '' then Exit;
-  Result :=  TJsonX.Parser<THS1x0_CountdownAddRuleResponse>(ResJSON);
+  Result :=  TJsonX.Parser<THS1x0_Countdown_AddRuleResponse>(ResJSON);
   if (Result <> nil) and (Result.Fcount_5Fdown.Fadd_5Frule.Ferr_5Fcode = 0) then
     Rule.Fcount_5Fdown.Fadd_5Frule.Fid := Result.Fcount_5Fdown.Fadd_5Frule.Fid;
 end;
@@ -1596,13 +1596,13 @@ begin
   Fedit_5Frule := THS1x0_Countdown.Create;
 end;
 
-constructor THS1x0_CountdownEditRuleRequest.Create;
+constructor THS1x0_Countdown_EditRuleRequest.Create;
 begin
   Inherited;
   Fcount_5Fdown := THS1x0_Type0151.Create;
 end;
 
-constructor THS1x0_CountdownEditRuleRequest.Create(Countdown: THS1x0_Countdown);
+constructor THS1x0_Countdown_EditRuleRequest.Create(Countdown: THS1x0_Countdown);
 begin
   Create;
   Self.Fcount_5Fdown.Fedit_5Frule.Fid := Countdown.Fid;
@@ -1613,30 +1613,30 @@ begin
   Self.Fcount_5Fdown.Fedit_5Frule.Fremain := Countdown.Fremain;
 end;
 
-function  THS1x0.Countdown_EditRule(Rule: THS1x0_CountdownEditRuleRequest): THS1x0_CountdownEditRuleResponse;
+function  THS1x0.Countdown_EditRule(Rule: THS1x0_Countdown_EditRuleRequest): THS1x0_Countdown_EditRuleResponse;
 begin
   Result := Nil;
   var ReqJSON := TJsonX.Writer(Rule);
   if ReqJSON = '' then Exit;
   var ResJSON := DoRequest(ReqJSON);
   if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_CountdownEditRuleResponse>(ResJSON);
+  Result := TJsonX.Parser<THS1x0_Countdown_EditRuleResponse>(ResJSON);
 end;
 
-function THS1x0.Countdown_DeleteRule(Id: string): THS1x0_CountdownDeleteRuleResponse;
+function THS1x0.Countdown_DeleteRule(Id: string): THS1x0_Countdown_DeleteRuleResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest( Format('{"count_down":{"delete_rule":{"id":"7C90311A1CD3227F25C6001D88F7FC13"}}}', [Id]));
   if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_CountdownDeleteRuleResponse>(ResJSON);
+  Result := TJsonX.Parser<THS1x0_Countdown_DeleteRuleResponse>(ResJSON);
 end;
 
-function THS1x0.Countdown_DeleteAllRules: THS1x0_CountdownDeleteAllRulesResponse;
+function THS1x0.Countdown_DeleteAllRules: THS1x0_Countdown_DeleteAllRulesResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest('{"count_down":{"delete_all_rules":null}}');
   if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_CountdownDeleteAllRulesResponse>(ResJSON);
+  Result := TJsonX.Parser<THS1x0_Countdown_DeleteAllRulesResponse>(ResJSON);
 end;
 
 {$ENDREGION}
@@ -1778,20 +1778,20 @@ end;
 
 {$REGION 'Cloud Commands'}
 
-function THS1x0.Cloud_GetInfo: THS1x0_GetCloudInfoResponse;
+function THS1x0.Cloud_GetInfo: THS1x0_Cloud_GetCloudInfoResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest( Format('{"cnCloud":{"get_info":null}}',[]));
   if ResJSON = '' then Exit;
-  Result :=  TJsonX.Parser<THS1x0_GetCloudInfoResponse>(ResJSON);
+  Result :=  TJsonX.Parser<THS1x0_Cloud_GetCloudInfoResponse>(ResJSON);
 end;
 
-function THS1x0.Cloud_GetIntlFwList: THS1x0_GetIntlFwListResponse;
+function THS1x0.Cloud_GetIntlFwList: THS1x0_Cloud_GetIntlFwListResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest( Format('{"cnCloud":{"get_intl_fw_list":{}}}',[]));
   if ResJSON = '' then Exit;
-   Result :=  TJsonX.Parser<THS1x0_GetIntlFwListResponse>(ResJSON);
+   Result :=  TJsonX.Parser<THS1x0_Cloud_GetIntlFwListResponse>(ResJSON);
 end;
 
 function THS1x0.Cloud_SetServerURL(URL: string): Boolean;
@@ -1799,7 +1799,7 @@ begin
   Result := False;
   var ResJSON := DoRequest( Format('{"cnCloud":{"set_server_url":{"server":"%s"}}}',[URL]));
   if ResJSON = '' then Exit;
-  var Response :=  TJsonX.Parser<THS1x0_SetServerURLResponse>(ResJSON) ;
+  var Response :=  TJsonX.Parser<THS1x0_Cloud_SetServerURLResponse>(ResJSON) ;
   if Response <> nil then
   begin
     Result := Response.FcnCloud.Fset_5Fserver_5Furl.Ferr_5Fcode = 0;
@@ -1811,7 +1811,7 @@ function  THS1x0.Cloud_Bind(Username, Password: string): Boolean;
 begin
   Result := False;
   var ResJSON := DoRequest( Format('{"cnCloud":{"bind":{"username":"%s", "password":"%s"}}}',[Username, PAssword]));
- var Response :=  TJsonX.Parser<THS1x0_BindResponse>(ResJSON);
+ var Response :=  TJsonX.Parser<THS1x0_Cloud_BindResponse>(ResJSON);
   if Response <> nil then
   begin
     Result := Response.FcnCloud.Fbind.Ferr_5Fcode = 0;
@@ -1823,7 +1823,7 @@ function  THS1x0.Cloud_Unbind: Boolean;
 begin
   Result := False;
   var ResJSON := DoRequest( Format('{"cnCloud":{"unbind":null}}',[]));
- var Response :=  TJsonX.Parser<THS1x0_UnbindResponse>(ResJSON);
+ var Response :=  TJsonX.Parser<THS1x0_Cloud_UnbindResponse>(ResJSON);
   if Response <> nil then
   begin
     Result := Response.FcnCloud.Funbind.Ferr_5Fcode = 0;
@@ -1841,7 +1841,7 @@ end;
     Self.Fset_5Ftimezone := THS1x0_Type085.Create;
   end;
 
-  constructor THS1x0_SetTimezoneRequest.Create;
+  constructor THS1x0_System_SetTimezoneRequest.Create;
   begin
     inherited;
     Self.Ftime := THS1x0_Type086.Create;
@@ -1853,7 +1853,7 @@ end;
     Result := 0;
     var ResJSON := DoRequest('{"time":{"get_time":null}}');
     if ResJSON = '' then Exit;
-    var Response := TJsonX.Parser<THS1x0_GetTimeResponse>(ResJSON);
+    var Response := TJsonX.Parser<THS1x0_System_GetTimeResponse>(ResJSON);
     if Response.Ftime.Fget_5Ftime.Ferr_5Fcode = 0 then
       Result := EncodeDateTime(
         Response.Ftime.Fget_5Ftime.Fyear,
@@ -1872,7 +1872,7 @@ end;
     Result := -1;
     var ResJSON := DoRequest('{"time":{"get_timezone":null}}');
     if ResJSON = '' then Exit;
-    var Response := TJsonX.Parser<THS1x0_GetTimezoneResponse>(ResJSON);
+    var Response := TJsonX.Parser<THS1x0_System_GetTimezoneResponse>(ResJSON);
     if Response.Ftime.Fget_5Ftimezone.Ferr_5Fcode= 0 then
       Result := Response.Ftime.Fget_5Ftimezone.Findex;
     Response.Free;
@@ -1884,7 +1884,7 @@ end;
   begin
     Result := False;
     DecodeDateTime(DateTime, AYear, AMonth, ADay, AHour, AMinute, ASecond, AMilliSecond);
-    var Request :=  THS1x0_SetTimezoneRequest.Create;
+    var Request :=  THS1x0_System_SetTimezoneRequest.Create;
     Request.Ftime.Fset_5Ftimezone.Fyear := AYear;
     Request.Ftime.Fset_5Ftimezone.Fmonth := AMonth;
     Request.Ftime.Fset_5Ftimezone.Fmday := ADay;
@@ -1896,7 +1896,7 @@ end;
     Request.Free;
     var ResJSON := DoRequest(ReqJSON);
     if ResJSON = '' then Exit;
-    var Response := TJsonX.Parser<THS1x0_SetTimezoneResponse>(ResJSON);
+    var Response := TJsonX.Parser<THS1x0_System_SetTimezoneResponse>(ResJSON);
     Result := Response.Ftime.Fset_5Ftimezone.Ferr_5Fcode = 0;
     Response.Free;
   end;

@@ -2,7 +2,7 @@ object EditScheduleFrm: TEditScheduleFrm
   Left = 0
   Top = 0
   BorderStyle = bsSingle
-  Caption = 'Schedule'
+  Caption = 'Schedule Editor'
   ClientHeight = 318
   ClientWidth = 220
   Color = clBtnFace
@@ -35,8 +35,8 @@ object EditScheduleFrm: TEditScheduleFrm
     Caption = 'Name'
   end
   object CkbEnable: TCheckBox
-    Left = 67
-    Top = 17
+    Left = 16
+    Top = 25
     Width = 65
     Height = 17
     Caption = 'Enable'
@@ -89,7 +89,7 @@ object EditScheduleFrm: TEditScheduleFrm
     Top = 165
     Width = 187
     Height = 111
-    ItemHeight = 15
+    ItemHeight = 17
     Items.Strings = (
       'Sunday'
       'Monday'

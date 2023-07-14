@@ -29,7 +29,7 @@ object EditCntDwnFrm: TEditCntDwnFrm
     Caption = 'Delay (Hours / Minutes) :'
   end
   object CkbEnable: TCheckBox
-    Left = 75
+    Left = 16
     Top = 25
     Width = 65
     Height = 17

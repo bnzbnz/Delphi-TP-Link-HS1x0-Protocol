@@ -1,7 +1,7 @@
 object HSForm: THSForm
   Left = 0
   Top = 0
-  Caption = 'HS1x0 viewer'
+  Caption = 'HS1x0 Editor'
   ClientHeight = 521
   ClientWidth = 853
   Color = clBtnFace
@@ -28,18 +28,18 @@ object HSForm: THSForm
       853
       33)
     object PBar: TProgressBar
-      Left = 1
+      Left = 16
       Top = 10
-      Width = 726
+      Width = 705
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Max = 255
       TabOrder = 0
-      ExplicitWidth = 722
+      ExplicitWidth = 701
     end
   end
   object Button1: TButton
-    Left = 750
+    Left = 738
     Top = 10
     Width = 75
     Height = 17
@@ -47,7 +47,7 @@ object HSForm: THSForm
     Caption = 'Refresh'
     TabOrder = 1
     OnClick = Button1Click
-    ExplicitLeft = 746
+    ExplicitLeft = 734
   end
   object Panel2: TPanel
     Left = 0
@@ -79,6 +79,8 @@ object HSForm: THSForm
         PopupMenu = PopupScheds
         ScrollBars = ssVertical
         TabOrder = 0
+        OnDblClick = GridSDblClick
+        ExplicitWidth = 516
         ColWidths = (
           64
           64
@@ -115,6 +117,7 @@ object HSForm: THSForm
       Align = alLeft
       BevelInner = bvNone
       ColCount = 2
+      RowCount = 6
       FixedRows = 0
       ScrollBars = ssVertical
       TabOrder = 1
@@ -182,6 +185,15 @@ object HSForm: THSForm
       Caption = 'Stats Reset'
       OnClick = StatsReset1Click
     end
+    object N6: TMenuItem
+      Caption = '-'
+      Visible = False
+    end
+    object DevTEST1: TMenuItem
+      Caption = 'Dev TEST'
+      Visible = False
+      OnClick = DevTEST1Click
+    end
   end
   object PopupScheds: TPopupMenu
     Left = 746
@@ -204,6 +216,10 @@ object HSForm: THSForm
     object Delete1: TMenuItem
       Caption = 'Delete'
       OnClick = Delete1Click
+    end
+    object DeleteALL1: TMenuItem
+      Caption = 'Delete All'
+      OnClick = DeleteALL1Click
     end
   end
   object PopupCntDwn: TPopupMenu

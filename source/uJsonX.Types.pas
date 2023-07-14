@@ -180,7 +180,13 @@ begin
   Self.ClonePropertiesTo(Result);
 end;
 
+procedure Breakpoint; assembler;
+asm
+  int 3;
+end;
+
 procedure TJsonXBaseExType.ClonePropertiesTo(T: TJsonXBaseExType);
+
 begin
   if T = nil then exit;
   var rttictx := TRttiContext.Create();
@@ -198,7 +204,7 @@ begin
        if Instance.MetaclassType = TJsonXVarListType then
          field.SetValue(T,  TJsonXVarListType(field.GetValue(Self).AsObject).Clone)
        else
-         asm int 3 end; // TODO: Missing Type Cloning
+         Breakpoint// TODO: Missing Type Cloning
 
 
       end;

@@ -84,7 +84,7 @@ begin
     Exit;
   end;
 
-  var NumThread := 8;
+  var NumThread := 16;
   if DebugHook = 0 then NumThread := 64;
   for var i := 0 to NumThread - 1 do
   begin
