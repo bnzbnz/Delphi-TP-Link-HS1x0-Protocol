@@ -771,7 +771,7 @@ type
     Fget_5Frules: THS1x0_Type0157
   end;
 
-  THS1x0_AnitTheftGetRulesResponse = class(TJsonXBaseEx2Type)
+  THS1x0_AnitTheft_GetRulesResponse = class(TJsonXBaseEx2Type)
     Fanti_5Ftheft : THS1x0_Type0156;
   end;
 
@@ -783,7 +783,7 @@ type
     constructor Create;
   end;
 
-  THS1x0_AnitTheftAddRuleRequest = class(TJsonXBaseEx2Type)
+  THS1x0_AnitTheft_AddRuleRequest = class(TJsonXBaseEx2Type)
     Fanti_5Ftheft : THS1x0_Type0158;
     constructor Create; overload;
     constructor Create(AntiTheft: THS1x0_AntiTheft); overload;
@@ -799,7 +799,7 @@ type
     Fadd_5Frule: THS1x0_Type0160
   end;
 
-  THS1x0_AnitTheftAddRuleResponse = class(TJsonXBaseEx2Type)
+  THS1x0_AnitTheft_AddRuleResponse = class(TJsonXBaseEx2Type)
     Fanti_5Ftheft : THS1x0_Type0159;
   end;
 
@@ -810,7 +810,7 @@ type
     constructor Create;
   end;
 
-  THS1x0_AntiTheftEditRuleRequest = class(TJsonXBaseEx2Type)
+  THS1x0_AntiTheft_EditRuleRequest = class(TJsonXBaseEx2Type)
     Fanti_5Ftheft : THS1x0_Type0161;
     constructor Create; overload;
     constructor Create(AntiTheft: THS1x0_AntiTheft); overload;
@@ -825,7 +825,7 @@ type
     Fedit_5Frule: THS1x0_Type0152;
   end;
 
-  THS1x0_AntiTheftEditRuleResponse = class(TJsonXBaseEx2Type)
+  THS1x0_AntiTheft_EditRuleResponse = class(TJsonXBaseEx2Type)
     Fanti_5Ftheft : THS1x0_Type0163;
   end;
 
@@ -835,7 +835,7 @@ type
     Fdelete_5Frule: THS1x0_GenericError;
   end;
 
-  THS1x0_AntiTheftDeleteRuleResponse = class(TJsonXBaseEx2Type)
+  THS1x0_AntiTheft_DeleteRuleResponse = class(TJsonXBaseEx2Type)
     Fanti_5Ftheft : THS1x0_Type0165;
   end;
 
@@ -845,7 +845,7 @@ type
     Fdelete_5Fall_5Frules : THS1x0_GenericError;
   end;
 
-  THS1x0_AntiTheftDeleteAllRulesResponse = class(TJsonXBaseEx2Type)
+  THS1x0_AntiTheft_DeleteAllRulesResponse = class(TJsonXBaseEx2Type)
     Fanti_5Ftheft : THS1x0_Type0167;
   end;
 
@@ -933,11 +933,11 @@ type
     function        Countdown_DeleteAllRules: THS1x0_Countdown_DeleteAllRulesResponse;
 
     // AntiTheft Commands
-    function        AntiTheft_GetRulesList: THS1x0_AnitTheftGetRulesResponse;
-    function        AntiTheft_AddRule(Rule: THS1x0_AnitTheftAddRuleRequest): THS1x0_AnitTheftAddRuleResponse;
-    function        AntiTheft_EditRule(Rule: THS1x0_AntiTheftEditRuleRequest): THS1x0_AntiTheftEditRuleResponse;
-    function        AntiTheft_DeleteRule(Id: string): THS1x0_AntiTheftDeleteRuleResponse;
-    function        AntiTheft_DeleteAllRules: THS1x0_AntiTheftDeleteAllRulesResponse;
+    function        AntiTheft_GetRulesList: THS1x0_AnitTheft_GetRulesResponse;
+    function        AntiTheft_AddRule(Rule: THS1x0_AnitTheft_AddRuleRequest): THS1x0_AnitTheft_AddRuleResponse;
+    function        AntiTheft_EditRule(Rule: THS1x0_AntiTheft_EditRuleRequest): THS1x0_AntiTheft_EditRuleResponse;
+    function        AntiTheft_DeleteRule(Id: string): THS1x0_AntiTheft_DeleteRuleResponse;
+    function        AntiTheft_DeleteAllRules: THS1x0_AntiTheft_DeleteAllRulesResponse;
 
     property IP: string read FIP;
 
@@ -1649,12 +1649,12 @@ begin
   Self.Fwday := TJsonXVarListType.Create;
 end;
 
-function THS1x0.AntiTheft_GetRulesList: THS1x0_AnitTheftGetRulesResponse;
+function THS1x0.AntiTheft_GetRulesList: THS1x0_AnitTheft_GetRulesResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest('{"anti_theft":{"get_rules":null}}');
   if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_AnitTheftGetRulesResponse>(ResJSON);
+  Result := TJsonX.Parser<THS1x0_AnitTheft_GetRulesResponse>(ResJSON);
 end;
 
  constructor THS1x0_Type0158.Create;
@@ -1663,13 +1663,13 @@ end;
    Fadd_5Frule := THS1x0_AntiTheft.Create;
  end;
 
-constructor THS1x0_AnitTheftAddRuleRequest.Create;
+constructor THS1x0_AnitTheft_AddRuleRequest.Create;
 begin
   Inherited;
   Fanti_5Ftheft := THS1x0_Type0158.Create;
 end;
 
-constructor THS1x0_AnitTheftAddRuleRequest.Create(AntiTheft: THS1x0_AntiTheft);
+constructor THS1x0_AnitTheft_AddRuleRequest.Create(AntiTheft: THS1x0_AntiTheft);
 begin
   Create;
   Self.Fanti_5Ftheft.Fadd_5Frule.Fname := AntiTheft.Fname;
@@ -1698,14 +1698,14 @@ begin
   Self.Fanti_5Ftheft.Fadd_5Frule.Flastfor := AntiTheft.Flastfor;
 end;
 
-function THS1x0.AntiTheft_AddRule(Rule: THS1x0_AnitTheftAddRuleRequest): THS1x0_AnitTheftAddRuleResponse;
+function THS1x0.AntiTheft_AddRule(Rule: THS1x0_AnitTheft_AddRuleRequest): THS1x0_AnitTheft_AddRuleResponse;
 begin
   Result := Nil;
   var ReqJSON := TJsonX.Writer(Rule);
   if ReqJSON = '' then Exit;
   var ResJSON := DoRequest(ReqJSON);
   if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_AnitTheftAddRuleResponse>(ResJSON);
+  Result := TJsonX.Parser<THS1x0_AnitTheft_AddRuleResponse>(ResJSON);
   if (Result <> nil) and (Result.Fanti_5Ftheft.Fadd_5Frule.Ferr_5Fcode = 0) then
     Rule.Fanti_5Ftheft.Fadd_5Frule.Fid := Result.Fanti_5Ftheft.Fadd_5Frule.Fid;
 end;
@@ -1716,13 +1716,13 @@ begin
   Fedit_5Frule := THS1x0_AntiTheft.Create;
 end;
 
-constructor THS1x0_AntiTheftEditRuleRequest.Create;
+constructor THS1x0_AntiTheft_EditRuleRequest.Create;
 begin
   Inherited;
    Fanti_5Ftheft := THS1x0_Type0161.Create;
 end;
 
-constructor THS1x0_AntiTheftEditRuleRequest.Create(AntiTheft: THS1x0_AntiTheft);
+constructor THS1x0_AntiTheft_EditRuleRequest.Create(AntiTheft: THS1x0_AntiTheft);
 begin
   Create;
   Self.Fanti_5Ftheft.Fedit_5Frule.Fid := AntiTheft.Fid;
@@ -1748,30 +1748,30 @@ begin
   Self.Fanti_5Ftheft.Fedit_5Frule.Fforce := AntiTheft.Fforce;
 end;
 
-function THS1x0.AntiTheft_EditRule(Rule: THS1x0_AntiTheftEditRuleRequest): THS1x0_AntiTheftEditRuleResponse;
+function THS1x0.AntiTheft_EditRule(Rule: THS1x0_AntiTheft_EditRuleRequest): THS1x0_AntiTheft_EditRuleResponse;
 begin
   Result := Nil;
   var ReqJSON := TJsonX.Writer(Rule);
   if ReqJSON = '' then Exit;
   var ResJSON := DoRequest(ReqJSON);
   if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_AntiTheftEditRuleResponse>(ResJSON);
+  Result := TJsonX.Parser<THS1x0_AntiTheft_EditRuleResponse>(ResJSON);
 end;
 
-function THS1x0.AntiTheft_DeleteRule(Id: string): THS1x0_AntiTheftDeleteRuleResponse;
+function THS1x0.AntiTheft_DeleteRule(Id: string): THS1x0_AntiTheft_DeleteRuleResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest( Format('{"anti_theft":{"delete_rule":{"id":"%s"}}}', [Id]));
   if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_AntiTheftDeleteRuleResponse>(ResJSON);
+  Result := TJsonX.Parser<THS1x0_AntiTheft_DeleteRuleResponse>(ResJSON);
 end;
 
-function THS1x0.AntiTheft_DeleteAllRules: THS1x0_AntiTheftDeleteAllRulesResponse;
+function THS1x0.AntiTheft_DeleteAllRules: THS1x0_AntiTheft_DeleteAllRulesResponse;
 begin
   Result := nil;
   var ResJSON := DoRequest('{"anti_theft":{"delete_all_rules":null}}');
   if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_AntiTheftDeleteAllRulesResponse>(ResJSON);
+  Result := TJsonX.Parser<THS1x0_AntiTheft_DeleteAllRulesResponse>(ResJSON);
 end;
 
 {$ENDREGION}

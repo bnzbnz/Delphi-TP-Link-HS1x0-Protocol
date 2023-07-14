@@ -430,9 +430,6 @@ end;
 procedure THSForm.FormCreate(Sender: TObject);
 begin
 
-  if debugHook <> 0 then
-    ShowMessage('You are running in the IDE : Due to a Debugger Bug while multi-threading, the port scanning feature is going to be slow...');
-
   PBar.Position := 0;
   Grid.RowCount := 1;
   RowThreadCnt  := 0;
@@ -446,7 +443,11 @@ begin
   if (GetKeyState(VK_CONTROL) < 0 )  and (GetKeyState(VK_SHIFT) < 0) then
     Scanner.Start(12, 20) // Dev Only;
   else
+  begin
+    if debugHook <> 0 then
+      ShowMessage('You are running in the IDE : Due to a Debugger Bug while multi-threading, the port scanning feature is going to be slow...');
     Scanner.Start;
+  end;
 
   Grid.Cells[0,0] := 'IP'; Grid.ColWidths[0] := 80;
   Grid.Cells[1,0] := 'Alias'; Grid.ColWidths[1] := 128;
