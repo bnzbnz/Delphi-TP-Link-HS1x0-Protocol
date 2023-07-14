@@ -147,7 +147,7 @@ type
     Fsystem: THS1x0_Type050;
   end;
 
-  THS1x0_System_SystemInfoResponse = class(TJsonXBaseEx2Type)
+  THS1x0_System_GetSysInfoResponse = class(TJsonXBaseEx2Type)
     Fsystem: THS1x0_Type051;
   end;
 
@@ -870,7 +870,7 @@ type
     // Custom Commands
     function        Ping: Boolean;
     // System Commands
-    function        System_GetSysinfo: THS1x0_System_SystemInfoResponse;
+    function        System_GetSysinfo: THS1x0_System_GetSysInfoResponse;
     function        System_Reboot: THS1x0_System_RebootResponse;
     function        System_Reset(DelaySec: Integer): THS1x0_System_SystemResetResponse;
     function        System_PowerOn: Boolean;
@@ -1043,10 +1043,10 @@ end;
 
 {$REGION 'System Commands'}
 
-function THS1x0.System_GetSysinfo: THS1x0_System_SystemInfoResponse;
+function THS1x0.System_GetSysinfo: THS1x0_System_GetSysInfoResponse;
 begin
   Result :=
-    TJsonX.Parser<THS1x0_System_SystemInfoResponse>(
+    TJsonX.Parser<THS1x0_System_GetSysInfoResponse>(
       DoRequest('{"system":{"get_sysinfo":{}}}')
     );
 end;

@@ -96,7 +96,7 @@ type
                 Thread: THSRealTime;
                 Index: Integer;
                 HS1x0: THS1x0;
-                Info: THS1x0_System_SystemInfoResponse;
+                Info: THS1x0_System_GetSysInfoResponse;
                 RealTime: THS1x0_EMEter_GetRealtimeCVResponse;
                 MonthStats, PrevMonthStats: THS1x0_EMeter_GetDayStatResponse;
                 Scheds: THS1x0_Schedule_GetRulesListResponse;
@@ -532,7 +532,7 @@ end;
 procedure THSForm.SyncGrid(
                     Thread: THSRealTime;
                     Index: Integer; HS1x0:
-                    THS1x0; Info: THS1x0_System_SystemInfoResponse;
+                    THS1x0; Info: THS1x0_System_GetSysInfoResponse;
                     RealTime: THS1x0_EMeter_GetRealtimeCVResponse;
                     MonthStats, PrevMonthStats: THS1x0_EMeter_GetDayStatResponse;
                     Scheds: THS1x0_Schedule_GetRulesListResponse;

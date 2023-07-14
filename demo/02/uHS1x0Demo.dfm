@@ -30,16 +30,16 @@ object HSForm: THSForm
     object PBar: TProgressBar
       Left = 16
       Top = 10
-      Width = 705
+      Width = 701
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Max = 255
       TabOrder = 0
-      ExplicitWidth = 701
+      ExplicitWidth = 697
     end
   end
   object Button1: TButton
-    Left = 738
+    Left = 734
     Top = 10
     Width = 75
     Height = 17
@@ -47,7 +47,7 @@ object HSForm: THSForm
     Caption = 'Refresh'
     TabOrder = 1
     OnClick = Button1Click
-    ExplicitLeft = 734
+    ExplicitLeft = 730
   end
   object Panel2: TPanel
     Left = 0

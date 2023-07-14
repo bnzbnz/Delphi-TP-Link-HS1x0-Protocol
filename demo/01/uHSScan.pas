@@ -42,8 +42,8 @@ end;
 
 procedure OnFound(nIP: Cardinal);
 begin
-  var Info: THS1x0_SystemInfoResponse := nil;
-  var RTime  : THS1x0_GetRealtimeCVResponse := nil;
+  var Info: THS1x0_System_GetSysInfoResponse := nil;
+  var RTime  : THS1x0_EMeter_GetRealtimeCVResponse := nil;
   var IP := IpAddrToStr(nIP);
   var HS1x0 := THS1x0.Create(IP);
   try
