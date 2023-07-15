@@ -35,12 +35,13 @@ uses uHS1x0, uNetUtils;
 const
   BStrONOFF: array[Boolean] of string = ('OFF','ON');
 
-procedure OnScanned(nIP: Cardinal);
+function DoScanIP(nIP: Cardinal): Boolean;
 begin
   HSScanFrm.PBar.Position := HSScanFrm.PBar.Position + 1;
+  Result := True;
 end;
 
-procedure OnFound(nIP: Cardinal);
+procedure DoNewDevice(nIP: Cardinal);
 begin
   var Info: THS1x0_System_GetSysInfoResponse := nil;
   var RTime  : THS1x0_EMeter_GetRealtimeCVResponse := nil;
@@ -70,8 +71,8 @@ end;
 procedure THSScanFrm.FormShow(Sender: TObject);
 begin
   Scanner := THS1x0Discovery.Create;
-  Scanner.OnScanned := OnScanned;
-  Scanner.OnFound := OnFound;
+  Scanner.OnScanIP := DoScanIP;
+  Scanner.OnNewDevice := DoNewDevice;
   Scanner.Start;
 end;
 

@@ -6,7 +6,7 @@ uses Classes, System.Generics.Collections;
 type
 
   THS1x0Discovery = class;
-  THS1x0ScannedCallback = procedure(nIP: Cardinal);
+  THS1x0ScanIPCallback = function(nIP: Cardinal): Boolean;
   THS1x0FoundCallback = procedure(nIP: Cardinal);
 
   TDiscoveryThread = class(TThread)
@@ -16,15 +16,15 @@ type
     IPs: TList<Cardinal>;
     ScanNumTh: Integer;
     StartIP, EndIP: Integer;
-    FOnScanned: THS1x0ScannedCallback;
-    FOnFound: THS1x0FoundCallback;
+    FOnScanIP: THS1x0ScanIPCallback;
+    FOnNewDevice: THS1x0FoundCallback;
     procedure Execute; override;
   end;
 
   THS1x0Discovery = class(TObject)
   private
-    FOnScanned: THS1x0ScannedCallback;
-    FOnFound: THS1x0FoundCallback;
+    FOnScanIP: THS1x0ScanIPCallback;
+    FOnNewDevice: THS1x0FoundCallback;
     IPs: TList<Cardinal>;
     ScanThreadList: TObjectList<TDiscoveryThread>;
     procedure   JustWaitFor;
@@ -32,10 +32,11 @@ type
     class function Call: TList<Cardinal>;
     procedure   Start(FromPort: Byte = 0; ToPort: Byte = 255);
     procedure   Stop;
+    function    GetRunningThreadCount: Cardinal;
     constructor Create; overload;
     destructor  Destroy; override;
-    property    OnScanned: THS1x0ScannedCallback read FOnScanned write FOnScanned;
-    property    OnFound: THS1x0FoundCallback read FOnFound write FOnFound;
+    property    OnScanIP: THS1x0ScanIPCallback read FOnScanIP write FOnScanIP;
+    property    OnNewDevice: THS1x0FoundCallback read FOnNewDevice write FOnNewDevice;
   end;
 
 implementation
@@ -54,6 +55,13 @@ begin
   inherited;
 end;
 
+function THS1x0Discovery.GetRunningThreadCount: Cardinal;
+begin
+  Result := 0;
+  for var T in ScanThreadList do
+    if not T.Terminated then Inc(Result);
+end;
+
 class function THS1x0Discovery.Call: TList<Cardinal>;
 begin
   var T := THS1x0Discovery.Create;
@@ -66,7 +74,7 @@ begin
   T.Free;
 end;
 
-procedure  THS1x0Discovery.Start(FromPort, ToPort: Byte);
+procedure THS1x0Discovery.Start(FromPort, ToPort: Byte);
 begin
   if (FromPort <> 0) and (ToPort <>255) then
   begin
@@ -75,8 +83,8 @@ begin
     Th.FreeOnTerminate := False;
     TH.StartIP := FromPort;
     TH.EndIP := ToPort;
-    TH.FOnScanned := FOnScanned;
-    TH.FOnFound := FOnFound;
+    TH.FOnScanIP := FOnScanIP;
+    TH.FOnNewDevice := FOnNewDevice;
     TH.IPs := IPs;
     ScanThreadList.Add(Th);
     Th.Start;
@@ -92,8 +100,8 @@ begin
     Th.FreeOnTerminate := False;
     TH.StartIP :=  i * (256 div NumThread);
     TH.EndIP := (i + 1) * (256 div NumThread) - 1;
-    TH.FOnScanned := FOnScanned;
-    TH.FOnFound := FOnFound;
+    TH.FOnScanIP := FOnScanIP;
+    TH.FOnNewDevice := FOnNewDevice;
     TH.IPs := IPs;
     ScanThreadList.Add(Th);
     Th.Start;
@@ -120,30 +128,33 @@ end;
 
 procedure TDiscoveryThread.Execute;
 begin
+
+try
   var BaseIp := StrToIpAddr(LocalIP) and $FFFFFF00; // Class C
   for var i := StartIP to EndIP do
   begin
-    if Terminated then
-    begin
-      Terminate;
-      exit;
-    end;
+    if Terminated then Break;
     var nIP := BaseIP + Cardinal(Abs(i));
     IP := IpAddrToStr(nIP);
-    Synchronize( procedure begin  if assigned(FOnScanned) then FOnScanned(nIP); ; end );
-    var HS110 := THS1x0.Create(IP);
-    if HS110 <> Nil then
+    var MustScan: Boolean := True;
+    Synchronize( procedure begin  if assigned(FOnScanIP) then MustScan := FOnScanIP(nIP); ; end );
+    var HS1x0 := THS1x0.Create(IP);
+    if HS1x0 <> Nil then
     begin
-      if HS110.ping then
-      begin
-        Synchronize( procedure begin if assigned(FOnFound) then FOnFound(nIP); end );
-        Synchronize( procedure begin if assigned(IPs) then IPs.Add(nIP) end );
-      end;
-      HS110.Free;
+      try
+        if HS1x0.ping then
+        begin
+          Synchronize( procedure begin if assigned(FOnNewDevice) then FOnNewDevice(nIP); end );
+          Synchronize( procedure begin if assigned(IPs) then IPs.Add(nIP) end );
+        end;
+      except; end;
+      HS1x0.Free;
     end;
   end;
+finally
   Terminate;
 end;
 
+end;
 
 end.

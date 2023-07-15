@@ -83,6 +83,7 @@ type
     procedure GridSDblClick(Sender: TObject);
     procedure DevTEST1Click(Sender: TObject);
     procedure DeleteALL1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -107,8 +108,8 @@ type
 var
   HSForm : THSForm;
 
-implementation
-uses uNetUtils, DateUtils, uHS1x0Hlp;
+  implementation
+uses uHS1x0Hlp, uNetUtils, DateUtils;
 
 {$R *.dfm}
 
@@ -122,12 +123,17 @@ begin
   if C then Result := A else Result := B;
 end;
 
-procedure OnScanned(nIP: Cardinal);
+function DoScanIP(nIP: Cardinal): Boolean;
 begin
   HSForm.PBar.Position := HSForm.PBar.Position + 1;
+  HSForm.Caption := Format
+      ('HS1x0 - Scanning (%d Threads) : %s'
+      , [HSForm.Scanner.GetRunningThreadCount, IpAddrToStr(nIP)]);
+  if HSForm.PBar.Position = 255 then HSForm.Caption := 'HS1x0';
+  Result := True;
 end;
 
-procedure OnFound(nIP: Cardinal);
+procedure DoNewDevice(nIP: Cardinal);
 begin
   HSForm.InitRow(nIP);
 end;
@@ -423,6 +429,11 @@ begin
   Scanner.Start;
 end;
 
+procedure THSForm.Button2Click(Sender: TObject);
+begin
+  Stop;
+end;
+
 procedure THSForm.FormCreate(Sender: TObject);
 begin
 
@@ -433,8 +444,8 @@ begin
   HSTRealTimeList := TObjectList<THSRealTime>.Create(False);
 
   Scanner := THS1x0Discovery.Create;
-  Scanner.OnScanned := OnScanned;
-  Scanner.OnFound := OnFound;
+  Scanner.OnScanIP := DoScanIP;
+  Scanner.OnNewDevice := DoNewDevice;
 
   if (GetKeyState(VK_LSHIFT) < 0) then
   begin
