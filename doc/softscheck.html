@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<!-- saved from url=(0063)https://www.softscheck.com/en/blog/tp-link-reverse-engineering/ -->
+<html lang="en-us" data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <title>Reverse Engineering the TP-Link HS110</title>
+  <!-- Mobile responsive meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+  <meta name="description" content="**TP-Link HS110 Wi-Fi** is a cloud-enabled power plug that can be turned on and off remotely via app and offers energy monitoring and scheduling capabilities. As part of ongoing research into Internet of Things security, we performed a security analysis by reverse engineering the device firmware and Android app, sniffing app-to-device and device-to-app communications and fuzzing the proprietary protocols being used.">
+  <!-- Bootstrap -->
+  
+    <link href="https://www.softscheck.com/css/bs.min.7743dfea31818452f9091724a0473829f425380e0eef4dfa995a43518e4ffc6b.css" integrity="sha256-d0Pf6jGBhFL5CRckoEc4KfQlOA4O7036mVpDUY5P/Gs=" rel="preload stylesheet" as="style">
+  <!-- Main Stylesheet -->
+  
+  <link rel="preload stylesheet" href="https://www.softscheck.com/sass/main.min.29d99ba565fde77006690a8fd71b303f66616cf16cab4fc2a5be53b03b8444c4.css" as="style">
+  <!-- Favicon -->
+  <link rel="icon" href="https://www.softscheck.com/favicon.ico" sizes="any">
+  <link rel="icon" href="https://www.softscheck.com/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="https://www.softscheck.com/apple-touch-icon.png">
+  <link rel="manifest" href="https://www.softscheck.com/manifest.webmanifest">
+</head>
+
+  
+<body cz-shortcut-listen="true"><header>
+  <nav class="navbar fixed-top navbar-expand-lg">
+    <div class="container-fluid p-0">
+
+      
+      <a class="navbar-brand justify-content-start justify-content-lg-end ms-2" href="https://www.softscheck.com/en/">
+        <img class="dm" src="./Reverse Engineering the TP-Link HS110_files/logo.svg" alt="softScheck Logo">
+      </a>
+
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon">
+          <svg viewBox="0 0 30 30">
+            <path class="burger-menu" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path>
+          </svg>
+        </span>
+      </button>
+
+      
+      <div class="collapse navbar-collapse container-lg" id="navbarSupportedContent">
+        <ul class="navbar-nav m-auto">
+
+          
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://www.softscheck.com/en/blog/tp-link-reverse-engineering/#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Security Test</a>
+
+              <ul class="dropdown-menu mx-2">
+                <li><a class="dropdown-item" href="https://www.softscheck.com/en/threat-modeling">Threat Modeling</a></li>
+                <li><a class="dropdown-item" href="https://www.softscheck.com/en/static-source-code-analysis">Statische Code Analyse</a></li>
+                <li><a class="dropdown-item" href="https://www.softscheck.com/en/fuzzing">Fuzzing</a></li>
+                <li><a class="dropdown-item" href="https://www.softscheck.com/en/vulnerability-assessment">Vulnerability Assessment</a></li>
+                <li><a class="dropdown-item" href="https://www.softscheck.com/en/pentesting">Penetration Test</a></li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://www.softscheck.com/en/blog/tp-link-reverse-engineering/#consulting" role="button" data-bs-toggle="dropdown" aria-expanded="false">Consulting</a>
+
+              <ul class="dropdown-menu mx-2">
+                <li><a class="dropdown-item" href="https://www.softscheck.com/en/security-consulting">Security Consulting</a></li>
+                <li><a class="dropdown-item" href="https://www.softscheck.com/en/workshops">Workshops</a></li>
+                <li><a class="dropdown-item" href="https://www.softscheck.com/en/forensics">Forensics</a></li>
+                <li><a class="dropdown-item" href="https://www.softscheck.com/en/requirement-analysis">Requirements Analysis</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://www.softscheck.com/en/publications/">Publications</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="https://www.softscheck.com/en/blog/tp-link-reverse-engineering/#" role="button" data-bs-toggle="dropdown" aria-expanded="false">About Us</a>
+
+              <ul class="dropdown-menu mx-2">
+                <li><a class="dropdown-item" href="https://www.softscheck.com/en/guiding-principles">Guiding Principles</a></li>
+                <li><a class="dropdown-item" href="https://www.softscheck.com/en/partner">Partner</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://www.softscheck.com/en/contact">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://www.softscheck.com/en/blog">Blog</a>
+            </li>
+            </ul>
+        <div class="nav-item btn-group" role="group" aria-label="Language &amp; Theme switch">
+          <button type="button" class="btn" aria-label="Ins Deutsche wechseln"><a class="nav-link" title="Ins Deutsche wechseln" href="https://www.softscheck.com/de/blog/tp-link-reverse-engineering/">
+                <i class="bi bi-globe2"></i>
+                </a>
+              </button>
+          <button type="button" class="btn nav-link"><label title="Toggle Theme" id="theme-switch">
+            <input type="checkbox" class="bd-theme-toggle-checkbox" id="checkbox_theme">
+            <i id="sunmoon" class="bi bi-sun" style="display: inline-block;"></i></label></button>
+        </div>
+      </div> 
+
+      <div class="navbar-blue-banner d-none d-lg-flex">
+        <svg viewBox="0, 0, 100, 50" class="d-none d-lg-block" preserveAspectRatio="xMinYMin slice">
+          <polygon points="0,0 100,0 100,50 50,50 0,0"></polygon>
+        </svg>
+      </div>
+
+    </div>
+  </nav>
+</header>
+
+
+  
+    
+
+<section class="section">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2 text-center">
+        <h1 class="mt-3 blog">Reverse Engineering the TP-Link HS110</h1>
+        <em></em>
+
+        <div class="row mb-3">
+        <span>
+
+        
+          
+            <span class="me-2 line" title="Publication date"><i class="bi bi-calendar"></i> Jul 29, 2016</span>
+          
+        
+
+        
+          </span>
+        </div>
+        
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-9 post-single-content">
+          <p>The <strong>TP-Link HS110 Wi-Fi</strong> is a cloud-enabled power plug that can be turned on and off remotely via app and offers energy monitoring and scheduling capabilities. As part of ongoing research into Internet of Things security, we performed a security analysis by reverse engineering the device firmware and Android app, sniffing app-to-device and device-to-app communications and <a href="https://www.softscheck.com/en/fuzzing/">fuzzing</a> the proprietary protocols being used.</p>
+<p>While cloud communication was found to be reasonably secure for an IoT device, we discovered two insecure proprietary local configuration protocols: A human-readable JSON protocol "encrypted" with an easily reversible autokey XOR cipher and a binary DES-encrypted configuration and debugging protocol (<strong>TDDP – TP-Link Device Debug Protocol</strong>). TDDP is in use across most of the TP-Link product line including routers and access points and thus merits further research. We also release a <a href="https://github.com/softScheck/tplink-smartplug" target="_blank" rel="noopener">Wireshark dissector and two python clients</a> for the proprietary protocols on GitHub.</p>
+<div align="right"><a href="https://github.com/softScheck/tplink-smartplug"><img src="./Reverse Engineering the TP-Link HS110_files/github.svg" alt="GitHub Icon" width="32" height="32" class="alignnone size-full wp-image-3351"> View on GitHub</a></div>
+<h2 id="contents">Contents</h2>
+<ol>
+<li><a href="https://www.softscheck.com/en/blog/tp-link-reverse-engineering/#1-security-analysis-summary">Security Analysis Summary</a></li>
+<li><a href="https://www.softscheck.com/en/blog/tp-link-reverse-engineering/#2-device-setup">Device Setup</a></li>
+<li><a href="https://www.softscheck.com/en/blog/tp-link-reverse-engineering/#3-reverse-engineering-the-tp-link-hs110-firmware">Reverse Engineering the firmware</a></li>
+<li><a href="https://www.softscheck.com/en/blog/tp-link-reverse-engineering/#4-busybox">Busybox</a></li>
+<li><a href="https://www.softscheck.com/en/blog/tp-link-reverse-engineering/#5-portscan">Portscan</a></li>
+<li><a href="https://www.softscheck.com/en/blog/tp-link-reverse-engineering/#6-tp-link-smart-home-protocol">TP-Link Smart Home Protocol</a></li>
+<li><a href="https://www.softscheck.com/en/blog/tp-link-reverse-engineering/#7-test-mode">Test Mode</a></li>
+<li><a href="https://www.softscheck.com/en/blog/tp-link-reverse-engineering/#8-tp-link-device-debug-protocol">TP-Link Device Debug Protocol</a></li>
+</ol>
+<h2 id="1-security-analysis-summary">1. Security Analysis Summary</h2>
+<h4 id="the-good">The Good:</h4>
+<ul>
+<li>Cloud functionality can be turned off</li>
+<li>Cloud communication uses HTTPS and CA pinning</li>
+<li>Stores energy monitoring data locally</li>
+<li>Firmware update checks signature against RSA keys</li>
+</ul>
+<h4 id="the-bad">The Bad:</h4>
+<ul>
+<li>Useless encryption for local communication</li>
+<li>No authentication: Anybody on the local network can turn the Smart Plug on and off, reset it or render it inoperable</li>
+<li>TLS cloud connection could be intercepted with any valid Symantec EV certificate (only Root CA is checked)</li>
+<li>Phones home even if set up as local-only</li>
+<li>Undocumented configuration and debug service (TDDP)</li>
+</ul>
+<h2 id="2-device-setup">2. Device Setup</h2>
+<p>The Smart Plug has two physical buttons: An on/off relay switch and a device reset button that resets the device if pushed for five seconds or longer. When plugged in, an unconfigured or freshly reset Smart Plug will start an unsecured open Access Point with the SSID "<code>TP-LINK_Smart Plug_XXXX</code>" where XXXX are four hexadecimal numbers. A quick search on <a href="https://www.wigle.net/" target="_blank" rel="noopener">WiGLE</a> reveals several unconfigured TP-Link Smart Plugs in the wild:</p>
+<p>
+
+  </p><div class="text-center">
+    <figure class="figure">
+      <img src="./Reverse Engineering the TP-Link HS110_files/wigle-suche-1.webp" class="figure-img img-fluid rounded shadow" alt="WiGLE quick search" loading="lazy" decoding="async">
+      <figcaption class="figure-caption fst-italic">WiGLE quick search</figcaption>
+    </figure>
+  </div>
+
+<p></p>
+<p>TP-Link's Smart Home app "<a href="https://play.google.com/store/apps/details?id=com.tplink.kasa_android" target="_blank" rel="noopener">Kasa</a>" makes the smartphone connect to this access point, sends UDP broadcast packets to <code>255.255.255.255</code> to find the Smart Plug IP and proceeds to configure it with the SSID and password that the user entered into the app. The Smart Plug then turns off the Access Point and connects to the configured WiFi as a client.</p>
+<p>We perform a KARMA attack using the Sensepost <a href="https://github.com/sensepost/mana" target="_blank" rel="noopener">MANA Toolkit</a>, forcibly deauthenticating the Smart Plug and trying to get it to connect to a rogue Access Point with the same SSID and no security. The attack is not successful; however repeated deauthentication can be used to perform a temporary Denial of Service attack against the device.</p>
+<h2 id="3-reverse-engineering-the-tp-link-hs110-firmware">3. Reverse Engineering the TP-Link HS110 firmware</h2>
+<p>We download the current official firmware for the device (<code>HS110(US)_V1_151016.zip</code>) and use binwalk to extract the contents of the .bin file:</p>
+<p>
+
+  </p><div class="text-center">
+    <figure class="figure">
+      <img src="./Reverse Engineering the TP-Link HS110_files/binwalk-1.webp" class="figure-img img-fluid rounded shadow" alt="Binwalk" loading="lazy" decoding="async">
+      <figcaption class="figure-caption fst-italic">Binwalk</figcaption>
+    </figure>
+  </div>
+
+<p></p>
+<p>As we can see, the firmware is a typical embedded Linux system and contains three parts:</p>
+<ul>
+<li>U-Boot Bootloader 1.1.4 (Oct 16 2015 – 11:22:22)</li>
+<li>Linux Kernel 2.6.31—LSDK-9.2.0_U11.14 ("yt@yangtao.localdomain")</li>
+<li>Squashfs filesystem</li>
+</ul>
+<p>Examining the contents of the filesystem, we find the following interesting files:</p>
+<ul>
+<li>/bin/busybox v1.01 (2015.10.16-03:17+0000)</li>
+<li>/etc/newroot2048.crt</li>
+</ul>
+<p>This is the certificate used to verify the identity of the cloud server. The file contains the "<a href="https://de.ssl-tools.net/subjects/b9e9b287028503f8eca5fb42e13e0f49c72426e2" target="_blank" rel="noopener">VeriSign Class 3 Public Primary Certification Authority – G5</a>" root certificate. This means the only check performed when establishing a TLS connection to the cloud is if the provided server certificate has been signed by the Symantec/VeriSign CA for Extended Validation (EV) certificates (<a href="https://www.owasp.org/index.php/Certificate_and_Public_Key_Pinning" target="_blank" rel="noopener">CA pinning</a>). A determined attacker could buy his own EV certificate and use it to impersonate a cloud server.</p>
+<ul>
+<li>/etc/shadow</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">root:7KBNXuMnKTx6g:15502:0:99999:7:::
+</span></span></code></pre></div><p>The oldschool descrypt password is trivially broken, the password is "media".</p>
+<ul>
+<li>/usr/bin/shd – the main server application</li>
+<li>/usr/bin/shdTester – client for energy monitor calibration</li>
+<li>/usr/bin/calDump – dumps wifi calibration data from /dev/caldata</li>
+</ul>
+<p>All proprietary server logic is contained in the shd ("Smart Home Daemon") binary, which is <code>MIPS32 R2 Big Endian</code>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">shd: ELF 32-bit MSB executable, MIPS, MIPS32 rel2 version 1 (SYSV), 
+</span></span><span class="line"><span class="cl">dynamically linked, interpreter /lib/ld-uClibc.so.0, corrupted section header size
+</span></span></code></pre></div><p>The shd binary also contains a copy of <code>OpenSSL 1.0.1j 15 Oct 2014</code> for establishing TLS connections to the cloud server.
+We load the shd binary into IDA and start analyzing!</p>
+<h2 id="4-busybox">4. Busybox</h2>
+<p>The Busybox version provided in the firmware is vulnerable to <a href="https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2011-2716" target="_blank" rel="noopener">CVE-2011-2716</a>, a command injection vulnerability in the udhcpc DHCP client component of Busybox, which allows to inject shell commands into one of the following DHCP options: (12) Hostname, (15) Domainname, (40) NIS Domain or (66) TFTP Server Name. For this to work, those values have to be actually used by the shell script invoking udhcpc. Analyzing the firmware we find that the shd binary creates a shell script <code>/tmp/udhcpc.script</code> containing:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/bin/sh
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">if</span><span class="o">[</span> <span class="nv">$1</span> <span class="o">=</span> renew –o <span class="nv">$1</span> <span class="o">=</span> bound<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="k">then</span>
+</span></span><span class="line"><span class="cl">  ifconfig <span class="nv">$interface</span> <span class="nv">$ip</span> netmask <span class="nv">$subnet</span>
+</span></span><span class="line"><span class="cl">  route del default
+</span></span><span class="line"><span class="cl">  route add default gw <span class="nv">$router</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">echo</span> <span class="s2">"nameserver </span><span class="nv">$dns</span><span class="s2">"</span> &gt; /tmp/resolv.conf
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span></code></pre></div><p>It then executes udhcpc:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">/sbin/udhcpc –b –H <span class="s2">"HS100(US)"</span> –i br0 –s /tmp/udhcpc.script
+</span></span></code></pre></div><p>As we can see, the hostname is hardcoded and none of the other options are used. Unfortunately, the udhcpc vulnerability is not exploitable in this case.</p>
+<h2 id="5-portscan">5. Portscan</h2>
+<p>An nmap port scan on all TCP and UDP ports reveals the following:
+
+
+
+
+
+</p><table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Port</th>
+<th>Protocol</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>80/tcp</td>
+<td>HTTP</td>
+</tr>
+<tr>
+<td>9999/tcp</td>
+<td>TP-Link Smart Home Protocol</td>
+</tr>
+<tr>
+<td>1040/udp</td>
+<td>TP-Link Device Debug Protocol (TDDP)</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>The Webserver on Port <code>80</code> replies with a meaningless ellipsis, no matter what the request is:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+</span></span><span class="line"><span class="cl"><span class="n">Server</span><span class="o">:</span> <span class="l">TP-LINK Smart Plug</span>
+</span></span><span class="line"><span class="cl"><span class="n">Connection</span><span class="o">:</span> <span class="l">close</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Length</span><span class="o">:</span> <span class="l">5</span>
+</span></span><span class="line"><span class="cl"><span class="n">Content-Type</span><span class="o">:</span> <span class="l">text/html</span>
+</span></span><span class="line"><span class="cl"><span class="err">…</span>
+</span></span></code></pre></div><p>Looking through the shd binary we see that the HTTP Server routine is called "fake_httpd" and will always return this hardcoded reply.</p>
+<p>Port <code>9999 TCP</code> is used for controlling the Smart Plug on the local network via the Kasa app and is described in the <a href="https://www.softscheck.com/en/blog/tp-link-reverse-engineering/#6-tp-link-smart-home-protocol">TP-Link Smart Home Protocol section</a>. Port <code>1040 UDP</code> is described in the <a href="https://www.softscheck.com/en/blog/tp-link-reverse-engineering/#8-tp-link-device-debug-protocol">TP-Link Device Debug Protocol section</a>.</p>
+<h2 id="6-tp-link-smart-home-protocol">6. TP-Link Smart Home Protocol</h2>
+<p>Sniffing the local wireless network traffic reveals that the TP-Link Kasa SmartHome app talks to the HS110 Smart Plug on TCP port 9999 using what looks like encrypted data.</p>
+<p>After decompiling the Kasa app for Android, we find the encryption function:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="nf">byte</span> <span class="o">(]</span> <span class="n">m7377b</span> <span class="o">(</span><span class="kt">byte</span> <span class="o">[]</span> <span class="n">bArr</span><span class="o">){</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">(</span><span class="n">bArr</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">bArr</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">85</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i2</span> <span class="o">&lt;</span> <span class="n">bArr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i2</span><span class="o">++){</span>
+</span></span><span class="line"><span class="cl">      <span class="kt">byte</span> <span class="n">b</span> <span class="o">=</span> <span class="o">(</span><span class="kt">byte</span><span class="o">)</span> <span class="o">(</span><span class="n">i</span> <span class="o">^</span> <span class="n">bArr</span><span class="o">[</span><span class="n">i2</span><span class="o">]);</span>
+</span></span><span class="line"><span class="cl">      <span class="n">i</span> <span class="o">=</span> <span class="n">bArr</span><span class="o">[</span><span class="n">i2l</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">      <span class="n">bArr</span><span class="o">[</span><span class="n">i2</span><span class="o">]</span> <span class="o">=</span> <span class="n">b</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="o">}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="n">bArr</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><p>We see the initial key (initialization vector) i has a hardcoded value of <code>-85 (= 171)</code>. The first byte of the plaintext is <code>XORed</code> with the key. The key is then set to the plaintext byte. During the next iteration, the next plaintext byte is <code>XORed</code> with the previous plaintext byte. Decryption works the same, with the keystream made out of cyphertext bytes. This is known as an <a href="https://en.wikipedia.org/wiki/Autokey_cipher" target="_blank" rel="noopener">autokey cipher</a> and while it has better statistical properties than simple XOR encryption with a repeating key, it can be easily broken by known plaintext attacks.</p>
+<p>Now that we know the algorithm and the key, we implement a Wireshark dissector in LUA which automatically decrypts TP-Link Smart Home packets on port <code>9999</code>. It turns out that the protocol uses JSON, so we also pass the decrypted contents to the JSON dissector. We can now monitor communications between the Kasa app and the Smart Plug on the local WiFi:</p>
+<p>
+
+  </p><div class="text-center">
+    <figure class="figure">
+      <img src="./Reverse Engineering the TP-Link HS110_files/wireshark-dissector-1.webp" class="figure-img img-fluid rounded" alt="Wireshark Dissector" loading="lazy" decoding="async">
+      <figcaption class="figure-caption fst-italic">Wireshark Dissector</figcaption>
+    </figure>
+  </div>
+
+<p></p>
+<p>The Smart Plug commands are grouped into the following categories:</p>
+<ul>
+<li>system</li>
+<li>netif (WLAN interface commands)</li>
+<li>cnCloud (cloud connection)</li>
+<li>time</li>
+<li>emeter (energy meter)</li>
+<li>schedule (scheduled on/off)</li>
+<li>count_down (countdown on/off)</li>
+<li>anti_theft (random scheduled on/off)</li>
+</ul>
+<p>We provide a comprehensive list of JSON commands (<a href="https://github.com/softScheck/tplink-smartplug/blob/master/tplink-smarthome-commands.txt" target="_blank" rel="noopener">tplink-smarthome-commands.txt</a>) and a python client to send them with (<a href="https://github.com/softScheck/tplink-smartplug/blob/master/tplink_smartplug.py" target="_blank" rel="noopener">tplink_smartplug.py</a>).</p>
+<h4 id="61-system-commands">6.1 System Commands</h4>
+<p>We can read out information about the system using the <code>get_sysinfo</code> command:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">"system"</span><span class="p">:{</span><span class="nt">"get_sysinfo"</span><span class="p">:{}}}</span>
+</span></span></code></pre></div><p>To send the command using our python client, invoke it with the <code>–c</code> info option:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">./tplink_smartplug.py –t 192.168.0.1 –c info
+</span></span></code></pre></div><p>We provide several predefined commands to read out information from the HS110 Smart Plug using <code>–c</code> options.
+Alternatively, you can use the <code>–j</code> option and provide the full JSON string:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">./tplink_smartplug.py –t 192.168.0.1 –j <span class="s1">'{"system":{"get_sysinfo":{}}}'</span>
+</span></span></code></pre></div><p>This allows to send any of the commands listed in <code>tplink-smarthome-commands.txt</code>.
+The <code>get_sysinfo</code> reply will contain the following information:</p>
+
+
+
+
+
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Command</th>
+<th>Info</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>err_code</td>
+<td>0 = no error</td>
+</tr>
+<tr>
+<td>sw_ver</td>
+<td>Software Version, currently "1.0.8 Build 151101 Rel.24452"</td>
+</tr>
+<tr>
+<td>hw_ver</td>
+<td>Hardware Version, currently "1.0"</td>
+</tr>
+<tr>
+<td>type</td>
+<td>"smartplug"</td>
+</tr>
+<tr>
+<td>model</td>
+<td>"HS110 (EU)"</td>
+</tr>
+<tr>
+<td>mac</td>
+<td>MAC address of WiFi interface</td>
+</tr>
+<tr>
+<td>deviceId</td>
+<td>Device ID, 40 char hex string</td>
+</tr>
+<tr>
+<td>hwID</td>
+<td>Hardware ID, 32 char hex string</td>
+</tr>
+<tr>
+<td>fwID</td>
+<td>Firmware ID, 32 char hex string</td>
+</tr>
+<tr>
+<td>oemID</td>
+<td>OEM ID, 32 char hex string</td>
+</tr>
+<tr>
+<td>alias</td>
+<td>Text description, e.g. "Basement Lights"</td>
+</tr>
+<tr>
+<td>dev_name</td>
+<td>"Wi-Fi Smart Plug With Energy Monitoring"</td>
+</tr>
+<tr>
+<td>icon hash</td>
+<td>Hash for custom picture</td>
+</tr>
+<tr>
+<td>relav state</td>
+<td>O = Off, 1 = on</td>
+</tr>
+<tr>
+<td>on time</td>
+<td>0</td>
+</tr>
+<tr>
+<td>active mode</td>
+<td>"schedule" for Schedule Mode</td>
+</tr>
+<tr>
+<td>feature</td>
+<td>"TIM:ENE" (Timer, Energy Monitor)</td>
+</tr>
+<tr>
+<td>updating</td>
+<td>O = not updating</td>
+</tr>
+<tr>
+<td>rssi</td>
+<td>Signal Strength Indicator in dBm (e.g. - 35)</td>
+</tr>
+<tr>
+<td>led off</td>
+<td>O = LED on (default), 1 = LED turned off</td>
+</tr>
+<tr>
+<td>latitude</td>
+<td>Optional geolocation information</td>
+</tr>
+<tr>
+<td>logitude</td>
+<td>Optional geolocation information</td>
+</tr>
+</tbody>
+</table>
+
+<p>We can turn the HS110 Smart Plug on and off using the <code>set_relay_state</code> command, using <code>1</code> for on and <code>0</code> for off:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">"system"</span><span class="p">:{</span><span class="nt">"set_relay_state"</span><span class="p">:{</span><span class="nt">"state"</span><span class="p">:</span><span class="mi">1</span><span class="p">}}}</span>
+</span></span></code></pre></div><p>We can reboot the HS110 Smart Plug using the <code>reboot</code> command which requires a <code>delay</code> parameter in seconds:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">"system"</span><span class="p">:{</span><span class="nt">"reboot"</span><span class="p">:{</span><span class="nt">"delay"</span><span class="p">:</span><span class="mi">1</span><span class="p">}}}</span>
+</span></span></code></pre></div><p>The HS110 Smart Plug can be reset to factory settings, making it act as an open Access Point again:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">"system"</span><span class="p">:{</span><span class="nt">"reset"</span><span class="p">:{</span><span class="nt">"delay"</span><span class="p">:</span><span class="mi">1</span><span class="p">}}}</span>
+</span></span></code></pre></div><p>Note that since the protocol does not provide authentication, anybody on your network can send this command and force a reset. Here, a prankster would set a high delay value, giving them time to leave the premises.</p>
+<p>There are further commands to change the MAC address, change the Device and Hardware IDs, turn off the device LED (night mode) etc.</p>
+<p>Of special interest are the firmware flashing commands. You can download a&nbsp; firmware file from an arbitrary URL using:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">"system"</span><span class="p">:{</span><span class="nt">"download_firmware"</span><span class="p">:{</span><span class="nt">"url"</span><span class="p">:</span><span class="s2">"http://..."</span><span class="p">}}}</span>
+</span></span></code></pre></div><p>While downloading, you can get the download state using:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">"system"</span><span class="p">:{</span><span class="nt">"get_download_state"</span><span class="p">:{}}}</span>
+</span></span></code></pre></div><p>Once the download is finished, you can flash the firmware using:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">"system"</span><span class="p">:{</span><span class="nt">"flash_firmware"</span><span class="p">:{}}}</span>
+</span></span></code></pre></div><p>Flashing a modified image will not work since the image's signature has to match one of four hardcoded RSA keys (we won’t go into wild speculations why there are four keys here):</p>
+<p>
+
+  </p><div class="text-center">
+    <figure class="figure">
+      <img src="./Reverse Engineering the TP-Link HS110_files/checkfirmware2-1.webp" class="figure-img img-fluid rounded" alt="HS110 checkfirmware2" loading="lazy" decoding="async">
+      <figcaption class="figure-caption fst-italic">HS110 checkfirmware2</figcaption>
+    </figure>
+  </div>
+
+<p></p>
+<h4 id="62-wifi-commands">6.2 WiFi Commands</h4>
+<p>You can instruct the HS110 Smart Plug to scan for a list of nearby Access Points:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">"netif"</span><span class="p">:{</span><span class="nt">"get_scaninfo"</span><span class="p">:{</span><span class="nt">"refresh"</span><span class="p">:</span><span class="mi">1</span><span class="p">}}}</span>
+</span></span></code></pre></div><p>This will return a list of all the available visible APs in the area.</p>
+<p>Connecting to an AP with a given SSID and password is done using the command <code>set_stainfo</code> (<code>key_type 3</code> indicates WPA2):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">"netif"</span><span class="p">:{</span><span class="nt">"set_stainfo"</span><span class="p">:{</span><span class="nt">"ssid"</span><span class="p">:</span><span class="s2">"WiFi"</span><span class="p">,</span><span class="nt">"password"</span><span class="p">:</span><span class="s2">"123"</span><span class="p">,</span><span class="nt">"key_type"</span><span class="p">:</span><span class="mi">3</span><span class="p">}}}</span>
+</span></span></code></pre></div><p>Note that all JSON commands are accepted independent of the device state! Connecting to an Access Point would only be necessary in the unconfigured state when the HS110 Smart Plug is acting as an AP. Using the <code>set_stainfo</code> command you can force the Plug to connect to a different WiFi on the fly.</p>
+<h4 id="63-cloud-commands">6.3 Cloud Commands</h4>
+<p>The HS110 Smart Plug regularly tries to connect to the TP-Link cloud server at <code>devs.tplinkcloud.com:50443</code> using TLS. This behavior continues even if the HS110 Smart Plug is configured as "local only" in the Kasa app. Fortunately for us, there is a command to change the cloud server URL:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">"cnCloud"</span><span class="p">:{</span><span class="nt">"set_server_url"</span><span class="p">:{</span><span class="nt">"server"</span><span class="p">:</span><span class="s2">"devs.tplinkcloud.com"</span><span class="p">}}}</span>
+</span></span></code></pre></div><p>The shd binary tries to establish a TLS 1.0 connection with the provided URL and checks if the server certificate is signed by Symantec's EV Root CA stored under <code>/etc/newroot2048.crt</code>. An attacker with the necessary funds could purchase a valid EV certificate and perform a Man-in-the-Middle attack on the communication between HS110 Smart Plug and cloud.</p>
+<p>To register the device with the cloud we issue the bind command and provide a valid cloud account name and password:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">"cnCloud"</span><span class="p">:{</span><span class="nt">"bind"</span><span class="p">:{</span><span class="nt">"username"</span><span class="p">:</span><span class="err">alice@home.com</span><span class="p">,</span> <span class="nt">"password"</span><span class="p">:</span><span class="s2">"secret"</span><span class="p">}}}</span>
+</span></span></code></pre></div><p>It's interesting to note that registration will fail if the Smart Plug's hwID is unknown to the cloud server. This means TP-Link either performs a checksum or other type of plausibility check or checks against a complete list of devices. Either way, this allows TP-Link to track all devices throughout their lifetime.</p>
+<p>You can unregister a device from the cloud account using unbind:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">"cnCloud"</span><span class="p">:{</span><span class="nt">"unbind"</span><span class="p">:</span><span class="kc">null</span><span class="p">}}</span>
+</span></span></code></pre></div><p>This allows an attacker on the local network to unregister the device, forcing the device owner to register again. The attacker can then capture the bind registration command sent by the Kasa app and sees the owner's tplinkcloud.com credentials in cleartext!</p>
+<h2 id="7-test-mode">7. Test Mode</h2>
+<p>Analyzing the shd binary, we discovered a hidden "test mode" in the HS110 Smart Plug. It can be invoked remotely or via a command-line argument to the shd binary.</p>
+<h4 id="71-command-line-test-mode">7.1 Command-Line Test Mode</h4>
+<p>The shd binary can be launched using a –t option which makes it enter test mode:</p>
+<p>
+
+  </p><div class="text-center">
+    <figure class="figure">
+      <img src="./Reverse Engineering the TP-Link HS110_files/testmodecmd-1.webp" class="figure-img img-fluid rounded shadow" alt="HS110 testmodecmd" loading="lazy" decoding="async">
+      <figcaption class="figure-caption fst-italic">HS110 testmodecmd</figcaption>
+    </figure>
+  </div>
+
+<p></p>
+<p>This calls a function called <code>wlan_start_art</code> which looks promising because it executes the Atheros Radio Test (ART) client code for performance-testing Atheros wireless adapters.&nbsp; This piece of debugging code already led to a vulnerability in TP-Link Routers in 2013 where it could be triggered using a hidden URL on the device webserver: <a href="http://sekurak.pl/tp-link-httptftp-backdoor/" target="_blank" rel="noopener">TP-Link http/tftp backdoor</a></p>
+<p>The function <code>wlan_start_art</code> runs the following system commands:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/tmp
+</span></span><span class="line"><span class="cl">arping –I br0 –c <span class="m">1</span> 192.168.0.100
+</span></span><span class="line"><span class="cl">tftp –g 192.168.0.100 –r ap_bin/ap121/art.ko –l /tmp/art.ko
+</span></span><span class="line"><span class="cl">insmod /tmp/art.ko
+</span></span><span class="line"><span class="cl">tftp –g 192.168.0.100 –r ap_bin/ap121/nart.out –l /tmp/nart.out
+</span></span><span class="line"><span class="cl">chmod +x /tmp/nart.out
+</span></span><span class="line"><span class="cl">/tmp/nart.out –instance <span class="m">0</span> <span class="p">&amp;</span>
+</span></span></code></pre></div><p>The commands connect to a TFTP Server, download a file called <code>nart.out</code>, make it executable and run it. This can be easily used to root the device. All one would need to do is to host a shell script called <code>nart.out</code> on a TFTP server with the IP <code>192.168.0.100</code> under the path <code>ap_bin/ap121/</code>. The shell script would start the busybox telnetd daemon:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">/bin/busybox telnetd –l/bin/sh <span class="p">&amp;</span>
+</span></span></code></pre></div><p>However, we have no way of invoking the shd binary on the device with the –t option.</p>
+<h4 id="72-remote-test-mode">7.2 Remote Test Mode</h4>
+<p>Going through all the JSON commands in the shd binary we find a command called <code>set_test_mode</code>. This means test mode can be enabled remotely!</p>
+<p>This is the only JSON command which, as a primitive sort of protection, requires the request to originate from the IP <code>192.168.0.100</code>. The easiest way to do this is to reset the HS110 Smart Plug and connect to its AP since the DHCP server is configured to issue IPs starting with <code>192.168.0.100</code>. Next, send the set_test_mode command:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">./tplink-smarthome.py -t 192.168.0.1 -j <span class="s1">'{"system":{"set_test_mode":{"enable":1}}}'</span>
+</span></span></code></pre></div><p>This writes a special test mode flag into the device's NVRAM. The flag is checked during boot, and if set the HS110 Smart Plug boots into test mode.</p>
+<p>Reboot the Smart Plug using:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">./tplink-smarthome.py -t 192.168.0.1 -c reboot
+</span></span></code></pre></div><p>The Smart Plug will try to connect to a WPA2-secured Access Point with the SSID "<code>hs_test</code>" and password "<code>12345670</code>" and then turn on the plug's relay:</p>
+<p>
+
+  </p><div class="text-center">
+    <figure class="figure">
+      <img src="./Reverse Engineering the TP-Link HS110_files/testmode4-1.webp" class="figure-img img-fluid rounded shadow" alt="HS110 testmode4" loading="lazy" decoding="async">
+      <figcaption class="figure-caption fst-italic">HS110 testmode4</figcaption>
+    </figure>
+  </div>
+
+<p></p>
+<p>To set up the <code>hs_test</code> AP, we use hostapd with the following hostapd.conf:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ini" data-lang="ini"><span class="line"><span class="cl"><span class="na">interface</span><span class="o">=</span><span class="s">wlan0</span>
+</span></span><span class="line"><span class="cl"><span class="na">driver</span><span class="o">=</span><span class="s">nl80211</span>
+</span></span><span class="line"><span class="cl"><span class="na">ssid</span><span class="o">=</span><span class="s">hs_test</span>
+</span></span><span class="line"><span class="cl"><span class="na">wpa</span><span class="o">=</span><span class="s">2</span>
+</span></span><span class="line"><span class="cl"><span class="na">wpa_passphrase</span><span class="o">=</span><span class="s">12345670</span>
+</span></span><span class="line"><span class="cl"><span class="na">channel</span><span class="o">=</span><span class="s">1</span>
+</span></span></code></pre></div><p>As expected, the HS110 Smart Plug connects to our <code>hs_test</code> AP. We then observe the Smart Plug going through its regular setup: Request an IP via DHCP, synchronize the time using a server from the NTP-Pool (<code>cn.pool.ntp.org</code>) and connect to the TP-Link Cloud server at <code>devs.tplinkcloud.com:50443</code>.</p>
+<p>Unfortunately, the Smart Plug's behavior was no different in test mode than after a regular boot. While there is a reference to the <code>wlan_start_art</code> function in the remote test mode code, it is in a part without any references leading to it. This likely means that the function call to that part was commented out.</p>
+<h2 id="8-tp-link-device-debug-protocol">8. TP-Link Device Debug Protocol</h2>
+<p>A portscan of the HS110 Smart Plug revealed an open UDP port of <code>1040</code>. Analyzing the shd binary for <code>setsockopt()</code> calls, we could see the port was being bound by a component called "TDDP". The protocol seemed to be binary and designed in a very stealthy manner so that no reply is given whatsoever unless a fully valid packet was sent to the port. Reverse-engineering the protocol would have been a major new undertaking and fortunately, we didn't have to.</p>
+<p><strong>Hacked by Patent</strong></p>
+<p>After quite a bit of googling for "TP-Link" and "TDDP", we discovered the protocol had been patented in China as patents "<code>CN 102096654 A</code>" and "<code>CN 102123140 B</code>" which Google handily auto-translates into English:</p>
+<p><a href="http://www.google.com/patents/CN102096654A?cl=en" target="_blank" rel="noopener">http://www.google.com/patents/CN102096654A?cl=en</a></p>
+<p>A complete protocol specification is included in the patent description and shows you how to construct a TDDP packet.</p>
+<p>TDDP can be used to ping or discover a TP-Link Device on the network through broadcasts, read and set configuration options and execute special device-specific commands. TDDP provides integrity through an MD5 digest of the whole packet included in the packet header:</p>
+
+
+
+
+
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Block 1</th>
+<th>Block 2</th>
+<th>Block 3</th>
+<th>Block 4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ver</td>
+<td>Type</td>
+<td>Code</td>
+<td>ReplyInfo</td>
+</tr>
+<tr>
+<td>PktLength</td>
+<td>PktLength</td>
+<td>PktLength</td>
+<td>PktLength</td>
+</tr>
+<tr>
+<td>PktID</td>
+<td>PktID</td>
+<td>SubType</td>
+<td>Reserve</td>
+</tr>
+<tr>
+<td>Digest 0</td>
+<td>Digest 1</td>
+<td>Digest 2</td>
+<td>Digest 3</td>
+</tr>
+<tr>
+<td>Digest 4</td>
+<td>Digest 5</td>
+<td>Digest 6</td>
+<td>Digest 7</td>
+</tr>
+<tr>
+<td>Digest 8</td>
+<td>Digest 9</td>
+<td>Digest 10</td>
+<td>Digest 11</td>
+</tr>
+<tr>
+<td>Digest 12</td>
+<td>Digest 13</td>
+<td>Digest 14</td>
+<td>Digest 15</td>
+</tr>
+</tbody>
+</table>
+
+<p>It also encrypts the packet payload using DES. This means that any configuration data we read out will be encrypted in the reply, and any configuration we want to write needs to be sent encrypted.</p>
+<p>The DES key is determined by concatenating the device's username and password, building an MD5 hash of that string, and then using the first half of the MD5 (16-digit hex number or 8 bytes) or  as the DES key:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">md5<span class="o">(</span>username + password<span class="o">)[</span>:16<span class="o">]</span>
+</span></span></code></pre></div><p>Since the HS110 Smart Plug does not provide any authentication, the username and password are hardcoded into the shd binary as admin/admin:</p>
+<p>
+
+  </p><div class="text-center">
+    <figure class="figure">
+      <img src="./Reverse Engineering the TP-Link HS110_files/tddpadmin-1.webp" class="figure-img img-fluid rounded" alt="tddpadmin" loading="lazy" decoding="async">
+      <figcaption class="figure-caption fst-italic">tddpadmin</figcaption>
+    </figure>
+  </div>
+
+<p></p>
+<p>For other TP-Link devices, this means an attacker has a highly efficient way to check for default passwords and perform an offline brute-force attack on the login.
+With a single UDP packet, they can request information that is already known (we found a "Heartbeat"/ping request in the SmartPlug that always returns "ABCD0110) or can be easily determined (e.g. MAC address). The encrypted reply can then be brute-forced offline trying different combinations for username (likely "admin") and password.</p>
+<p>We provide a very basic proof-of-concept TDDP client which tries to read out one of three values from a TP-Link device by using a packet type of <code>0x03</code> and specific hex-values in the "SubType" header field:</p>
+<p>
+
+  </p><div class="text-center">
+    <figure class="figure">
+      <img src="./Reverse Engineering the TP-Link HS110_files/tddp-1.webp" class="figure-img img-fluid rounded" alt="HS110 tddp" loading="lazy" decoding="async">
+      <figcaption class="figure-caption fst-italic">HS110 tddp</figcaption>
+    </figure>
+  </div>
+
+<p></p>
+<p><code>0x0A</code> returns the test string "<code>ABCD0110</code>", <code>0x012</code> return the deviceID and <code>0x14</code> returns the hardwareID. They might return different types of information on other types of TP-Link devices. We also found additional values which changed the deviceID (<code>0x13</code>, <code>0x15</code>), the hardwareID (<code>0x12</code>) and the MAC address (<code>0x06</code>).</p>
+<p>The binary TDDP protocol <strong>merits further research</strong> since it is available on a broad range of TP-Link devices. The possibility for device-specific special commands (<code>CMD_SPE_OPR</code>) has potential to uncover undocumented functions, vulnerabilities or even backdoors. As a next step, different TP-Link devices should be fuzzed with the full range of hex values in the TDDP header and their behavior monitored and analyzed.</p>
+<h4 id="update-19062018">UPDATE 19.06.2018:</h4>
+<p>TP-Link has updated their firmware. If you install this firmware upgrade, tplink_smartplug.py does not work anymore.</p>
+<h4 id="update-04072018">UPDATE 04.07.2018:</h4>
+<p>We updated our tool. It now supports TP-Link HS100, HS105 and HS110 with the latest firmware. Hostnames instead of IP addresses are also supported and the script can now be imported as a Python module. A big thank you to the persons who opened issues and pull requests on GitHub.</p>
+<p>Read about other interesting topics on our <a href="https://www.softscheck.com/en/blog/">blog</a>.</p>
+
+        </div>
+      </div>
+        
+    </div>
+  </div>
+</section>
+
+
+
+    
+<footer class="container-fluid d-flex flex-column">
+
+  <!-- Locations -->
+  <div class="container-lg row mx-auto">
+    <div class="col-12 col-sm d-flex flex-column text-center my-3 my-md-0">
+        <span class="footer-country">Germany</span>
+        <small>
+          <p>
+          softScheck GmbH<br>
+          Bonner Str. 108<br>
+          53757 Sankt Augustin<br>
+          <a href="tel:+492241255430">+49 2241 255 430</a><br>
+          <a href="mailto:info@softscheck.com">info@softscheck.com</a><br>
+            <a href="https://www.softscheck.com/info-at-softscheck-publickey.asc.txt">(PGP)</a>
+          </p>
+        </small>
+      </div>
+    <div class="col-12 col-sm d-flex flex-column text-center my-3 my-md-0">
+        <span class="footer-country">Singapore</span>
+        <small>
+          <p>
+          softScheck Singapore Pte Ltd<br>
+          24 Raffles Place #28-00<br>
+          Clifford Centre<br>
+          Singapore 048621<br>
+          <a href="tel:+6566323680">+65 6632 3680</a><br>
+          <a href="mailto:info@softscheck.sg">info@softscheck.sg</a><br>
+            
+          </p>
+        </small>
+      </div>
+    <div class="col-12 col-sm d-flex flex-column text-center my-3 my-md-0">
+        <span class="footer-country">Indonesia</span>
+        <small>
+          <p>
+          
+          Office 8, Level 18-A, Jl. Jend. Sudirman Kav 52-53<br>
+          Sudirman Central Business District Lot 28<br>
+          Jakarta, Indonesia<br>
+          <a href="tel:+85770352123">+857 7035 2123</a><br>
+          <a href="mailto:info.id@softscheck.sg">info.id@softscheck.sg</a><br>
+            
+          </p>
+        </small>
+      </div>
+    </div>
+
+  <!-- Social media links and copyright -->
+  <div class="d-flex flex-row">
+    <div class="blue-banner d-none d-lg-flex">
+      <svg viewBox="0, 0, 100, 50" class="d-none d-lg-block" preserveAspectRatio="xMaxYMax slice">
+        <polygon points="0,0 50,0 100,50 0,50 0,0"></polygon>
+      </svg>
+    </div>
+    <div class="icons-and-copyright d-flex flex-column container">
+      <div class="social-icons list-inline text-center">
+        <ul>
+        <li class="list-inline-item"><a href="https://twitter.com/softscheck" title="Twitter"><i class="bi bi-twitter"></i></a></li>
+        <li class="list-inline-item"><a href="https://social.tchncs.de/web/@softScheck" title="Mastodon"><i class="bi bi-mastodon"></i></a></li>
+        <li class="list-inline-item"><a href="https://github.com/softscheck" title="GitHub"><i class="bi bi-github"></i></a></li>
+        <li class="list-inline-item"><a href="https://de.linkedin.com/company/softscheck-gmbh" title="LinkedIn"><i class="bi bi-linkedin"></i></a></li>
+        </ul>
+      </div>
+      <div class="copyright text-center">
+        <p>
+          
+          <br>
+          <a href="https://www.softscheck.com/en/imprint">
+            Imprint
+          </a> ·
+          <a href="https://www.softscheck.com/en/privacy">
+            Privacy
+          </a>
+        </p>
+      </div>
+    </div>
+    <div class="spacer d-none d-lg-flex"></div>
+  </div>
+</footer>
+
+<!-- Javascript --><script src="./Reverse Engineering the TP-Link HS110_files/bootstrap.bundle.min.js.download"></script>
+  <script src="./Reverse Engineering the TP-Link HS110_files/main.min.d90d9feb58f0affed8b53eb1e0934e0422594bdc689162c4be6678d5f046f236.js.download" defer=""></script>
+
+  
+
+
+<div id="syno-notification-is-installed"></div></body></html>
