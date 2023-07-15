@@ -57,9 +57,8 @@ type
     Add1: TMenuItem;
     Edit3: TMenuItem;
     Delete1: TMenuItem;
-    N6: TMenuItem;
-    DevTEST1: TMenuItem;
     DeleteALL1: TMenuItem;
+    DevTestMenu: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -81,7 +80,7 @@ type
     procedure Add1Click(Sender: TObject);
     procedure Edit3Click(Sender: TObject);
     procedure GridSDblClick(Sender: TObject);
-    procedure DevTEST1Click(Sender: TObject);
+    procedure DevTestMenuClick(Sender: TObject);
     procedure DeleteALL1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
   private
@@ -126,9 +125,10 @@ end;
 function DoScanIP(nIP: Cardinal): Boolean;
 begin
   HSForm.PBar.Position := HSForm.PBar.Position + 1;
-  HSForm.Caption := Format
-      ('HS1x0 - Scanning (%d Threads) : %s'
-      , [HSForm.Scanner.GetRunningThreadCount, IpAddrToStr(nIP)]);
+  HSForm.Caption := Format(
+                      'HS1x0 - Scanning (%d Threads) : %s'
+                      , [HSForm.Scanner.GetRunningThreadCount, IpAddrToStr(nIP)]
+                    );
   if HSForm.PBar.Position = 255 then HSForm.Caption := 'HS1x0';
   Result := True;
 end;
@@ -197,18 +197,15 @@ begin
   end;
 end;
 
-procedure THSForm.DevTEST1Click(Sender: TObject);
+procedure THSForm.DevTestMenuClick(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
-  var Res: THS1x0_Netif_GetScanInfoResponse := Nil;
   var IP := Grid.Cells[0, Grid.Row ];
-  var ID := GridC.Cells[0, Grids.Row ];
   try
     HS := THS1x0.Create(IP);
     if HS = Nil then Exit;
-    Res := HS.Netif_GetScanInfo(1);
+    // Debug something
   finally
-    Res.Free;
     HS.Free;
   end;
 end;
@@ -247,10 +244,11 @@ begin
     if HS = nil then Exit;
     Rule := HS.Countdown_GetRule(ID);
     if Rule = nil then Exit;
-    EditCntDwnFrm.ShowAsModal(Rule);
-
-    Req := THS1x0_Countdown_EditRuleRequest.Create(Rule);
-    HS.CountDown_EditRule(Req).Free;
+    if EditCntDwnFrm.ShowAsModal(Rule) then
+    begin
+      Req := THS1x0_Countdown_EditRuleRequest.Create(Rule);
+      HS.CountDown_EditRule(Req).Free;
+    end;
   finally
     Req.Free;
     Rule.Free;
@@ -447,14 +445,16 @@ begin
   Scanner.OnScanIP := DoScanIP;
   Scanner.OnNewDevice := DoNewDevice;
 
-  if (GetKeyState(VK_LSHIFT) < 0) then
+  if (GetKeyState(VK_CONTROL) < 0) then
   begin
-    Scanner.Start(12, 20); // Dev Only 1 Thread
-  end  else begin
+    Scanner.Start(11, 20); // Dev Only 1 Thread
+    SetForegroundWindow(Handle);
+  end else begin
     if debugHook <> 0 then
       ShowMessage('You are running in the IDE : Due to a Debugger Bug while multi-threading, the port scanning feature is going to be slow...');
     Scanner.Start;
   end;
+
 
   Grid.Cells[0,0] := 'IP'; Grid.ColWidths[0] := 80;
   Grid.Cells[1,0] := 'Alias'; Grid.ColWidths[1] := 128;
@@ -513,8 +513,10 @@ begin
     GridD.Cells[1, 3] := 'v' + Info.Fsystem.Fget_5Fsysinfo.Fsw_5Fver;
     GridD.Cells[0, 4] := 'MAC :';
     GridD.Cells[1, 4] := Info.Fsystem.Fget_5Fsysinfo.Fmac;
-    GridD.Cells[0, 5] := 'rssi :';
-    GridD.Cells[1, 5] := Info.Fsystem.Fget_5Fsysinfo.Frssi;
+    GridD.Cells[0, 5] := 'Features :';
+    GridD.Cells[1, 5] := Info.Fsystem.Fget_5Fsysinfo.Ffeature;
+    GridD.Cells[0, 6] := 'Rssi :';
+    GridD.Cells[1, 6] := Info.Fsystem.Fget_5Fsysinfo.Frssi;
     Info.Free;
   end;
 
