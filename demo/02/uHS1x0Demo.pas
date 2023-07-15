@@ -122,7 +122,7 @@ begin
   if C then Result := A else Result := B;
 end;
 
-procedure OnScanned;
+procedure OnScanned(nIP: Cardinal);
 begin
   HSForm.PBar.Position := HSForm.PBar.Position + 1;
 end;
@@ -139,7 +139,7 @@ begin
   TH.IP := IpAddrToStr(nIP);
   Grid.Cells[0, Grid.RowCount] := TH.IP;
   HSTrealTimeList.Add(TH);
-  TH.Priority := tpIdle;
+  TH.Priority := tpLowest;
   Grid.RowCount := Grid.RowCount + 1;
   TH.Start;
   Grid.Refresh;
@@ -181,7 +181,6 @@ end;
 procedure THSForm.DeleteALL1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
-  var Res: THS1x0_Netif_GetScanInfoResponse := Nil;
   var IP := Grid.Cells[0, Grid.Row ];
   try
     HS := THS1x0.Create(IP);
@@ -360,15 +359,12 @@ end;
 
 procedure THSForm.Stop;
 begin
-   for var Th in HSTrealTimeList do
+ Scanner.Stop;
+ for var Th in HSTrealTimeList do
     Th.Terminate;
-
-  Scanner.Stop;
-
   PBar.Position := 0;
   Grid.RowCount := 1;
   RowThreadCnt  := 0;
-
   for var Th in HSTrealTimeList do
   begin
     Th.WaitFor;
@@ -440,10 +436,10 @@ begin
   Scanner.OnScanned := OnScanned;
   Scanner.OnFound := OnFound;
 
-  if (GetKeyState(VK_CONTROL) < 0 )  and (GetKeyState(VK_SHIFT) < 0) then
-    Scanner.Start(12, 20) // Dev Only;
-  else
+  if (GetKeyState(VK_LSHIFT) < 0) then
   begin
+    Scanner.Start(12, 20); // Dev Only 1 Thread
+  end  else begin
     if debugHook <> 0 then
       ShowMessage('You are running in the IDE : Due to a Debugger Bug while multi-threading, the port scanning feature is going to be slow...');
     Scanner.Start;
@@ -541,7 +537,6 @@ procedure THSForm.SyncGrid(
 var
   H, M, S, Ms:  Word;
 begin
-  GridS.BeginUpdate;
   Grid.BeginUpdate;
 
   Grid.Cells[1, Index] := Info.Fsystem.Fget_5Fsysinfo.Falias;
@@ -591,12 +586,13 @@ begin
   end;
 
  if (Scheds <> Nil) and (Index = Grid.Row)  then
-  begin
-
+ begin
+    GridS.BeginUpdate;
+    (*
     for var i := 0  to GridS.ColCount do
      for var J := 0  to GridS.RowCount do
         GridS.Cells[i, j] := '';
-
+     *)
     GridS.Cells[0, 0] := 'Id';    GridS.ColWidths[0] := 0;
     GridS.Cells[1, 0] := 'Schedule';  GridS.ColWidths[1] := 128;
     GridS.Cells[2, 0] := 'Status'; GridS.ColWidths[2] := 68;
@@ -624,12 +620,15 @@ begin
       GridS.Cells[5, Row] := DayTxt;
       Inc(Row);
     end;
+
+    GridS.EndUpdate;
   end;
 
   if (CntDwn <> Nil) and (Index = Grid.Row)  then
   begin
+    GridC.BeginUpdate;
 
-    if CntDwn.Fcount_5Fdown.Fget_5Frules.Frule_5Flist.Count = 0 then
+   if CntDwn.Fcount_5Fdown.Fget_5Frules.Frule_5Flist.Count = 0 then
     begin
       // ?? Bug ?? We Should have at least 1 rule...
       var AddCDRule := THS1x0_Countdown_AddRuleRequest.Create;
@@ -669,10 +668,14 @@ begin
       Inc(Row);
     end;
 
+    GridC.EndUpdate;
   end;
 
   Grid.EndUpdate;
-  GridS.EndUpdate;
+
+  Grid.Refresh;
+  GridS.Refresh;
+  GridC.Refresh;
 end;
 
 { THS1x0Thread }
@@ -703,7 +706,7 @@ begin
       end;
       HS1x0.Free;
     except; end;
-    while ((Start + 1000) > GetTickCount) and not Terminated do sleep(250);
+    while ((Start + 1000) > GetTickCount) and not Terminated do sleep(100);
   end;
 end;
 

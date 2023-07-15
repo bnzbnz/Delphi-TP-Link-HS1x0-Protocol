@@ -35,7 +35,7 @@ uses uHS1x0, uNetUtils;
 const
   BStrONOFF: array[Boolean] of string = ('OFF','ON');
 
-procedure OnScanned;
+procedure OnScanned(nIP: Cardinal);
 begin
   HSScanFrm.PBar.Position := HSScanFrm.PBar.Position + 1;
 end;

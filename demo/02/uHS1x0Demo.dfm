@@ -30,16 +30,16 @@ object HSForm: THSForm
     object PBar: TProgressBar
       Left = 16
       Top = 10
-      Width = 701
+      Width = 693
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Max = 255
       TabOrder = 0
-      ExplicitWidth = 697
+      ExplicitWidth = 689
     end
   end
   object Button1: TButton
-    Left = 734
+    Left = 726
     Top = 10
     Width = 75
     Height = 17
@@ -47,7 +47,7 @@ object HSForm: THSForm
     Caption = 'Refresh'
     TabOrder = 1
     OnClick = Button1Click
-    ExplicitLeft = 730
+    ExplicitLeft = 722
   end
   object Panel2: TPanel
     Left = 0
@@ -74,8 +74,10 @@ object HSForm: THSForm
         Height = 112
         Align = alTop
         ColCount = 6
+        DoubleBuffered = True
         FixedCols = 0
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goFixedRowDefAlign]
+        ParentDoubleBuffered = False
         PopupMenu = PopupScheds
         ScrollBars = ssVertical
         TabOrder = 0
@@ -95,8 +97,10 @@ object HSForm: THSForm
         Width = 520
         Height = 95
         Align = alBottom
+        DoubleBuffered = True
         FixedCols = 0
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goFixedRowDefAlign]
+        ParentDoubleBuffered = False
         PopupMenu = PopupCntDwn
         TabOrder = 1
         OnDblClick = GRidCDblClick
@@ -131,10 +135,12 @@ object HSForm: THSForm
     Align = alClient
     ColCount = 10
     DefaultColWidth = 80
+    DoubleBuffered = True
     FixedCols = 0
     RowCount = 1
     FixedRows = 0
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goFixedRowDefAlign]
+    ParentDoubleBuffered = False
     PopupMenu = Popup
     TabOrder = 3
     OnSelectCell = GridSelectCell

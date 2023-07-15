@@ -1007,8 +1007,8 @@ var
   Stream: TMemoryStream;
 begin
   Stream := nil;
-  LReq := JsonBody;
   try
+    LReq := JsonBody;
     try
       FTCP.Connect;
       Stream := Encrypt(JsonBody);
@@ -1019,13 +1019,12 @@ begin
       var ResSize := FTCP.IOHandler.ReadInt32(True);
       FTCP.IOHandler.ReadStream(Stream, ResSize);
       Result := Decrypt(Stream);
-      LRes := Result;
     except
       Result := '';
     end;
   finally
-    FTCP.Disconnect;
     LRes := Result;
+    FTCP.Disconnect;
     Stream.Free;
   end;
 end;

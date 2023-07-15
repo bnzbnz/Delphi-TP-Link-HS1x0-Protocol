@@ -4,8 +4,8 @@ object EditCntDwnFrm: TEditCntDwnFrm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Countdown Editor'
-  ClientHeight = 208
-  ClientWidth = 222
+  ClientHeight = 181
+  ClientWidth = 217
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,21 +16,21 @@ object EditCntDwnFrm: TEditCntDwnFrm
   TextHeight = 15
   object Label1: TLabel
     Left = 16
-    Top = 62
+    Top = 49
     Width = 41
     Height = 15
     Caption = 'Action :'
   end
   object Label2: TLabel
     Left = 16
-    Top = 101
+    Top = 85
     Width = 132
     Height = 15
     Caption = 'Delay (Hours / Minutes) :'
   end
   object CkbEnable: TCheckBox
     Left = 16
-    Top = 25
+    Top = 17
     Width = 65
     Height = 17
     Caption = 'Enable'
@@ -38,7 +38,7 @@ object EditCntDwnFrm: TEditCntDwnFrm
   end
   object ComboBox1: TComboBox
     Left = 115
-    Top = 59
+    Top = 46
     Width = 88
     Height = 23
     Style = csDropDownList
@@ -51,7 +51,7 @@ object EditCntDwnFrm: TEditCntDwnFrm
   end
   object Button1: TButton
     Left = 16
-    Top = 168
+    Top = 144
     Width = 187
     Height = 25
     Caption = 'OK'
@@ -60,7 +60,7 @@ object EditCntDwnFrm: TEditCntDwnFrm
   end
   object TimePicker1: TTimePicker
     Left = 16
-    Top = 122
+    Top = 106
     Width = 187
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText

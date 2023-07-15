@@ -6,7 +6,7 @@ uses Classes, System.Generics.Collections;
 type
 
   THS1x0Discovery = class;
-  THS1x0ScannedCallback = procedure;
+  THS1x0ScannedCallback = procedure(nIP: Cardinal);
   THS1x0FoundCallback = procedure(nIP: Cardinal);
 
   TDiscoveryThread = class(TThread)
@@ -26,7 +26,6 @@ type
     FOnScanned: THS1x0ScannedCallback;
     FOnFound: THS1x0FoundCallback;
     IPs: TList<Cardinal>;
-    ScannedCnt: Integer;
     ScanThreadList: TObjectList<TDiscoveryThread>;
     procedure   JustWaitFor;
   public
@@ -40,7 +39,7 @@ type
   end;
 
 implementation
-uses uHS1x0, uNetUtils;
+uses uHS1x0, uNetUtils, windows;
 
 constructor THS1x0Discovery.Create;
 begin
@@ -84,8 +83,8 @@ begin
     Exit;
   end;
 
-  var NumThread := 16;
-  if DebugHook = 0 then NumThread := 64;
+  var NumThread := 8;
+  if not IsDebuggerPresent then NumThread := 128;
   for var i := 0 to NumThread - 1 do
   begin
     var Th := TDiscoveryThread.Create(True);
@@ -129,15 +128,16 @@ begin
       Terminate;
       exit;
     end;
-    IP := IpAddrToStr(BaseIP + Abs(i));
-    Synchronize( procedure begin  if assigned(FOnScanned) then FOnScanned; ; end );
+    var nIP := BaseIP + Cardinal(Abs(i));
+    IP := IpAddrToStr(nIP);
+    Synchronize( procedure begin  if assigned(FOnScanned) then FOnScanned(nIP); ; end );
     var HS110 := THS1x0.Create(IP);
     if HS110 <> Nil then
     begin
       if HS110.ping then
       begin
-        Synchronize( procedure begin if assigned(FOnFound) then FOnFound(BaseIP + Abs(i)); end );
-        Synchronize( procedure begin if assigned(IPs) then IPs.Add(BaseIP + Abs(i)) end );
+        Synchronize( procedure begin if assigned(FOnFound) then FOnFound(nIP); end );
+        Synchronize( procedure begin if assigned(IPs) then IPs.Add(nIP) end );
       end;
       HS110.Free;
     end;
