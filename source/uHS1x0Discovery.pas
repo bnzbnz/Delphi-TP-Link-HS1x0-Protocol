@@ -6,6 +6,10 @@ uses Classes, System.Generics.Collections;
 type
 
   THS1x0Discovery = class;
+  TDiscoveryThread = class;
+
+  THS1x0DoneEvent = procedure of object;
+  THS1x0DoneCallback = procedure;
   THS1x0ScanIPCallback = function(nIP: Cardinal): Boolean;
   THS1x0FoundCallback = procedure(nIP: Cardinal);
 
@@ -18,16 +22,20 @@ type
     StartIP, EndIP: Integer;
     FOnScanIP: THS1x0ScanIPCallback;
     FOnNewDevice: THS1x0FoundCallback;
+    FOnDone: THS1x0DoneEvent;
     procedure Execute; override;
   end;
 
   THS1x0Discovery = class(TObject)
   private
+    FThreadCount: Integer;
     FOnScanIP: THS1x0ScanIPCallback;
     FOnNewDevice: THS1x0FoundCallback;
+    FOnDone: THS1x0DoneCallback;
     IPs: TList<Cardinal>;
     ScanThreadList: TObjectList<TDiscoveryThread>;
     procedure   JustWaitFor;
+    procedure   DoDone;
   public
     class function Call: TList<Cardinal>;
     procedure   Start(FromPort: Byte = 0; ToPort: Byte = 255);
@@ -37,6 +45,7 @@ type
     destructor  Destroy; override;
     property    OnScanIP: THS1x0ScanIPCallback read FOnScanIP write FOnScanIP;
     property    OnNewDevice: THS1x0FoundCallback read FOnNewDevice write FOnNewDevice;
+    property    OnDone: THS1x0DoneCallback read FOnDone write FOnDone;
   end;
 
 implementation
@@ -91,17 +100,18 @@ begin
     Exit;
   end;
 
-  var NumThread := 8;
-  if not IsDebuggerPresent then NumThread := 128;
-  for var i := 0 to NumThread - 1 do
+  FThreadCount:= 8;
+  if not IsDebuggerPresent then FThreadCount := 128;
+  for var i := 0 to FThreadCount - 1 do
   begin
     var Th := TDiscoveryThread.Create(True);
     Th.Priority := tpIdle;
     Th.FreeOnTerminate := False;
-    TH.StartIP :=  i * (256 div NumThread);
-    TH.EndIP := (i + 1) * (256 div NumThread) - 1;
+    TH.StartIP :=  i * (256 div FThreadCount);
+    TH.EndIP := (i + 1) * (256 div FThreadCount) - 1;
     TH.FOnScanIP := FOnScanIP;
     TH.FOnNewDevice := FOnNewDevice;
+    TH.FOnDone := DoDone;
     TH.IPs := IPs;
     ScanThreadList.Add(Th);
     Th.Start;
@@ -126,11 +136,17 @@ begin
    Th.WaitFor;
 end;
 
+procedure THS1x0Discovery.DoDone;
+begin
+  Dec(FThreadCount);
+  if (FThreadCount = 0) and Assigned(FOnDone) then FOnDone;
+end;
+
 procedure TDiscoveryThread.Execute;
 begin
 
 try
-  var BaseIp := StrToIpAddr(LocalIP) and $FFFFFF00; // Class C
+  var BaseIp := StrToIpAddr(LocalIP) and $FFFFFF00; // Class C, like a Merc :)
   for var i := StartIP to EndIP do
   begin
     if Terminated then Break;
@@ -138,20 +154,24 @@ try
     IP := IpAddrToStr(nIP);
     var MustScan: Boolean := True;
     Synchronize( procedure begin  if assigned(FOnScanIP) then MustScan := FOnScanIP(nIP); ; end );
-    var HS1x0 := THS1x0.Create(IP);
-    if HS1x0 <> Nil then
+    if MustScan then
     begin
-      try
-        if HS1x0.ping then
-        begin
-          Synchronize( procedure begin if assigned(FOnNewDevice) then FOnNewDevice(nIP); end );
-          Synchronize( procedure begin if assigned(IPs) then IPs.Add(nIP) end );
-        end;
-      except; end;
-      HS1x0.Free;
+      var HS1x0 := THS1x0.Create(IP);
+      if HS1x0 <> Nil then
+      begin
+        try
+          if HS1x0.ping then
+          begin
+            Synchronize( procedure begin if assigned(FOnNewDevice) then FOnNewDevice(nIP); end );
+            Synchronize( procedure begin if assigned(IPs) then IPs.Add(nIP) end );
+          end;
+        except; end;
+        HS1x0.Free;
+      end;
     end;
   end;
 finally
+  Synchronize( procedure begin if assigned(FOnDone) then FOnDone; end );
   Terminate;
 end;
 

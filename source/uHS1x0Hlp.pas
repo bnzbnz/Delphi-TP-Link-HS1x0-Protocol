@@ -16,7 +16,7 @@ type
 
   THS1x0Hlp = class Helper  for THS1x0
 
-    // Badly missing functioons
+    // Badly missing functions
     function Schedule_GetRule(Id: string): THS1x0_Schedule;
     function Countdown_GetRule(Id: string): THS1x0_Countdown;
     function AntiTheft_GetRule(Id: string): THS1x0_AntiTheft;

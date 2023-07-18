@@ -1,5 +1,4 @@
 ﻿unit uHS1x0Demo;
-
 ///
 ///  Author:  Laurent Meyer
 ///  Contact: HS1x0@ea4d.com
@@ -8,23 +7,18 @@
 ///
 ///  License: MPL 1.1 / GPL 2.1
 ///
-
 interface
-
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, uHS1x0Discovery,
   Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Grids, System.Generics.Collections,
   uHS1x0, Vcl.Menus, uEditCntDwnFrm, uEditScheduleFrm;
-
 type
-
   THSRealTime = class(Tthread)
     Index: Integer;
     IP: string;
     procedure Execute; override;
   end;
-
   THSForm = class(TForm)
     Panel1: TPanel;
     PBar: TProgressBar;
@@ -92,36 +86,31 @@ type
     HSTrealTimeList : TObjectList<THSRealTime>;
     procedure InitRow(nIP: Cardinal);
     procedure Stop;
-    procedure SyncGrid(
+    procedure SyncGrids(
                 Thread: THSRealTime;
                 Index: Integer;
                 HS1x0: THS1x0;
                 Info: THS1x0_System_GetSysInfoResponse;
                 RealTime: THS1x0_EMEter_GetRealtimeCVResponse;
-                MonthStats, PrevMonthStats: THS1x0_EMeter_GetDayStatResponse;
+                MonthStats: THS1x0_EMeter_GetDayStatResponse;
+                PrevMonthStats: THS1x0_EMeter_GetDayStatResponse;
                 Scheds: THS1x0_Schedule_GetRulesListResponse;
                 CntDwn: THS1x0_Countdown_GetRulesResponse
               );
   end;
-
 var
   HSForm : THSForm;
-
   implementation
 uses uHS1x0Hlp, uNetUtils, DateUtils;
-
 {$R *.dfm}
-
 const
   BInt: array[boolean] of integer = (0, 1);
   BEnable: array[boolean] of string = ('Disable', 'Enable');
   BOnOff: array[boolean] of string = ('OFF', 'ON');
-
 function IIF(C: Boolean; A, B: variant): variant;
 begin
   if C then Result := A else Result := B;
 end;
-
 function DoScanIP(nIP: Cardinal): Boolean;
 begin
   HSForm.PBar.Position := HSForm.PBar.Position + 1;
@@ -132,10 +121,14 @@ begin
   if HSForm.PBar.Position = 255 then HSForm.Caption := 'HS1x0';
   Result := True;
 end;
-
 procedure DoNewDevice(nIP: Cardinal);
 begin
   HSForm.InitRow(nIP);
+end;
+procedure DoDone;
+begin
+  HSForm.Caption := 'HS1x0 Editor';
+  HSForm.PBar.Position := 0;
 end;
 
 procedure THSForm.InitRow(nIP: Cardinal);
@@ -150,7 +143,6 @@ begin
   TH.Start;
   Grid.Refresh;
 end;
-
 procedure THSForm.LedOFF1Click(Sender: TObject);
 begin
   var IP := Grid.Cells[0, Grid.Row ];
@@ -158,7 +150,6 @@ begin
   HS1x0.System_LedOff;
   HS1x0.Free
 end;
-
 procedure THSForm.LedON1Click(Sender: TObject);
 begin
   var IP := Grid.Cells[0, Grid.Row ];
@@ -166,7 +157,6 @@ begin
   HS1x0.System_LedOn;
   HS1x0.Free
 end;
-
 procedure THSForm.Delete1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -183,7 +173,6 @@ begin
     HS.Free;
   end;
 end;
-
 procedure THSForm.DeleteALL1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -196,7 +185,6 @@ begin
     HS.Free;
   end;
 end;
-
 procedure THSForm.DevTestMenuClick(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -209,7 +197,6 @@ begin
     HS.Free;
   end;
 end;
-
 procedure THSForm.Edit1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -231,7 +218,6 @@ begin
     HS.Free;
   end;
 end;
-
 procedure THSForm.Edit2Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -255,7 +241,6 @@ begin
     HS.Free;
   end;
 end;
-
 procedure THSForm.Edit3Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -279,7 +264,6 @@ begin
     HS.Free;
   end;
 end;
-
 procedure THSForm.Enable1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -301,7 +285,6 @@ begin
     HS.Free;
   end;
 end;
-
 procedure THSForm.PowerOFF1Click(Sender: TObject);
 begin
   var IP := Grid.Cells[0, Grid.Row ];
@@ -309,7 +292,6 @@ begin
   HS1x0.System_PowerOff;
   HS1x0.Free;
 end;
-
 procedure THSForm.PowerON1Click(Sender: TObject);
 begin
   var IP := Grid.Cells[0, Grid.Row ];
@@ -317,7 +299,6 @@ begin
   HS1x0.System_PowerOn;
   HS1x0.Free;
 end;
-
 procedure THSForm.Reboot1Click(Sender: TObject);
 begin
   var IP := Grid.Cells[0, Grid.Row ];
@@ -325,7 +306,6 @@ begin
   HS1x0.System_Reboot;
   HS1x0.Free;
 end;
-
 
 procedure THSForm.Rename1Click(Sender: TObject);
 begin
@@ -341,7 +321,6 @@ begin
   HS1x0Res.Free;
   HS1x0.Free;
 end;
-
 procedure THSForm.Reset1Click(Sender: TObject);
 begin
   var IP := Grid.Cells[0, Grid.Row ];
@@ -349,7 +328,6 @@ begin
   HS1x0.System_Reset(1);
   HS1x0.Free;
 end;
-
 procedure THSForm.StatsReset1Click(Sender: TObject);
 begin
 begin
@@ -358,9 +336,7 @@ begin
   HS1x0.Emeter_Reset;
   HS1x0.Free;
 end;
-
 end;
-
 procedure THSForm.Stop;
 begin
  Scanner.Stop;
@@ -376,7 +352,6 @@ begin
   end;
   HSTrealTimeList.Clear;
 end;
-
 procedure THSForm.Add1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -384,7 +359,6 @@ begin
   var IP := Grid.Cells[0, Grid.Row ];
   try
     Rule := THS1x0_Schedule_AddRuleRequest.Create;
-
     Rule.Fschedule.Fadd_5Frule.Fid := '';
     Rule.Fschedule.Fadd_5Frule.Fstime_opt := 0;
     Rule.Fschedule.Fadd_5Frule.Fwday.Add(1);
@@ -408,43 +382,35 @@ begin
     Rule.Fschedule.Fadd_5Frule.Fday := 0;
     //Rule.Fschedule.Fadd_5Frule.Fforce := 0;
     Rule.Fschedule.Fadd_5Frule.Femin := 0;
-
     if EditScheduleFrm.ShowAsModal(Rule.Fschedule.Fadd_5Frule) then
     begin
       HS := THS1x0.Create(IP);
       HS.Schedule_AddRule(Rule).Free;
     end;
-
   finally
     Rule.Free;
     HS.Free;
   end;
 end;
-
 procedure THSForm.Button1Click(Sender: TObject);
 begin
   Stop;
   Scanner.Start;
 end;
-
 procedure THSForm.Button2Click(Sender: TObject);
 begin
   Stop;
 end;
-
 procedure THSForm.FormCreate(Sender: TObject);
 begin
-
   PBar.Position := 0;
   Grid.RowCount := 1;
   RowThreadCnt  := 0;
-
   HSTRealTimeList := TObjectList<THSRealTime>.Create(False);
-
   Scanner := THS1x0Discovery.Create;
   Scanner.OnScanIP := DoScanIP;
   Scanner.OnNewDevice := DoNewDevice;
-
+  Scanner.OnDone := DoDone;
   if (GetKeyState(VK_CONTROL) < 0) then
   begin
     Scanner.Start(11, 20); // Dev Only 1 Thread
@@ -454,7 +420,6 @@ begin
       ShowMessage('You are running in the IDE : Due to a Debugger Bug while multi-threading, the port scanning feature is going to be slow...');
     Scanner.Start;
   end;
-
 
   Grid.Cells[0,0] := 'IP'; Grid.ColWidths[0] := 80;
   Grid.Cells[1,0] := 'Alias'; Grid.ColWidths[1] := 128;
@@ -466,26 +431,21 @@ begin
   Grid.Cells[7, 0] := 'Day KWh (Estimated)';
   Grid.Cells[8, 0] := 'Day -1 KWh';
   Grid.Cells[9, 0] := 'ON Since';
-
 end;
-
 procedure THSForm.FormDestroy(Sender: TObject);
 begin
   Stop;
   Scanner.Free;
   HSTrealTimeList.Free;
 end;
-
 procedure THSForm.GRidCDblClick(Sender: TObject);
 begin
   Edit2Click(Self);
 end;
-
 procedure THSForm.GridSDblClick(Sender: TObject);
 begin
   Edit3Click(Self);
 end;
-
 procedure THSForm.GridSelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
 begin
@@ -494,10 +454,8 @@ begin
   for var i := 0  to GridD.ColCount do
     for var J := 0  to GridD.RowCount do
       GridD.Cells[i, j] := '';
-
   GridD.ColWidths[0] := 80;
   GridD.ColWidths[1] := 240;
-
   var IP := Grid.Cells[0, ARow];
   var HS1x0 := THS1x0.Create(IP);
   var Info := HS1x0.System_GetSysinfo;
@@ -519,10 +477,8 @@ begin
     GridD.Cells[1, 6] := Info.Fsystem.Fget_5Fsysinfo.Frssi;
     Info.Free;
   end;
-
   HS1x0.Free;
 end;
-
 function secToDHMS(sec: Integer; IncludeDays: Boolean = True): string;
 var
   D, H, M, S: Integer;
@@ -531,19 +487,19 @@ begin
   H:= (sec - D * 86400) div 60 div 60;
   M:= (sec - D * 86400 -  H * 3600) div 60;
   S:= sec - D * 86400 - H * 3600 - M * 60;
-
   Result := VarToStr(IIF(IncludeDays
       , Format('%dd %.*d:%.*d:%.*d ', [D, 2, H, 2, M, 2, S])
       , Format('%.*d:%.*d:%.*d ', [2, H, 2, M, 2, S])
   ));
 end;
-
-procedure THSForm.SyncGrid(
+procedure THSForm.SyncGrids(
                     Thread: THSRealTime;
-                    Index: Integer; HS1x0:
-                    THS1x0; Info: THS1x0_System_GetSysInfoResponse;
+                    Index: Integer;
+                    HS1x0:  THS1x0;
+                    Info: THS1x0_System_GetSysInfoResponse;
                     RealTime: THS1x0_EMeter_GetRealtimeCVResponse;
-                    MonthStats, PrevMonthStats: THS1x0_EMeter_GetDayStatResponse;
+                    MonthStats: THS1x0_EMeter_GetDayStatResponse;
+                    PrevMonthStats: THS1x0_EMeter_GetDayStatResponse;
                     Scheds: THS1x0_Schedule_GetRulesListResponse;
                     CntDwn: THS1x0_Countdown_GetRulesResponse
                   );
@@ -551,30 +507,24 @@ var
   H, M, S, Ms:  Word;
 begin
   Grid.BeginUpdate;
-
   Grid.Cells[1, Index] := Info.Fsystem.Fget_5Fsysinfo.Falias;
-
   if (Info <> nil) then
   begin
      if Info.Fsystem.Fget_5Fsysinfo.Frelay_state = 1 then
       Grid.Cells[2, Index] := '   🗲'
      else
       Grid.Cells[2, Index] := '' ;
-
      if Info.Fsystem.Fget_5Fsysinfo.Fled_5Foff = 0 then
       Grid.Cells[3, Index] := '   💡'
      else
       Grid.Cells[3, Index] := '' ;
-
       Grid.Cells[9, Index] := secToDHMS( Info.Fsystem.Fget_5Fsysinfo.Fon_5Ftime );
   end;
-
   if RealTime <> nil then
   begin
     Grid.Cells[4, Index] := VarToStr(Round(RealTime.Femeter.Fget_5Frealtime.Fpower));
     Grid.Cells[5, Index] := FormatFloat('0.000', RealTime.Femeter.Fget_5Frealtime.Fpower * 24 / 1000);
   end;
-
   if MonthStats <> nil then
   begin
     DecodeTime(Now, H, M, S, MS);
@@ -597,7 +547,6 @@ begin
        end;
     end;
   end;
-
  if (Scheds <> Nil) and (Index = Grid.Row)  then
  begin
     GridS.BeginUpdate;
@@ -612,7 +561,6 @@ begin
     GridS.Cells[3, 0] := 'Power'; GridS.ColWidths[3] := 68;
     GridS.Cells[4, 0] := 'Time (hh:mm)';  GridS.ColWidths[4] := 68;
     GridS.Cells[5, 0] := 'Days';  GridS.ColWidths[5] := 200;
-
     GridS.RowCount := Scheds.Fschedule.Fget_5Frules.Frule_5Flist.Count + 1;
     var Row := 1;
     for var uRule in Scheds.Fschedule.Fget_5Frules.Frule_5Flist do
@@ -633,14 +581,11 @@ begin
       GridS.Cells[5, Row] := DayTxt;
       Inc(Row);
     end;
-
     GridS.EndUpdate;
   end;
-
   if (CntDwn <> Nil) and (Index = Grid.Row)  then
   begin
     GridC.BeginUpdate;
-
    if CntDwn.Fcount_5Fdown.Fget_5Frules.Frule_5Flist.Count = 0 then
     begin
       // ?? Bug ?? We Should have at least 1 rule...
@@ -653,11 +598,9 @@ begin
       HS1x0.Countdown_AddRule(AddCDRule).Free;
       AddCDrule.Free;
     end;
-
     for var i := 0  to GridC.ColCount do
      for var J := 0  to GridC.RowCount do
         GridC.Cells[i, j] := '';
-
     GridC.Cells[0, 0] := 'Id';        GridC.ColWidths[0] := 0;
     GridC.Cells[1, 0] := 'Countdown'; GridC.ColWidths[1] := 128;
     GridC.Cells[2, 0] := 'Power';     GridC.ColWidths[2] := 68;
@@ -671,7 +614,6 @@ begin
       GridC.Cells[0, Row] := Countdown.FId;
       GridC.Cells[1, Row] := BEnable[Boolean(Countdown.Fenable)];
       GridC.Cells[2, Row] := BOnOff[Boolean(Countdown.Fact)];
-
       var Dd: integer := Countdown.Fdelay div 86400;
       var Hd: integer := (Countdown.Fdelay - Dd * 86400) div 60 div 60;
       var Md: integer := (Countdown.Fdelay - Dd * 86400 -  Hd * 3600) div 60;
@@ -680,19 +622,14 @@ begin
       GridC.Cells[4, Row] := secToDHMS(Countdown.Fremain, False);
       Inc(Row);
     end;
-
     GridC.EndUpdate;
   end;
-
   Grid.EndUpdate;
-
   Grid.Refresh;
   GridS.Refresh;
   GridC.Refresh;
 end;
-
 { THS1x0Thread }
-
 procedure THSRealTime.Execute;
 begin
   while not Terminated do
@@ -704,12 +641,12 @@ begin
       begin
         var Info := HS1x0.System_GetSysinfo;
         var RealTime := HS1x0.Emeter_GetRealtime;
-        var MonthStats      := HS1x0.Emeter_GetDayStat(IncDay(Now, 0));
+        var MonthStats := HS1x0.Emeter_GetDayStat(IncDay(Now, 0));
         var Scheds := HS1x0.Schedule_GetRulesList;
         var CntDwn := HS1x0.Countdown_GetRulesList;
         var PrevMonthStats  := HS1x0.Emeter_GetDayStat(IncDay(Now, -1));
-        if (Info <> Nil) and (RealTime <> Nil) and ( MonthStats <> Nil) then
-          Synchronize( procedure begin HSForm.SyncGrid(Self, Self.Index, HS1x0, Info, RealTime, MonthStats, PrevMonthStats, Scheds, CntDwn); end );
+        if (Info <> Nil) and (RealTime <> Nil) and (MonthStats <> Nil) then
+          Synchronize( procedure begin HSForm.SyncGrids(Self, Self.Index, HS1x0, Info, RealTime, MonthStats, PrevMonthStats, Scheds, CntDwn); end );
         FreeAndNil(CntDwn);
         FreeAndNil(Scheds);
         FreeAndNil(PrevMonthStats);
@@ -722,5 +659,4 @@ begin
     while ((Start + 1000) > GetTickCount) and not Terminated do sleep(100);
   end;
 end;
-
 end.

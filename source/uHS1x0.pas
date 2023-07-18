@@ -962,7 +962,7 @@ begin
   FTCP.Host := FIP;
   FTCP.Port := 9999;
   FTCP.ConnectTimeout := 500;
-  FTCP.ReadTimeout := 1000;
+  FTCP.ReadTimeout := 1500;
   FTCP.ReuseSocket := rsOSDependent;
 end;
 

@@ -13,6 +13,7 @@ object HSScanFrm: THSScanFrm
   Font.Style = []
   OldCreateOrder = True
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
