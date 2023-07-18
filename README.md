@@ -6,9 +6,9 @@ Based on :
 - https://github.com/softScheck/tplink-smartplug/blob/master/tplink-smarthome-commands.txt
 
 By Laurent MEYER
-Dhs1x0@ea4d.com
+hs1x0@ea4d.com
 
-
+![HS1x0win](https://github.com/bnzbnz/Delphi-TP-Link-HS1x0-Protocol/assets/32573002/0df8d44a-5024-4e5c-8c83-196cfb94f699)
 
 
 
