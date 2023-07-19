@@ -20,6 +20,11 @@ type
     procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
+  protected
+    { Protected declarations }
+    procedure DoScanIP(nIP: Cardinal);
+    procedure DoNewDevice(nIP: Cardinal);
+    procedure DoDone;
   public
     { Public declarations }
     Scanner: THS1x0Discovery;
@@ -36,25 +41,26 @@ uses uHS1x0, uNetUtils;
 const
   BStrONOFF: array[Boolean] of string = ('OFF','ON');
 
-function DoScanIP(nIP: Cardinal): Boolean;
+procedure THSScanFrm.DoScanIP(nIP: Cardinal);
 begin
-  HSScanFrm.PBar.Position := HSScanFrm.PBar.Position + 1;
-  HSScanFrm.Caption := 'Saanning IP : ' + IpAddrToStr(nIP);
-  Result := True;
+  PBar.Position := PBar.Position + 1;
+  Caption := 'Scanning IP : ' + IpAddrToStr(nIP);
 end;
 
-procedure DoOnDone;
+procedure THSScanFrm.DoDone;
 begin
-  HSScanFrm.Caption := 'Simple HS Scan';
+  Caption := 'Simple HS Scan';
 end;
 
-procedure DoNewDevice(nIP: Cardinal);
+procedure THSScanFrm.DoNewDevice(nIP: Cardinal);
 begin
   var Info: THS1x0_System_GetSysInfoResponse := nil;
   var RTime: THS1x0_EMeter_GetRealtimeCVResponse := nil;
+  var HS1x0: THS1x0 := nil;
   var IP := IpAddrToStr(nIP);
-  var HS1x0 := THS1x0.Create(IP);
   try
+    HS1x0 := THS1x0.Create(IP);
+    if HS1x0 = nil then Exit;
     Info := HS1x0.System_GetSysinfo;
     if Info = nil then Exit;
     RTime := HS1x0.Emeter_GetRealtime;
@@ -68,7 +74,7 @@ begin
                     VarToStr(RTime.Femeter.Fget_5Frealtime.Fpower)
                   ]
                 );
-    HSScanFrm.ListBox1.Items.Add(Str);
+    ListBox1.Items.Add(Str);
   finally
     RTime.Free;
     Info.Free;
@@ -89,10 +95,7 @@ end;
 
 procedure THSScanFrm.FormShow(Sender: TObject);
 begin
-  Scanner := THS1x0Discovery.Create;
-  Scanner.OnScanIP := DoScanIP;
-  Scanner.OnNewDevice := DoNewDevice;
-  Scanner.OnDone := DoOnDone;
+  Scanner := THS1x0Discovery.Create(DoScanIP, DoNewDevice, DoDone);
   Scanner.Start;
 end;
 

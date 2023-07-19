@@ -5,13 +5,12 @@ uses Classes, System.Generics.Collections;
 
 type
 
-  THS1x0Discovery = class;
+  THS1x0Discovery  = class;
   TDiscoveryThread = class;
 
-  THS1x0DoneEvent = procedure of object;
-  THS1x0DoneCallback = procedure;
-  THS1x0ScanIPCallback = function(nIP: Cardinal): Boolean;
-  THS1x0FoundCallback = procedure(nIP: Cardinal);
+  THS1x0Discovery_DoneEvent   = procedure of object;
+  THS1x0Discovery_ScanIPEvent = procedure(nIP: Cardinal) of object;
+  THS1x0Discovery_FoundEvent  = THS1x0Discovery_ScanIPEvent;
 
   TDiscoveryThread = class(TThread)
   public
@@ -20,42 +19,55 @@ type
     IPs: TList<Cardinal>;
     ScanNumTh: Integer;
     StartIP, EndIP: Integer;
-    FOnScanIP: THS1x0ScanIPCallback;
-    FOnNewDevice: THS1x0FoundCallback;
-    FOnDone: THS1x0DoneEvent;
+    FOnScanIP: THS1x0Discovery_ScanIPEvent;
+    FOnNewDevice: THS1x0Discovery_FoundEvent;
+    FOnDone: THS1x0Discovery_DoneEvent;
     procedure Execute; override;
   end;
 
   THS1x0Discovery = class(TObject)
   private
     FThreadCount: Integer;
-    FOnScanIP: THS1x0ScanIPCallback;
-    FOnNewDevice: THS1x0FoundCallback;
-    FOnDone: THS1x0DoneCallback;
+    FOnScanIP: THS1x0Discovery_ScanIPEvent;
+    FOnNewDevice: THS1x0Discovery_FoundEvent;
+    FOnDone: THS1x0Discovery_DoneEvent;
     IPs: TList<Cardinal>;
     ScanThreadList: TObjectList<TDiscoveryThread>;
     procedure   JustWaitFor;
     procedure   DoDone;
   public
     class function Call: TList<Cardinal>;
+
     procedure   Start(FromPort: Byte = 0; ToPort: Byte = 255);
     procedure   Stop;
     function    GetRunningThreadCount: Cardinal;
-    constructor Create; overload;
+    constructor Create(
+                    ScanIPEvent: THS1x0Discovery_ScanIPEvent;
+                    NewDeviceEvent: THS1x0Discovery_FoundEvent;
+                    DoneEvent: THS1x0Discovery_DoneEvent
+                ); overload;
     destructor  Destroy; override;
-    property    OnScanIP: THS1x0ScanIPCallback read FOnScanIP write FOnScanIP;
-    property    OnNewDevice: THS1x0FoundCallback read FOnNewDevice write FOnNewDevice;
-    property    OnDone: THS1x0DoneCallback read FOnDone write FOnDone;
+    property    OnScanIP: THS1x0Discovery_ScanIPEvent read FOnScanIP write FOnScanIP;
+    property    OnNewDevice: THS1x0Discovery_FoundEvent read FOnNewDevice write FOnNewDevice;
+    property    OnDone: THS1x0Discovery_DoneEvent read FOnDone write FOnDone;
   end;
 
 implementation
 uses uHS1x0, uNetUtils, windows;
 
-constructor THS1x0Discovery.Create;
+constructor THS1x0Discovery.Create(
+                ScanIPEvent: THS1x0Discovery_ScanIPEvent;
+                NewDeviceEvent: THS1x0Discovery_FoundEvent;
+                DoneEvent: THS1x0Discovery_DoneEvent
+            );
 begin
-  inherited;
+  inherited Create;
   ScanThreadList := TObjectList<TDiscoveryThread>.Create(False);
+  Self.OnScanIP := ScanIPEvent;
+  Self.OnNewDevice := NewDeviceEvent;
+  Self.OnDone := DoneEvent;
 end;
+
 
 destructor THS1x0Discovery.Destroy;
 begin
@@ -152,22 +164,28 @@ try
     if Terminated then Break;
     var nIP := BaseIP + Cardinal(Abs(i));
     IP := IpAddrToStr(nIP);
-    var MustScan: Boolean := True;
-    Synchronize( procedure begin  if assigned(FOnScanIP) then MustScan := FOnScanIP(nIP); ; end );
-    if MustScan then
+    Synchronize(
+                  procedure
+                  begin
+                    try
+                      if assigned(FOnScanIP) then FOnScanIP(nIP);
+                    except
+                    end;
+                  end
+               );
+
+
+    var HS1x0 := THS1x0.Create(IP);
+    if HS1x0 <> Nil then
     begin
-      var HS1x0 := THS1x0.Create(IP);
-      if HS1x0 <> Nil then
-      begin
-        try
-          if HS1x0.ping then
-          begin
-            Synchronize( procedure begin if assigned(FOnNewDevice) then FOnNewDevice(nIP); end );
-            Synchronize( procedure begin if assigned(IPs) then IPs.Add(nIP) end );
-          end;
-        except; end;
-        HS1x0.Free;
-      end;
+      try
+        if HS1x0.ping then
+        begin
+          Synchronize( procedure begin  try if assigned(FOnNewDevice) then FOnNewDevice(nIP); except end; end );
+          Synchronize( procedure begin  try if assigned(IPs) then IPs.Add(nIP); except end; end );
+        end;
+      except; end;
+      HS1x0.Free;
     end;
   end;
 finally

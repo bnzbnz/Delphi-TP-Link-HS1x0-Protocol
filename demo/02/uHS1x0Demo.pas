@@ -79,6 +79,10 @@ type
     procedure Button2Click(Sender: TObject);
   private
     { Private declarations }
+  protected
+    procedure DoScanIP(nIP: Cardinal);
+    procedure DoNewDevice(nIP: Cardinal);
+    procedure DoDone;
   public
     { Public declarations }
     RowThreadCnt: Integer;
@@ -103,15 +107,18 @@ var
   implementation
 uses uHS1x0Hlp, uNetUtils, DateUtils;
 {$R *.dfm}
+//Helpers
 const
   BInt: array[boolean] of integer = (0, 1);
   BEnable: array[boolean] of string = ('Disable', 'Enable');
   BOnOff: array[boolean] of string = ('OFF', 'ON');
+
 function IIF(C: Boolean; A, B: variant): variant;
 begin
   if C then Result := A else Result := B;
 end;
-function DoScanIP(nIP: Cardinal): Boolean;
+
+procedure THSForm.DoScanIP(nIP: Cardinal);
 begin
   HSForm.PBar.Position := HSForm.PBar.Position + 1;
   HSForm.Caption := Format(
@@ -119,13 +126,14 @@ begin
                       , [HSForm.Scanner.GetRunningThreadCount, IpAddrToStr(nIP)]
                     );
   if HSForm.PBar.Position = 255 then HSForm.Caption := 'HS1x0';
-  Result := True;
 end;
-procedure DoNewDevice(nIP: Cardinal);
+
+procedure THSForm.DoNewDevice(nIP: Cardinal);
 begin
   HSForm.InitRow(nIP);
 end;
-procedure DoDone;
+
+procedure THSForm.DoDone;
 begin
   HSForm.Caption := 'HS1x0 Editor';
   HSForm.PBar.Position := 0;
@@ -143,6 +151,7 @@ begin
   TH.Start;
   Grid.Refresh;
 end;
+
 procedure THSForm.LedOFF1Click(Sender: TObject);
 begin
   var IP := Grid.Cells[0, Grid.Row ];
@@ -150,6 +159,7 @@ begin
   HS1x0.System_LedOff;
   HS1x0.Free
 end;
+
 procedure THSForm.LedON1Click(Sender: TObject);
 begin
   var IP := Grid.Cells[0, Grid.Row ];
@@ -157,6 +167,7 @@ begin
   HS1x0.System_LedOn;
   HS1x0.Free
 end;
+
 procedure THSForm.Delete1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -173,6 +184,7 @@ begin
     HS.Free;
   end;
 end;
+
 procedure THSForm.DeleteALL1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -185,6 +197,7 @@ begin
     HS.Free;
   end;
 end;
+
 procedure THSForm.DevTestMenuClick(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -197,6 +210,7 @@ begin
     HS.Free;
   end;
 end;
+
 procedure THSForm.Edit1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -218,6 +232,7 @@ begin
     HS.Free;
   end;
 end;
+
 procedure THSForm.Edit2Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -241,6 +256,7 @@ begin
     HS.Free;
   end;
 end;
+
 procedure THSForm.Edit3Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -264,6 +280,7 @@ begin
     HS.Free;
   end;
 end;
+
 procedure THSForm.Enable1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -285,6 +302,7 @@ begin
     HS.Free;
   end;
 end;
+
 procedure THSForm.PowerOFF1Click(Sender: TObject);
 begin
   var IP := Grid.Cells[0, Grid.Row ];
@@ -292,6 +310,7 @@ begin
   HS1x0.System_PowerOff;
   HS1x0.Free;
 end;
+
 procedure THSForm.PowerON1Click(Sender: TObject);
 begin
   var IP := Grid.Cells[0, Grid.Row ];
@@ -299,6 +318,7 @@ begin
   HS1x0.System_PowerOn;
   HS1x0.Free;
 end;
+
 procedure THSForm.Reboot1Click(Sender: TObject);
 begin
   var IP := Grid.Cells[0, Grid.Row ];
@@ -321,6 +341,7 @@ begin
   HS1x0Res.Free;
   HS1x0.Free;
 end;
+
 procedure THSForm.Reset1Click(Sender: TObject);
 begin
   var IP := Grid.Cells[0, Grid.Row ];
@@ -328,15 +349,15 @@ begin
   HS1x0.System_Reset(1);
   HS1x0.Free;
 end;
+
 procedure THSForm.StatsReset1Click(Sender: TObject);
-begin
 begin
   var IP := Grid.Cells[0, Grid.Row ];
   var HS1x0 := THS1x0.Create(IP);
   HS1x0.Emeter_Reset;
   HS1x0.Free;
 end;
-end;
+
 procedure THSForm.Stop;
 begin
  Scanner.Stop;
@@ -352,6 +373,7 @@ begin
   end;
   HSTrealTimeList.Clear;
 end;
+
 procedure THSForm.Add1Click(Sender: TObject);
 begin
   var HS: THS1x0 := Nil;
@@ -392,25 +414,25 @@ begin
     HS.Free;
   end;
 end;
+
 procedure THSForm.Button1Click(Sender: TObject);
 begin
   Stop;
   Scanner.Start;
 end;
+
 procedure THSForm.Button2Click(Sender: TObject);
 begin
   Stop;
 end;
+
 procedure THSForm.FormCreate(Sender: TObject);
 begin
   PBar.Position := 0;
   Grid.RowCount := 1;
   RowThreadCnt  := 0;
   HSTRealTimeList := TObjectList<THSRealTime>.Create(False);
-  Scanner := THS1x0Discovery.Create;
-  Scanner.OnScanIP := DoScanIP;
-  Scanner.OnNewDevice := DoNewDevice;
-  Scanner.OnDone := DoDone;
+  Scanner := THS1x0Discovery.Create(DoScanIP, DoNewDevice, DoDone);
   if (GetKeyState(VK_CONTROL) < 0) then
   begin
     Scanner.Start(11, 20); // Dev Only 1 Thread
@@ -432,20 +454,24 @@ begin
   Grid.Cells[8, 0] := 'Day -1 KWh';
   Grid.Cells[9, 0] := 'ON Since';
 end;
+
 procedure THSForm.FormDestroy(Sender: TObject);
 begin
   Stop;
   Scanner.Free;
   HSTrealTimeList.Free;
 end;
+
 procedure THSForm.GRidCDblClick(Sender: TObject);
 begin
   Edit2Click(Self);
 end;
+
 procedure THSForm.GridSDblClick(Sender: TObject);
 begin
   Edit3Click(Self);
 end;
+
 procedure THSForm.GridSelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
 begin
@@ -479,6 +505,7 @@ begin
   end;
   HS1x0.Free;
 end;
+
 function secToDHMS(sec: Integer; IncludeDays: Boolean = True): string;
 var
   D, H, M, S: Integer;
@@ -492,6 +519,7 @@ begin
       , Format('%.*d:%.*d:%.*d ', [2, H, 2, M, 2, S])
   ));
 end;
+
 procedure THSForm.SyncGrids(
                     Thread: THSRealTime;
                     Index: Integer;
@@ -629,6 +657,7 @@ begin
   GridS.Refresh;
   GridC.Refresh;
 end;
+
 { THS1x0Thread }
 procedure THSRealTime.Execute;
 begin

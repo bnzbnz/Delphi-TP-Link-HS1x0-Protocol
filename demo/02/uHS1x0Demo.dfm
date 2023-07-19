@@ -2,8 +2,8 @@ object HSForm: THSForm
   Left = 0
   Top = 0
   Caption = 'HS1x0 Editor'
-  ClientHeight = 521
-  ClientWidth = 853
+  ClientHeight = 520
+  ClientWidth = 849
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,24 +13,23 @@ object HSForm: THSForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   DesignSize = (
-    853
-    521)
+    849
+    520)
   TextHeight = 15
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 853
+    Width = 849
     Height = 33
     Align = alTop
     TabOrder = 0
-    ExplicitWidth = 849
     DesignSize = (
-      853
+      849
       33)
     object PBar: TProgressBar
       Left = 16
       Top = 10
-      Width = 721
+      Width = 713
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Max = 255
@@ -39,7 +38,7 @@ object HSForm: THSForm
     end
   end
   object Button1: TButton
-    Left = 754
+    Left = 746
     Top = 10
     Width = 75
     Height = 17
@@ -51,13 +50,11 @@ object HSForm: THSForm
   end
   object Panel2: TPanel
     Left = 0
-    Top = 327
-    Width = 853
+    Top = 326
+    Width = 849
     Height = 194
     Align = alBottom
     TabOrder = 2
-    ExplicitTop = 326
-    ExplicitWidth = 849
     object Panel3: TPanel
       Left = 330
       Top = 1
@@ -130,8 +127,8 @@ object HSForm: THSForm
   object Grid: TStringGrid
     Left = 0
     Top = 33
-    Width = 853
-    Height = 294
+    Width = 849
+    Height = 293
     Align = alClient
     ColCount = 10
     DefaultColWidth = 80
@@ -144,8 +141,6 @@ object HSForm: THSForm
     PopupMenu = Popup
     TabOrder = 3
     OnSelectCell = GridSelectCell
-    ExplicitWidth = 849
-    ExplicitHeight = 293
   end
   object Popup: TPopupMenu
     Left = 208
