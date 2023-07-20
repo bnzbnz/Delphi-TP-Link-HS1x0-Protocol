@@ -2,8 +2,8 @@ object HSForm: THSForm
   Left = 0
   Top = 0
   Caption = 'HS1x0 Editor'
-  ClientHeight = 520
-  ClientWidth = 849
+  ClientHeight = 519
+  ClientWidth = 845
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,32 +13,33 @@ object HSForm: THSForm
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   DesignSize = (
-    849
-    520)
+    845
+    519)
   TextHeight = 15
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 849
+    Width = 845
     Height = 33
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 841
     DesignSize = (
-      849
+      845
       33)
     object PBar: TProgressBar
       Left = 16
       Top = 10
-      Width = 713
+      Width = 701
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Max = 255
       TabOrder = 0
-      ExplicitWidth = 717
+      ExplicitWidth = 697
     end
   end
   object Button1: TButton
-    Left = 746
+    Left = 734
     Top = 10
     Width = 75
     Height = 17
@@ -46,28 +47,30 @@ object HSForm: THSForm
     Caption = 'Refresh'
     TabOrder = 1
     OnClick = Button1Click
-    ExplicitLeft = 750
+    ExplicitLeft = 730
   end
   object Panel2: TPanel
     Left = 0
-    Top = 326
-    Width = 849
+    Top = 325
+    Width = 845
     Height = 194
     Align = alBottom
     TabOrder = 2
+    ExplicitTop = 324
+    ExplicitWidth = 841
     object Panel3: TPanel
       Left = 330
       Top = 1
-      Width = 522
+      Width = 514
       Height = 192
       Align = alClient
       Caption = 'Panel3'
       TabOrder = 0
-      ExplicitWidth = 518
+      ExplicitWidth = 510
       object GridS: TStringGrid
         Left = 1
         Top = 1
-        Width = 520
+        Width = 512
         Height = 112
         Align = alTop
         ColCount = 6
@@ -79,7 +82,7 @@ object HSForm: THSForm
         ScrollBars = ssVertical
         TabOrder = 0
         OnDblClick = GridSDblClick
-        ExplicitWidth = 516
+        ExplicitWidth = 508
         ColWidths = (
           64
           64
@@ -91,7 +94,7 @@ object HSForm: THSForm
       object GRidC: TStringGrid
         Left = 1
         Top = 96
-        Width = 520
+        Width = 512
         Height = 95
         Align = alBottom
         DoubleBuffered = True
@@ -101,7 +104,7 @@ object HSForm: THSForm
         PopupMenu = PopupCntDwn
         TabOrder = 1
         OnDblClick = GRidCDblClick
-        ExplicitWidth = 516
+        ExplicitWidth = 508
         ColWidths = (
           64
           64
@@ -127,8 +130,8 @@ object HSForm: THSForm
   object Grid: TStringGrid
     Left = 0
     Top = 33
-    Width = 849
-    Height = 293
+    Width = 845
+    Height = 292
     Align = alClient
     ColCount = 10
     DefaultColWidth = 80
@@ -141,6 +144,8 @@ object HSForm: THSForm
     PopupMenu = Popup
     TabOrder = 3
     OnSelectCell = GridSelectCell
+    ExplicitWidth = 841
+    ExplicitHeight = 291
   end
   object Popup: TPopupMenu
     Left = 208

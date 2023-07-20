@@ -435,7 +435,7 @@ begin
   Scanner := THS1x0Discovery.Create(DoScanIP, DoNewDevice, DoDone);
   if (GetKeyState(VK_CONTROL) < 0) then
   begin
-    Scanner.Start(11, 20); // Dev Only 1 Thread
+    Scanner.Start(42, 42); // Dev Only 1 Thread
     SetForegroundWindow(Handle);
   end else begin
     if debugHook <> 0 then
@@ -535,9 +535,9 @@ var
   H, M, S, Ms:  Word;
 begin
   Grid.BeginUpdate;
-  Grid.Cells[1, Index] := Info.Fsystem.Fget_5Fsysinfo.Falias;
   if (Info <> nil) then
   begin
+    Grid.Cells[1, Index] := Info.Fsystem.Fget_5Fsysinfo.Falias;
      if Info.Fsystem.Fget_5Fsysinfo.Frelay_state = 1 then
       Grid.Cells[2, Index] := '   🗲'
      else
@@ -674,8 +674,7 @@ begin
         var Scheds := HS1x0.Schedule_GetRulesList;
         var CntDwn := HS1x0.Countdown_GetRulesList;
         var PrevMonthStats  := HS1x0.Emeter_GetDayStat(IncDay(Now, -1));
-        if (Info <> Nil) and (RealTime <> Nil) and (MonthStats <> Nil) then
-          Synchronize( procedure begin HSForm.SyncGrids(Self, Self.Index, HS1x0, Info, RealTime, MonthStats, PrevMonthStats, Scheds, CntDwn); end );
+        Synchronize( procedure begin HSForm.SyncGrids(Self, Self.Index, HS1x0, Info, RealTime, MonthStats, PrevMonthStats, Scheds, CntDwn); end );
         FreeAndNil(CntDwn);
         FreeAndNil(Scheds);
         FreeAndNil(PrevMonthStats);

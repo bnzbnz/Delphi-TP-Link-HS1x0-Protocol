@@ -1304,78 +1304,109 @@ end;
 function THS1x0.Emeter_GetRealtime: THS1x0_EMeter_GetRealtimeCVResponse;
 begin
   Result := nil;
-  var Response := DoRequest('{"emeter":{"get_realtime":{}}}');
-  if Response = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_EMeter_GetRealtimeCVResponse>(Response);
-  if Result = nil then Exit;
-  if Result.Femeter.Fget_5Frealtime.Ferr_5Fcode <> 0 then Exit;
-   // Compat hw v1.0/2.0
-  if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Fpower_mw) then
-    Result.Femeter.Fget_5Frealtime.Fpower_mw := Result.Femeter.Fget_5Frealtime.Fpower * 1000;
-  if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Fcurrent_ma) then
-    Result.Femeter.Fget_5Frealtime.Fcurrent_ma := Result.Femeter.Fget_5Frealtime.Fcurrent * 1000;
-  if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Fvoltage_mv) then
-    Result.Femeter.Fget_5Frealtime.Fvoltage_mv := Result.Femeter.Fget_5Frealtime.Fvoltage * 1000;
-  if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Ftotal_wh) then
-    Result.Femeter.Fget_5Frealtime.Ftotal_wh := Result.Femeter.Fget_5Frealtime.Ftotal * 1000;
-  // Compat hw v1.0/2.0
-  if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Fpower) then
-    Result.Femeter.Fget_5Frealtime.Fpower := Result.Femeter.Fget_5Frealtime.Fpower_mw / 1000;
-  if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Fcurrent) then
-    Result.Femeter.Fget_5Frealtime.Fcurrent := Result.Femeter.Fget_5Frealtime.Fcurrent_ma / 1000;
-  if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Fvoltage) then
-    Result.Femeter.Fget_5Frealtime.Fvoltage := Result.Femeter.Fget_5Frealtime.Fvoltage_mv / 1000;
-  if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Ftotal) then
-    Result.Femeter.Fget_5Frealtime.Ftotal := Result.Femeter.Fget_5Frealtime.Ftotal_wh / 1000;
+  try
+    var ResJSON := DoRequest('{"emeter":{"get_realtime":{}}}');
+    if ResJSON = '' then raise Exception.Create('Invalid Response');
+    Result := TJsonX.Parser<THS1x0_EMeter_GetRealtimeCVResponse>(ResJSON);
+    if Result = nil then
+      raise Exception.Create('Invalid Response');
+    if Result.Femeter.Fget_5Frealtime = nil then  // HS100
+      raise Exception.Create('Invalid Response');
+
+    if Result.Femeter.Fget_5Frealtime.Ferr_5Fcode = 0 then
+    begin
+       // Compat hw v1.0/2.0
+      if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Fpower_mw) then
+        Result.Femeter.Fget_5Frealtime.Fpower_mw := Result.Femeter.Fget_5Frealtime.Fpower * 1000;
+      if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Fcurrent_ma) then
+        Result.Femeter.Fget_5Frealtime.Fcurrent_ma := Result.Femeter.Fget_5Frealtime.Fcurrent * 1000;
+      if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Fvoltage_mv) then
+        Result.Femeter.Fget_5Frealtime.Fvoltage_mv := Result.Femeter.Fget_5Frealtime.Fvoltage * 1000;
+      if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Ftotal_wh) then
+        Result.Femeter.Fget_5Frealtime.Ftotal_wh := Result.Femeter.Fget_5Frealtime.Ftotal * 1000;
+      // Compat hw v1.0/2.0
+      if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Fpower) then
+        Result.Femeter.Fget_5Frealtime.Fpower := Result.Femeter.Fget_5Frealtime.Fpower_mw / 1000;
+      if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Fcurrent) then
+        Result.Femeter.Fget_5Frealtime.Fcurrent := Result.Femeter.Fget_5Frealtime.Fcurrent_ma / 1000;
+      if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Fvoltage) then
+        Result.Femeter.Fget_5Frealtime.Fvoltage := Result.Femeter.Fget_5Frealtime.Fvoltage_mv / 1000;
+      if VarIsEmpty(Result.Femeter.Fget_5Frealtime.Ftotal) then
+        Result.Femeter.Fget_5Frealtime.Ftotal := Result.Femeter.Fget_5Frealtime.Ftotal_wh / 1000;
+    end;
+  except
+    FreeAndNil(Result);
+  end;
 end;
 
 function THS1x0.Emeter_GetVGainIGain: THS1x0_GetVGainIGainResponse;
 begin
   Result := nil;
-  var ResJSON := DoRequest('{"emeter":{"get_vgain_igain":{}}}');
-  if ResJSON = '' then Exit;
-  Result := TJsonX.Parser<THS1x0_GetVGainIGainResponse>(ResJSON);
+  try
+    var ResJSON := DoRequest('{"emeter":{"get_vgain_igain":{}}}');
+    if ResJSON = '' then Exit;
+    Result := TJsonX.Parser<THS1x0_GetVGainIGainResponse>(ResJSON);
+    if Result = nil then
+      raise Exception.Create('Invalid Response');
+    if Result.Femeter.Fget_5Fvgain_5Figain = nil then // HS100
+      raise Exception.Create('Invalid Response');
+  except
+    FreeAndNil(Result);
+  end;
 end;
 
 function THS1x0.Emeter_SetVGainIGain(VGain, IGain: Integer): Boolean;
 begin
+  var ResObj: THS1x0_SetVGainIGainResponse := nil;
   Result := False;
-  var ResJSON := DoRequest(Format('{"emeter":{"set_vgain_igain":{"vgain":%d,"igain":%d}}}',[VGain, IGain]));
-  var Response := TJsonX.Parser<THS1x0_SetVGainIGainResponse>(ResJSON);
-  if Response <> nil then
-  begin
-     Result := Response.Femeter.Fset_5Fvgain_5Figain.Ferr_5Fcode = 0;
-     Response.Free;
+  try
+    var ResJSON := DoRequest(Format('{"emeter":{"set_vgain_igain":{"vgain":%d,"igain":%d}}}',[VGain, IGain]));
+    ResObj := TJsonX.Parser<THS1x0_SetVGainIGainResponse>(ResJSON);
+    if ResObj = nil then Exit;
+    if ResObj.Femeter.Fset_5Fvgain_5Figain = nil then Exit; // HS100
+    Result := ResObj.Femeter.Fset_5Fvgain_5Figain.Ferr_5Fcode = 0;
+  finally
+    ResObj.Free;
   end;
 end;
 
 function THS1x0.Emeter_StartCalibration(VTarget, ITarget: Integer): Boolean;
 begin
+  var ResObj: THS1x0_StartCalibrationResponse := nil;
   Result := False;
-  var ResJSON := DoRequest(Format('{"emeter":{"start_calibration":{"vtarget":%d,"itarget":%d}}}',[VTarget, ITarget]));
-  var Response := TJsonX.Parser<THS1x0_StartCalibrationResponse>(ResJSON);
-  if Response <> nil then
-  begin
-     Result := Response.Femeter.Fstart_5Fcalibration.Ferr_5Fcode = 0;
-     Response.Free;
+  try
+    var ResJSON := DoRequest(Format('{"emeter":{"start_calibration":{"vtarget":%d,"itarget":%d}}}',[VTarget, ITarget]));
+    ResObj := TJsonX.Parser<THS1x0_StartCalibrationResponse>(ResJSON);
+    if ResObj = nil then Exit;
+    if ResObj.Femeter.Fstart_5Fcalibration = nil then Exit; // HS100
+    Result := ResObj.Femeter.Fstart_5Fcalibration.Ferr_5Fcode = 0;
+  finally
+     ResObj.Free;
   end;
 end;
 
 function THS1x0.Emeter_GetDayStat(Month, Year: Integer): THS1x0_EMeter_GetDayStatResponse;
 begin
   Result := nil;
-  var Response := DoRequest( Format('{"emeter":{"get_daystat":{"month":%d,"year":%d}}}',[Month,Year]));
-  if Response = '' then Exit;
-  Result :=  TJsonX.Parser<THS1x0_EMeter_GetDayStatResponse>(Response);
-  if Result = nil then Exit;
-  if Result.Femeter.Fget_5Fdaystat.Ferr_5Fcode <> 0 then Exit;
-  // Compat hw v1.0/2.0
-  for var v in (Result.Femeter.Fget_5Fdaystat.Fday_5Flist) do
-  begin
-      if VarIsEmpty(THS1x0_DayStat(v).Fenergy_wh) then
-        THS1x0_DayStat(v).Fenergy_wh := THS1x0_DayStat(v).Fenergy * 1000;
-      if VarIsEmpty(THS1x0_DayStat(v).Fenergy) then
-        THS1x0_DayStat(v).Fenergy := THS1x0_DayStat(v).Fenergy_wh / 1000;
+  try
+    var ResJSON := DoRequest( Format('{"emeter":{"get_daystat":{"month":%d,"year":%d}}}',[Month,Year]));
+    if ResJSON = '' then Exit;
+    Result :=  TJsonX.Parser<THS1x0_EMeter_GetDayStatResponse>(ResJSON);
+    if Result = nil then
+      raise Exception.Create('Invalid Response');
+    if Result.Femeter.Fget_5Fdaystat = nil then // HS100
+    raise Exception.Create('Invalid Response');
+    // Compat hw v1.0/2.0
+    if Result.Femeter.Fget_5Fdaystat.Ferr_5Fcode = 0 then
+      for var v in (Result.Femeter.Fget_5Fdaystat.Fday_5Flist) do
+      begin
+        if VarIsEmpty(THS1x0_DayStat(v).Fenergy_wh) then
+          THS1x0_DayStat(v).Fenergy_wh := THS1x0_DayStat(v).Fenergy * 1000;
+        if VarIsEmpty(THS1x0_DayStat(v).Fenergy) then
+          THS1x0_DayStat(v).Fenergy := THS1x0_DayStat(v).Fenergy_wh / 1000;
+      end;
+  except
+    FreeAndNil(Result);
   end;
 end;
 
@@ -1392,19 +1423,28 @@ var
   Y, M, D: Word;
 begin
   Result := nil;
-  DecodeDate(Date, Y, M, D);
-  var Response := DoRequest( Format('{"emeter":{"get_monthstat":{"year":Y}}}',[Y]));
-  if Response = '' then Exit;
-  Result :=  TJsonX.Parser<THS1x0_EMeter_GetMonthStatResponse>(Response);
-  if Result = nil then Exit;
-  if Result.Femeter.Fget_5Fmonthstat.Ferr_5Fcode <> 0 then Exit;
-  // Compat hw v1.0/2.0
-  for var v in (Result.Femeter.Fget_5Fmonthstat.Fmonth_5Flist) do
-  begin
-      if VarIsEmpty(THS1x0_MonthStat(v).Fenergy_wh) then
-        THS1x0_MonthStat(v).Fenergy_wh := THS1x0_MonthStat(v).Fenergy * 1000;
-      if VarIsEmpty(THS1x0_MonthStat(v).Fenergy) then
-        THS1x0_MonthStat(v).Fenergy := THS1x0_MonthStat(v).Fenergy_wh / 1000;
+  try
+    DecodeDate(Date, Y, M, D);
+    var ResJSON := DoRequest( Format('{"emeter":{"get_monthstat":{"year":Y}}}',[Y]));
+    if ResJSON = '' then Exit;
+    Result := TJsonX.Parser<THS1x0_EMeter_GetMonthStatResponse>(ResJSON);
+    if Result = nil then
+      raise Exception.Create('Invalid Response');
+    if Result.Femeter.Fget_5Fmonthstat = nil then // HS100
+      raise Exception.Create('Invalid Response');
+    if Result.Femeter.Fget_5Fmonthstat.Ferr_5Fcode = 0 then
+    begin
+      // Compat hw v1.0/2.0
+      for var v in (Result.Femeter.Fget_5Fmonthstat.Fmonth_5Flist) do
+      begin
+        if VarIsEmpty(THS1x0_MonthStat(v).Fenergy_wh) then
+          THS1x0_MonthStat(v).Fenergy_wh := THS1x0_MonthStat(v).Fenergy * 1000;
+        if VarIsEmpty(THS1x0_MonthStat(v).Fenergy) then
+          THS1x0_MonthStat(v).Fenergy := THS1x0_MonthStat(v).Fenergy_wh / 1000;
+      end;
+    end;
+  except
+    FreeAndNil(Result);
   end;
 end;
 
