@@ -66,17 +66,19 @@ type
     function Clone: TJsonXObjListType;
   end;
   TJsonXVarVarDicType = class(TDictionary<variant, variant>)
-    function Clone: TJsonXObjListType;
+    function Clone: TJsonXVarVarDicType;
   end;
   TJsonXVarObjDicType = class(TObjectDictionary<variant, TObject>)  // Requires AJsonXClassType Attribute(Object class type)
-    function Clone: TJsonXObjListType;
+    function Clone: TJsonXVarObjDicType;
   end;
 
   TJsonXBaseExType = class(TJsonXBaseType)
+  protected
+    procedure InternalClone(T : TJsonXBaseExType); virtual;
   public
     //class function NewInstance: TObject; override;
     //procedure FreeInstance; override;
-    procedure ClonePropertiesTo(T : TJsonXBaseExType); virtual;
+
     function Clone: TJsonXBaseExType; virtual;
   end;
 
@@ -95,13 +97,6 @@ type
 
 implementation
 uses RTTI, uJsonX.RTTI, uJsonX.Utils, SysUtils, Variants;
-
-
-function TJsonXVarListType.CLone: TJsonXVarListType;
-begin
-  Result := TJsonXVarListType.create;
-  for var v in Self do Result.add(v);
-end;
 
 { TJsonXSystemParameters }
 
@@ -183,13 +178,11 @@ end;
 function TJsonXBaseExType.Clone: TJsonXBaseExType;
 begin
   Result := TJsonXBaseExType(Self.ClassType.Create);
-  Self.ClonePropertiesTo(Result);
-
+  Self.InternalClone(Result);
 end;
 
-procedure TJsonXBaseExType.ClonePropertiesTo(T: TJsonXBaseExType);
-
-begin
+procedure TJsonXBaseExType.InternalClone(T: TJsonXBaseExType);
+begin  // To do : use RTTI Cache
   if T = nil then exit;
   var rttictx := TRttiContext.Create();
   var rttitype := rttictx.GetType(Self.ClassType);
@@ -203,25 +196,33 @@ begin
       begin
         var Instance := field.FieldType.AsInstance;
 
-       if Instance.MetaclassType = TJsonXVarListType then
-         field.SetValue(T, TJsonXVarListType(field.GetValue(Self).AsObject).Clone)
-       else
-       if Instance.MetaclassType = TJsonXObjListType then
-         field.SetValue(T, TJsonXObjListType(field.GetValue(Self).AsObject).Clone)
-       else
-       if Instance.MetaclassType = TJsonXObjListType then
-         field.SetValue(T, TJsonXVarVarDicType(field.GetValue(Self).AsObject).Clone)
-       else
-       if Instance.MetaclassType = TJsonXVarVarDicType then
-         field.SetValue(T, TJsonXObjListType(field.GetValue(Self).AsObject).Clone)
-       else
-       if Instance.MetaclassType = TJsonXVarObjDicType then
-         field.SetValue(T, TJsonXVarObjDicType(field.GetValue(Self).AsObject).Clone)
-       else
+        if Instance.MetaclassType = TJsonXVarListType then
+          field.SetValue(T, TJsonXVarListType(field.GetValue(Self).AsObject).Clone)
+        else
+        if Instance.MetaclassType = TJsonXObjListType then
+          field.SetValue(T, TJsonXObjListType(field.GetValue(Self).AsObject).Clone)
+        else
+        if Instance.MetaclassType = TJsonXObjListType then
+          field.SetValue(T, TJsonXVarVarDicType(field.GetValue(Self).AsObject).Clone)
+        else
+        if Instance.MetaclassType = TJsonXVarVarDicType then
+          field.SetValue(T, TJsonXObjListType(field.GetValue(Self).AsObject).Clone)
+        else
+        if Instance.MetaclassType = TJsonXVarObjDicType then
+          field.SetValue(T, TJsonXVarObjDicType(field.GetValue(Self).AsObject).Clone)
+        else
          BreakPoint('TODO: Missing Type Cloning');
 
       end;
   rttictx.Free;
+end;
+
+{ TJsonXVarListType }
+
+function TJsonXVarListType.CLone: TJsonXVarListType;
+begin
+  Result := TJsonXVarListType.create;
+  for var v in Self do Result.Add(v);
 end;
 
 { TJsonXObjListType }
@@ -229,21 +230,23 @@ end;
 function TJsonXObjListType.Clone: TJsonXObjListType;
 begin
   Result := TJsonXObjListType.Create;
-  for var v in self do ( Result.Add(TJsonXBaseExType(v).Clone));
+  for var v in self do (Result.Add(TJsonXBaseExType(v).Clone));
 end;
 
 { TJsonXVarVarDicType }
 
-function TJsonXVarVarDicType.Clone: TJsonXObjListType;
+function TJsonXVarVarDicType.Clone: TJsonXVarVarDicType;
 begin
-  raise Exception.Create('TJsonXVarVarDicType.Clone : To be Implemented');
+  Result := TJsonXVarVarDicType.Create;
+  for var kv in Self do Result.Add(kv.Key, kv.Value);
 end;
 
 { TJsonXVarObjDicType }
 
-function TJsonXVarObjDicType.Clone: TJsonXObjListType;
+function TJsonXVarObjDicType.Clone: TJsonXVarObjDicType;
 begin
-  raise Exception.Create('TJsonXVarObjDicType.Clone : To be Implemented');
+  Result := TJsonXVarObjDicType.Create;
+  for var kv in Self do Result.Add(kv.Key, TJsonXBaseExType(kv.Value).Clone);
 end;
 
 end.
