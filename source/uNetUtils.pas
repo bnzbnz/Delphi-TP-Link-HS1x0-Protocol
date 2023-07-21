@@ -20,7 +20,6 @@ implementation
 uses  IdGlobal, IdStack, IdUDPClient, winsock2, IpHlpAPI, IpExport, IdIcmpClient,
       SysUtils, IdTCPClient, StrUtils;
 
-
 function LocalIP: string;
 type
   TaPInAddr = array[0..10] of PInAddr;
@@ -40,7 +39,7 @@ begin
       var i := 0;
       while pPtr^[i] <> nil do
       begin
-        Result := inet_ntoa(pPtr^[i]^);
+        Result := string(inet_ntoa(pPtr^[i]^));
         Inc(i);
       end;
     except

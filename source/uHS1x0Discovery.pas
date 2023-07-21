@@ -97,6 +97,7 @@ end;
 
 procedure THS1x0Discovery.Start(FromPort, ToPort: Byte);
 begin
+
   if (FromPort <> 0) and (ToPort <>255) then
   begin
     var Th := TDiscoveryThread.Create(True);
@@ -107,7 +108,7 @@ begin
     TH.FOnScanIP := FOnScanIP;
     TH.FOnNewDevice := FOnNewDevice;
     TH.IPs := IPs;
-    ScanThreadList.Add(Th);
+    ScanThreadList.Add(TH);
     Th.Start;
     Exit;
   end;
@@ -125,7 +126,7 @@ begin
     TH.FOnNewDevice := FOnNewDevice;
     TH.FOnDone := DoDone;
     TH.IPs := IPs;
-    ScanThreadList.Add(Th);
+    ScanThreadList.Add(TH);
     Th.Start;
   end;
 end;

@@ -436,7 +436,7 @@ begin
   if (GetKeyState(VK_CONTROL) < 0) then
   begin
     Scanner.Start(42, 42); // Dev Only 1 Thread
-    SetForegroundWindow(Handle);
+    SetForegroundWindow(Handle); // ???
   end else begin
     if debugHook <> 0 then
       ShowMessage('You are running in the IDE : Due to a Debugger Bug while multi-threading, the port scanning feature is going to be slow...');

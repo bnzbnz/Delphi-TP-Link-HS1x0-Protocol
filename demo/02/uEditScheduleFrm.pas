@@ -37,7 +37,7 @@ const
 
 function TEditScheduleFrm.ShowAsModal(SC: THS1x0_Schedule): Boolean;
 var
-  D, H, M, S, MS: word;
+  H, M, S, MS: word;
 begin
   CkbEnable.Checked := SC.Fenable;
   ComboBox1.ItemIndex := SC.Fsact;

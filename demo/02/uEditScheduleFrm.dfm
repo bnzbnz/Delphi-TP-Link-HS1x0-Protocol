@@ -3,8 +3,8 @@ object EditScheduleFrm: TEditScheduleFrm
   Top = 0
   BorderStyle = bsSingle
   Caption = 'Schedule Editor'
-  ClientHeight = 318
-  ClientWidth = 220
+  ClientHeight = 317
+  ClientWidth = 216
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

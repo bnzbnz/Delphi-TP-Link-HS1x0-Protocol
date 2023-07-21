@@ -64,14 +64,15 @@ begin
     Info := HS1x0.System_GetSysinfo;
     if Info = nil then Exit;
     RTime := HS1x0.Emeter_GetRealtime;
-    if RTime = Nil then Exit;
+    var Watt := -1; // HS100 - no EMeter
+    if RTime <> nil then Watt := RTime.Femeter.Fget_5Frealtime.Fpower;
     var Str := Format(
-                  '%s : %s is %s @ %s W',
+                  '%s : %s is %s @ %d W',
                   [
                     IP,
                     Info.Fsystem.Fget_5Fsysinfo.Falias,
-                    BStrONOFF[Boolean(Info.Fsystem.Fget_5Fsysinfo.Frelay_state)],
-                    VarToStr(RTime.Femeter.Fget_5Frealtime.Fpower)
+                    BStrONOFF[Boolean(Info.Fsystem.Fget_5Fsysinfo.Frelay_state)]
+                    , Watt
                   ]
                 );
     ListBox1.Items.Add(Str);
