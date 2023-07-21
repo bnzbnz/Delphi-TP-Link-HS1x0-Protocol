@@ -14,16 +14,18 @@ type
     Refresh: TButton;
     Panel2: TPanel;
     PBar: TProgressBar;
+    Memo1: TMemo;
     procedure FormShow(Sender: TObject);
     procedure RefreshClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure ListBox1Click(Sender: TObject);
   private
     { Private declarations }
   protected
     { Protected declarations }
-    procedure DoScanIP(nIP: Cardinal);
-    procedure DoNewDevice(nIP: Cardinal);
+    procedure DoScanIP(nIPv4: Cardinal);
+    procedure DoNewDevice(nIPv4: Cardinal);
     procedure DoDone;
   public
     { Public declarations }
@@ -41,10 +43,10 @@ uses uHS1x0, uNetUtils;
 const
   BStrONOFF: array[Boolean] of string = ('OFF','ON');
 
-procedure THSScanFrm.DoScanIP(nIP: Cardinal);
+procedure THSScanFrm.DoScanIP(nIPv4: Cardinal);
 begin
   PBar.Position := PBar.Position + 1;
-  Caption := 'Scanning IP : ' + IpAddrToStr(nIP);
+  Caption := 'Scanning IP : ' + IpAddrToStr(nIPv4);
 end;
 
 procedure THSScanFrm.DoDone;
@@ -52,14 +54,13 @@ begin
   Caption := 'Simple HS Scan';
 end;
 
-procedure THSScanFrm.DoNewDevice(nIP: Cardinal);
+procedure THSScanFrm.DoNewDevice(nIPv4: Cardinal);
 begin
   var Info: THS1x0_System_GetSysInfoResponse := nil;
   var RTime: THS1x0_EMeter_GetRealtimeCVResponse := nil;
   var HS1x0: THS1x0 := nil;
-  var IP := IpAddrToStr(nIP);
   try
-    HS1x0 := THS1x0.Create(IP);
+    HS1x0 := THS1x0.Create(nIPv4);
     if HS1x0 = nil then Exit;
     Info := HS1x0.System_GetSysinfo;
     if Info = nil then Exit;
@@ -69,13 +70,13 @@ begin
     var Str := Format(
                   '%s : %s is %s @ %d W',
                   [
-                    IP,
-                    Info.Fsystem.Fget_5Fsysinfo.Falias,
-                    BStrONOFF[Boolean(Info.Fsystem.Fget_5Fsysinfo.Frelay_state)]
+                      IpAddrToStr(nIPv4)
+                    , Info.Fsystem.Fget_5Fsysinfo.Falias
+                    , BStrONOFF[Boolean(Info.Fsystem.Fget_5Fsysinfo.Frelay_state)]
                     , Watt
                   ]
-                );
-    ListBox1.Items.Add(Str);
+               );
+    ListBox1.Items.AddObject(Str, TObject(nIPv4));
   finally
     RTime.Free;
     Info.Free;
@@ -98,6 +99,28 @@ procedure THSScanFrm.FormShow(Sender: TObject);
 begin
   Scanner := THS1x0Discovery.Create(DoScanIP, DoNewDevice, DoDone);
   Scanner.Start;
+end;
+
+procedure THSScanFrm.ListBox1Click(Sender: TObject);
+begin
+  Memo1.Clear;
+  if ListBox1.ItemIndex = -1 then Exit;
+  var Info: THS1x0_System_GetSysInfoResponse := nil;
+  var HS1x0: THS1x0 := nil;
+  try
+    var nIPv4 := Cardinal(ListBox1.Items.Objects[ListBox1.ItemIndex]);
+    HS1x0 := THS1x0.Create(nIPv4);
+    if HS1x0 = nil then Exit;
+    Info := HS1x0.System_GetSysinfo;
+    if Info = nil then Exit;
+    Memo1.Lines.Add('Alias: ' + Info.Fsystem.Fget_5Fsysinfo.Falias);
+    Memo1.Lines.Add('Model: ' + Info.Fsystem.Fget_5Fsysinfo.Fmodel);
+    Memo1.Lines.Add('Feature: ' + Info.Fsystem.Fget_5Fsysinfo.Ffeature);
+    Memo1.Lines.Add('Version: ' + Info.Fsystem.Fget_5Fsysinfo.Fhw_5Fver);
+  finally
+    HS1x0.Free;
+    Info.Free;
+  end;
 end;
 
 procedure THSScanFrm.RefreshClick(Sender: TObject);

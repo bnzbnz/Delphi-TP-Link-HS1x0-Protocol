@@ -865,6 +865,7 @@ type
   public
 
     constructor     Create(IP: string); overload;
+    constructor     Create(nIP: Cardinal); overload;
     destructor      Destroy; override;
 
     // Custom Commands
@@ -950,7 +951,7 @@ type
 {$ENDREGION}
 
 implementation
-uses StrUtils, SysUtils, DateUtils, IdGlobal, IdIOHandler, Variants;
+uses StrUtils, SysUtils, DateUtils, IdGlobal, IdIOHandler, Variants, uNetUtils;
 
 {$REGION 'THS1x0 Core'}
 
@@ -964,6 +965,11 @@ begin
   FTCP.ConnectTimeout := 500;
   FTCP.ReadTimeout := 1500;
   FTCP.ReuseSocket := rsOSDependent;
+end;
+
+constructor THS1x0.Create(nIP: Cardinal);
+begin
+  Create(IpAddrToStr(nIP));
 end;
 
 destructor THS1x0.Destroy;
