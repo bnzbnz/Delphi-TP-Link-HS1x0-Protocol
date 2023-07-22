@@ -90,6 +90,7 @@ type
     HSTrealTimeList : TObjectList<THSRealTime>;
     procedure InitRow(nIP: Cardinal);
     procedure Stop;
+    function  MustRefresh(Index: Integer): Boolean;
     procedure SyncGrids(
                 Thread: THSRealTime;
                 Index: Integer;
@@ -137,6 +138,7 @@ procedure THSForm.DoDone;
 begin
   HSForm.Caption := 'HS1x0 Editor';
   HSForm.PBar.Position := 0;
+  if Grid.RowCount > 1 then Grid.Row := 1;
 end;
 
 procedure THSForm.InitRow(nIP: Cardinal);
@@ -475,6 +477,9 @@ end;
 procedure THSForm.GridSelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
 begin
+  CanSelect := not Scanner.Busy;
+  if not CanSelect then
+    Exit;
   if (ACol = 0) and (ARow = 0)  then
     Exit;
   for var i := 0  to GridD.ColCount do
@@ -658,6 +663,11 @@ begin
   GridC.Refresh;
 end;
 
+function THSForm.MustRefresh(Index: Integer): Boolean;
+begin
+  Result := Grid.Row = Index;
+end;
+
 { THSRealTime }
 
 procedure THSRealTime.Execute;
@@ -683,7 +693,12 @@ begin
         FreeAndNil(RealTime);
         FreeAndNil(Info);
       except; end;
-      while ((Start + 1000) > GetTickCount) and not Terminated do sleep(100);
+      var Refresh: Boolean := False;
+      while ((Start + 1500) > GetTickCount) and not Terminated  and not Refresh do
+      begin
+        Synchronize( procedure begin Refresh := HSForm.MustRefresh(Index); end );
+        sleep(250);
+      end;
     end;
   finally
     HS1x0.Free;

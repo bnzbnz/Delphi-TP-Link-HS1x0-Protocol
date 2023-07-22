@@ -39,7 +39,8 @@ type
     class function Call: TList<Cardinal>;
 
     procedure   Start(FromPort: Byte = 0; ToPort: Byte = 255);
-    procedure   Stop;
+    procedure   Stop; 
+    function    Busy: Boolean; 
     function    GetRunningThreadCount: Cardinal;
     constructor Create(
                     ScanIPEvent: THS1x0Discovery_ScanIPEvent;
@@ -81,6 +82,11 @@ begin
   Result := 0;
   for var T in ScanThreadList do
     if not T.Terminated then Inc(Result);
+end;
+
+function THS1x0Discovery.Busy: Boolean;
+begin
+  Result := FThreadCount > 0;
 end;
 
 class function THS1x0Discovery.Call: TList<Cardinal>;
