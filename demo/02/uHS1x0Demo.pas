@@ -81,7 +81,7 @@ type
     { Private declarations }
   protected
     procedure DoScanIP(nIP: Cardinal);
-    procedure DoNewDevice(nIP: Cardinal);
+    procedure DoNewDevice(HS1x0: THS1x0);
     procedure DoDone;
   public
     { Public declarations }
@@ -128,9 +128,9 @@ begin
   if HSForm.PBar.Position = 255 then HSForm.Caption := 'HS1x0';
 end;
 
-procedure THSForm.DoNewDevice(nIP: Cardinal);
+procedure THSForm.DoNewDevice(HS1x0: THS1x0);
 begin
-  HSForm.InitRow(nIP);
+  HSForm.InitRow(HS1x0.nIPv4);
 end;
 
 procedure THSForm.DoDone;

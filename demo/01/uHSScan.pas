@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.StdCtrls, uHS1x0Discovery,
-  Vcl.Samples.Spin;
+  Vcl.Samples.Spin, uHS1x0;
 
 type
   THSScanFrm = class(TForm)
@@ -25,7 +25,7 @@ type
   protected
     { Protected declarations }
     procedure DoScanIP(nIPv4: Cardinal);
-    procedure DoNewDevice(nIPv4: Cardinal);
+    procedure DoNewDevice(HS1x0: THS1x0);
     procedure DoDone;
   public
     { Public declarations }
@@ -36,7 +36,7 @@ var
   HSScanFrm: THSScanFrm;
 
 implementation
-uses uHS1x0, uNetUtils;
+uses uNetUtils;
 
 {$R *.dfm}
 
@@ -52,20 +52,15 @@ end;
 procedure THSScanFrm.DoDone;
 begin
   Caption := 'Simple HS Scan';
+  PBar.Position := 0;
 end;
 
-procedure THSScanFrm.DoNewDevice(nIPv4: Cardinal);
+procedure THSScanFrm.DoNewDevice(HS1x0: THS1x0);
 begin
   var Info: THS1x0_System_GetSysInfoResponse := nil;
   var RTime: THS1x0_EMeter_GetRealtimeCVResponse := nil;
-  var HS1x0: THS1x0 := nil;
   try
-    HS1x0 := THS1x0.Create(nIPv4);
-    if HS1x0 = nil then Exit;
     Info := HS1x0.System_GetSysinfo;
-    if Info = nil then
-          Info := HS1x0.System_GetSysinfo;
-
     if Info = nil then Exit;
     RTime := HS1x0.Emeter_GetRealtime;
     var Watt := -1; // HS100 - no EMeter
@@ -73,17 +68,16 @@ begin
     var Str := Format(
                   '%s : %s is %s @ %d W',
                   [
-                      IpAddrToStr(nIPv4)
+                      HS1x0.IPv4
                     , Info.Fsystem.Fget_5Fsysinfo.Falias
                     , BStrONOFF[Boolean(Info.Fsystem.Fget_5Fsysinfo.Frelay_state)]
                     , Watt
                   ]
                );
-    ListBox1.Items.AddObject(Str, TObject(nIPv4));
+    ListBox1.Items.AddObject(Str, TObject(HS1x0.nIPv4));
   finally
     RTime.Free;
     Info.Free;
-    HS1x0.Free;
   end;
 end;
 
@@ -113,7 +107,6 @@ begin
   try
     var nIPv4 := Cardinal(ListBox1.Items.Objects[ListBox1.ItemIndex]);
     HS1x0 := THS1x0.Create(nIPv4);
-    if HS1x0 = nil then Exit;
     Info := HS1x0.System_GetSysinfo;
     if Info = nil then Exit;
     Memo1.Lines.Add('Alias: ' + Info.Fsystem.Fget_5Fsysinfo.Falias);

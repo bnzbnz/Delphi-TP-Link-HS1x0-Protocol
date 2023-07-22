@@ -1,7 +1,7 @@
 unit uHS1x0Discovery;
 
 interface
-uses Classes, System.Generics.Collections;
+uses Classes, System.Generics.Collections, uHS1x0;
 
 type
 
@@ -10,7 +10,7 @@ type
 
   THS1x0Discovery_DoneEvent   = procedure of object;
   THS1x0Discovery_ScanIPEvent = procedure(nIP: Cardinal) of object;
-  THS1x0Discovery_FoundEvent  = THS1x0Discovery_ScanIPEvent;
+  THS1x0Discovery_FoundEvent  = procedure(HS1x0: THS1x0) of object;
 
   TDiscoveryThread = class(TThread)
   public
@@ -53,7 +53,7 @@ type
   end;
 
 implementation
-uses uHS1x0, uNetUtils, windows;
+uses uNetUtils, windows;
 
 constructor THS1x0Discovery.Create(
                 ScanIPEvent: THS1x0Discovery_ScanIPEvent;
@@ -164,30 +164,14 @@ try
   begin
     if Terminated then Break;
     var nIP := BaseIP + Cardinal(Abs(i));
-    IP := IpAddrToStr(nIP);
-    Synchronize(
-                  procedure
-                  begin
-                    try
-                      if assigned(FOnScanIP) then FOnScanIP(nIP);
-                    except
-                    end;
-                  end
-               );
-
-
-    var HS1x0 := THS1x0.Create(IP);
-    if HS1x0 <> Nil then
+    Synchronize( procedure begin try if assigned(FOnScanIP) then FOnScanIP(nIP); except end; end );
+    var HS1x0 := THS1x0.Create( IpAddrToStr(nIP) );
+    if HS1x0.ping then
     begin
-      try
-        if HS1x0.ping then
-        begin
-          Synchronize( procedure begin try if assigned(FOnNewDevice) then FOnNewDevice(nIP); except end; end );
-          Synchronize( procedure begin try if assigned(IPs) then IPs.Add(nIP); except end; end );
-        end;
-      except; end;
-      HS1x0.Free;
+      Synchronize( procedure begin try if assigned(FOnNewDevice) then FOnNewDevice(HS1x0); except end; end );
+      Synchronize( procedure begin try if assigned(IPs) then IPs.Add(nIP); except end; end );
     end;
+    HS1x0.Free;
   end;
 finally
   Synchronize( procedure begin if assigned(FOnDone) then FOnDone; end );
