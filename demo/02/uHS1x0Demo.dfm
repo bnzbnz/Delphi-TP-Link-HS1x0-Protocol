@@ -23,22 +23,23 @@ object HSForm: THSForm
     Height = 33
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 837
     DesignSize = (
       841
       33)
     object PBar: TProgressBar
       Left = 16
       Top = 10
-      Width = 693
+      Width = 685
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Max = 255
       TabOrder = 0
-      ExplicitWidth = 697
+      ExplicitWidth = 681
     end
   end
   object Button1: TButton
-    Left = 726
+    Left = 718
     Top = 10
     Width = 75
     Height = 17
@@ -46,7 +47,7 @@ object HSForm: THSForm
     Caption = 'Refresh'
     TabOrder = 1
     OnClick = Button1Click
-    ExplicitLeft = 730
+    ExplicitLeft = 714
   end
   object Panel2: TPanel
     Left = 0
@@ -55,19 +56,21 @@ object HSForm: THSForm
     Height = 194
     Align = alBottom
     TabOrder = 2
+    ExplicitTop = 323
+    ExplicitWidth = 837
     object Panel3: TPanel
       Left = 330
       Top = 1
-      Width = 514
+      Width = 510
       Height = 192
       Align = alClient
       Caption = 'Panel3'
       TabOrder = 0
-      ExplicitWidth = 510
+      ExplicitWidth = 506
       object GridS: TStringGrid
         Left = 1
         Top = 1
-        Width = 512
+        Width = 508
         Height = 112
         Align = alTop
         ColCount = 6
@@ -79,7 +82,7 @@ object HSForm: THSForm
         ScrollBars = ssVertical
         TabOrder = 0
         OnDblClick = GridSDblClick
-        ExplicitWidth = 508
+        ExplicitWidth = 504
         ColWidths = (
           64
           64
@@ -91,7 +94,7 @@ object HSForm: THSForm
       object GRidC: TStringGrid
         Left = 1
         Top = 96
-        Width = 512
+        Width = 508
         Height = 95
         Align = alBottom
         DoubleBuffered = True
@@ -101,7 +104,7 @@ object HSForm: THSForm
         PopupMenu = PopupCntDwn
         TabOrder = 1
         OnDblClick = GRidCDblClick
-        ExplicitWidth = 508
+        ExplicitWidth = 504
         ColWidths = (
           64
           64
@@ -141,6 +144,8 @@ object HSForm: THSForm
     PopupMenu = Popup
     TabOrder = 3
     OnSelectCell = GridSelectCell
+    ExplicitWidth = 837
+    ExplicitHeight = 290
   end
   object Popup: TPopupMenu
     Left = 208

@@ -63,6 +63,9 @@ begin
     HS1x0 := THS1x0.Create(nIPv4);
     if HS1x0 = nil then Exit;
     Info := HS1x0.System_GetSysinfo;
+    if Info = nil then
+          Info := HS1x0.System_GetSysinfo;
+
     if Info = nil then Exit;
     RTime := HS1x0.Emeter_GetRealtime;
     var Watt := -1; // HS100 - no EMeter

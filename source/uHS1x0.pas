@@ -859,9 +859,10 @@ type
     FIP:      string;
     LReq:     string;
     LRes:     string;
-    function  Encrypt(Str: string): TMemoryStream;
-    function  Decrypt(Stream: TMemoryStream): string;
+    function  XOREncrypt(Key: Byte; Str: string): TMemoryStream;
+    function  XORDecrypt(Key: Byte; Stream: TMemoryStream): string;
     function  DoRequest(JsonBody: string): string;
+    function  GetnIPv4: Cardinal;
   public
 
     constructor     Create(IP: string); overload;
@@ -940,10 +941,9 @@ type
     function        AntiTheft_DeleteRule(Id: string): THS1x0_AntiTheft_DeleteRuleResponse;
     function        AntiTheft_DeleteAllRules: THS1x0_AntiTheft_DeleteAllRulesResponse;
 
-    property IP: string read FIP;
-
-    // Debugging
-
+     // Debugging
+    property IPv4: string read FIP;
+    property nIPv4: Cardinal read GetnIPv4;
     property LastRequest: string read LReq;
     property LastResponse: string read LRes;
   end;
@@ -979,10 +979,9 @@ begin
   inherited;
 end;
 
-function THS1x0.Encrypt(Str: string): TMemoryStream;
+function THS1x0.XOREncrypt(Key: Byte; Str: string): TMemoryStream;
 begin
   Result := TMemoryStream.Create;
-  var Key := Byte(171);
   for var i := 1 to Length(Str) do
   begin
     var a := Key xor ord(Str[i]);
@@ -992,13 +991,12 @@ begin
   Result.Position := 0;
 end;
 
-function THS1x0.Decrypt(Stream: TMemoryStream): string;
+function THS1x0.XORDecrypt(Key: Byte; Stream: TMemoryStream): string;
 var
   c: Byte;
 begin
   Result := '';
   Stream.Position := 0;
-  var Key := Byte(171);
   while(Stream.Position < Stream.Size) do
   begin
     Stream.read(c, 1);
@@ -1016,32 +1014,33 @@ begin
   try
     LReq := JsonBody;
     try
-      FTCP.Connect;
-      Stream := Encrypt(JsonBody);
-      FTCP.IOHandler.Write(Integer(Stream.Size), True);
+      if not FTCP.Connected then FTCP.Connect;
+      Stream := XOREncrypt($AB, JsonBody);
+      FTCP.IOHandler.Write(UInt32(Stream.Size), True);
       FTCP.IOHandler.Write(Stream);
       FTCP.IOHandler.Readable;
       Stream.Clear;
-      var ResSize := FTCP.IOHandler.ReadInt32(True);
+      var ResSize := FTCP.IOHandler.ReadUInt32(True);
       FTCP.IOHandler.ReadStream(Stream, ResSize);
-      Result := Decrypt(Stream);
+      Result := XORDecrypt($AB, Stream);
     except
       Result := '';
     end;
   finally
     LRes := Result;
-    FTCP.Disconnect;
     Stream.Free;
+    FTCP.Disconnect;
   end;
+end;
+
+function THS1x0.GetnIPv4: Cardinal;
+begin
+  Result := StrToIPAddr(FIP);
 end;
 
 function THS1x0.Ping: Boolean;
 begin
-  Result := False;
-  var Response := Self.System_GetSysinfo;
-  if Response = nil then Exit;
-  Response.Free;
-  Result := True;
+  Result := DoRequest('{"system":{"ping":{}}}') <> '';
 end;
 
 {$ENDREGION}

@@ -3,7 +3,7 @@ object EditCntDwnFrm: TEditCntDwnFrm
   Top = 0
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
-  Caption = 'Countdown Editor'
+  Caption = 'ee'
   ClientHeight = 181
   ClientWidth = 217
   Color = clBtnFace

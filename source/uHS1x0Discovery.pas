@@ -182,8 +182,8 @@ try
       try
         if HS1x0.ping then
         begin
-          Synchronize( procedure begin  try if assigned(FOnNewDevice) then FOnNewDevice(nIP); except end; end );
-          Synchronize( procedure begin  try if assigned(IPs) then IPs.Add(nIP); except end; end );
+          Synchronize( procedure begin try if assigned(FOnNewDevice) then FOnNewDevice(nIP); except end; end );
+          Synchronize( procedure begin try if assigned(IPs) then IPs.Add(nIP); except end; end );
         end;
       except; end;
       HS1x0.Free;

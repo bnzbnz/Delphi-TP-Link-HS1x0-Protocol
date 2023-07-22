@@ -658,16 +658,17 @@ begin
   GridC.Refresh;
 end;
 
-{ THS1x0Thread }
+{ THSRealTime }
+
 procedure THSRealTime.Execute;
 begin
-  while not Terminated do
-  begin
-    var Start := Cardinal(GetTickCount);
-    try
-      var HS1x0 := THS1x0.Create(IP);
-      if HS1x0 <> nil then
-      begin
+  var HS1x0 := THS1x0.Create(IP);
+  if HS1x0 = nil then Exit;
+  try
+    while not Terminated do
+    begin
+      var Start := Cardinal(GetTickCount);
+      try
         var Info := HS1x0.System_GetSysinfo;
         var RealTime := HS1x0.Emeter_GetRealtime;
         var MonthStats := HS1x0.Emeter_GetDayStat(IncDay(Now, 0));
@@ -681,10 +682,12 @@ begin
         FreeAndNil(MonthStats);
         FreeAndNil(RealTime);
         FreeAndNil(Info);
-      end;
-      HS1x0.Free;
-    except; end;
-    while ((Start + 1000) > GetTickCount) and not Terminated do sleep(100);
+      except; end;
+      while ((Start + 1000) > GetTickCount) and not Terminated do sleep(100);
+    end;
+  finally
+    HS1x0.Free;
   end;
 end;
+
 end.
