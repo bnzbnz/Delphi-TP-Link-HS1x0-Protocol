@@ -37,7 +37,7 @@ begin
       if Rule.Fid = Id then
       begin
         Result := THS1x0_Schedule(Rule.Clone);
-        Exit;
+        Break;
       end;
     end;
   finally
@@ -57,7 +57,7 @@ begin
       if Rule.Fid = Id then
       begin
         Result := THS1x0_Countdown(Rule.Clone);
-        Exit;
+        Break;
       end;
     end;
   finally
@@ -77,7 +77,7 @@ begin
       if Rule.Fid = Id then
       begin
         Result := THS1x0_AntiTheft(Rule.Clone);
-        Exit;
+        Break;
       end;
     end;
   finally

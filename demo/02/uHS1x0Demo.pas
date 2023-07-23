@@ -105,13 +105,16 @@ type
   end;
 var
   HSForm : THSForm;
-  implementation
+
+implementation
 uses uHS1x0Hlp, uNetUtils, DateUtils;
+
 {$R *.dfm}
+
 //Helpers
 const
   BInt: array[boolean] of integer = (0, 1);
-  BEnable: array[boolean] of string = ('Disable', 'Enable');
+  BEnable: array[boolean] of string = ('Disabled', 'Enabled');
   BOnOff: array[boolean] of string = ('OFF', 'ON');
 
 function IIF(C: Boolean; A, B: variant): variant;
@@ -440,9 +443,9 @@ begin
     Scanner.Start(42, 42); // Dev Only 1 Thread
     SetForegroundWindow(Handle); // ???
   end else begin
+    Scanner.Start;
     if debugHook <> 0 then
       ShowMessage('You are running in the IDE : Due to a Debugger Bug while multi-threading, the port scanning feature is going to be slow...');
-    Scanner.Start;
   end;
 
   Grid.Cells[0,0] := 'IP'; Grid.ColWidths[0] := 80;

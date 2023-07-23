@@ -859,6 +859,7 @@ type
     FIP:      string;
     LReq:     string;
     LRes:     string;
+    function  RequestToJson(Request: TJsonXBaseEx2Type): string;  // HS 100 Compatibility
     function  XOREncrypt(Key: Byte; Str: string): TMemoryStream;
     function  XORDecrypt(Key: Byte; Stream: TMemoryStream): string;
     function  DoRequest(JsonBody: string): string;
@@ -1005,6 +1006,17 @@ begin
     Result := Result + chr(a);
   end;
 end;
+
+function THS1x0.RequestToJson(Request: TJsonXBaseEx2Type): string;  // HS 100 Compatibility
+begin
+  var ParamsHS100 := TJsonXSystemParameters.Create(Nil, [jxoUnassignedAsNull]);
+  try
+    Result := TJsonX.Writer(Request, ParamsHS100)
+  finally
+    ParamsHS100.Free;
+  end;
+end;
+
 
 function THS1x0.DoRequest(JsonBody: string): string;
 var
@@ -1499,7 +1511,7 @@ end;
 function THS1x0.Schedule_AddRule(Rule: THS1x0_Schedule_AddRuleRequest): THS1x0_Schedule_AddRuleResponse;
 begin
   Result := nil;
-  var ReqJSON := TJsonX.Writer(Rule);
+  var ReqJSON := RequestToJson(Rule);
   if ReqJSON = '' then Exit;
   var ResJSON := DoRequest(ReqJSON);
   if ResJSON = '' then Exit;
@@ -1575,7 +1587,7 @@ end;
 function THS1x0.Schedule_EditRule(Rule: THS1x0_Schedule_EditRuleRequest): THS1x0_Schedule_EditRuleResponse;
 begin
   Result := Nil;
-  var ReqJSON := TJsonX.Writer(Rule);
+  var ReqJSON := RequestToJson(Rule);
   if ReqJSON = '' then Exit;
   var ResJSON := DoRequest(ReqJSON);
   if ResJSON = '' then Exit;
@@ -1625,7 +1637,7 @@ end;
 function THS1x0.Countdown_AddRule(Rule: THS1x0_Countdown_AddRuleRequest): THS1x0_Countdown_AddRuleResponse;
 begin
   Result := nil;
-  var ReqJSON := TJsonX.Writer(Rule);
+  var ReqJSON := RequestToJson(Rule);
   if ReqJSON = '' then Exit;
   var ResJSON := DoRequest(ReqJSON);
   if ResJSON = '' then Exit;
@@ -1660,7 +1672,7 @@ end;
 function  THS1x0.Countdown_EditRule(Rule: THS1x0_Countdown_EditRuleRequest): THS1x0_Countdown_EditRuleResponse;
 begin
   Result := Nil;
-  var ReqJSON := TJsonX.Writer(Rule);
+  var ReqJSON := RequestToJson(Rule);
   if ReqJSON = '' then Exit;
   var ResJSON := DoRequest(ReqJSON);
   if ResJSON = '' then Exit;
@@ -1745,7 +1757,7 @@ end;
 function THS1x0.AntiTheft_AddRule(Rule: THS1x0_AnitTheft_AddRuleRequest): THS1x0_AnitTheft_AddRuleResponse;
 begin
   Result := Nil;
-  var ReqJSON := TJsonX.Writer(Rule);
+  var ReqJSON := RequestToJson(Rule);
   if ReqJSON = '' then Exit;
   var ResJSON := DoRequest(ReqJSON);
   if ResJSON = '' then Exit;
@@ -1795,7 +1807,7 @@ end;
 function THS1x0.AntiTheft_EditRule(Rule: THS1x0_AntiTheft_EditRuleRequest): THS1x0_AntiTheft_EditRuleResponse;
 begin
   Result := Nil;
-  var ReqJSON := TJsonX.Writer(Rule);
+  var ReqJSON := RequestToJson(Rule);
   if ReqJSON = '' then Exit;
   var ResJSON := DoRequest(ReqJSON);
   if ResJSON = '' then Exit;
@@ -1936,7 +1948,7 @@ end;
     Request.Ftime.Fset_5Ftimezone.Fmin := AMinute;
     Request.Ftime.Fset_5Ftimezone.Fsec := ASecond;
     Request.Ftime.Fset_5Ftimezone.Findex := TimeZoneIndex;
-    var ReqJSON := TJsonX.Writer(Request);
+    var ReqJSON := RequestToJson(Request);
     Request.Free;
     var ResJSON := DoRequest(ReqJSON);
     if ResJSON = '' then Exit;

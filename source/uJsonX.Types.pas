@@ -16,6 +16,7 @@ type
 
   TJsonXParsingOption = (
     jxoReturnEmptyObject,
+    jxoUnassignedAsNull,
     jxoWarnOnMissingField,
     jxoRaiseException,
     jxoPropertiesOnly,

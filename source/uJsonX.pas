@@ -552,7 +552,11 @@ begin
 
       case FindVarData(V)^.VType of
         varEmpty, varNull:
-          if Assigned(SysStatus) then Inc(SysStatus.NilVarCount);
+        begin
+            if Assigned(SysStatus) then Inc(SysStatus.NilVarCount);
+            if jxoUnassignedAsNull in SysParams.Options then
+              aJsonObj.InternAddItem(N).VariantValue := Null;
+        end;
         varOleStr, varString, varUString:
           aJsonObj.InternAddItem(N).Value := (V);
         varSmallInt, varInteger, varShortInt, varByte, varWord, varLongWord:
