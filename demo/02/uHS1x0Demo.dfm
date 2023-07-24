@@ -30,16 +30,16 @@ object HSForm: THSForm
     object PBar: TProgressBar
       Left = 16
       Top = 10
-      Width = 665
+      Width = 724
       Height = 17
       Anchors = [akLeft, akTop, akRight]
       Max = 255
       TabOrder = 0
-      ExplicitWidth = 661
+      ExplicitWidth = 720
     end
   end
   object Button1: TButton
-    Left = 698
+    Left = 746
     Top = 10
     Width = 75
     Height = 17
@@ -47,7 +47,7 @@ object HSForm: THSForm
     Caption = 'Refresh'
     TabOrder = 1
     OnClick = Button1Click
-    ExplicitLeft = 694
+    ExplicitLeft = 742
   end
   object Panel2: TPanel
     Left = 0
@@ -192,9 +192,13 @@ object HSForm: THSForm
       OnClick = StatsReset1Click
     end
     object DevTestMenu: TMenuItem
-      Caption = '~~ DevTest ~~'
+      Caption = '-'
       Visible = False
       OnClick = DevTestMenuClick
+    end
+    object Guirland1: TMenuItem
+      Caption = 'Flashing Light'
+      OnClick = Guirland1Click
     end
   end
   object PopupScheds: TPopupMenu

@@ -10,7 +10,7 @@ type
 
   THS1x0Discovery_DoneEvent   = procedure of object;
   THS1x0Discovery_ScanIPEvent = procedure(nIP: Cardinal) of object;
-  THS1x0Discovery_FoundEvent  = procedure(HS1x0: THS1x0) of object;
+  THS1x0Discovery_FoundEvent  = procedure(HS1x0: THS1x0; Info: THS1x0_System_GetSysInfoResponse) of object;
 
   TDiscoveryThread = class(TThread)
   public
@@ -107,7 +107,7 @@ begin
   if (FromPort <> 0) and (ToPort <>255) then
   begin
     var Th := TDiscoveryThread.Create(True);
-    Th.Priority := tpIdle;
+    //Th.Priority := tpIdle;
     Th.FreeOnTerminate := False;
     TH.StartIP := FromPort;
     TH.EndIP := ToPort;
@@ -172,10 +172,12 @@ try
     var nIP := BaseIP + Cardinal(Abs(i));
     Synchronize( procedure begin try if assigned(FOnScanIP) then FOnScanIP(nIP); except end; end );
     var HS1x0 := THS1x0.Create( IpAddrToStr(nIP) );
-    if HS1x0.ping then
+    var Info := HS1x0.System_GetSysinfo;
+    if  Info <> nil then
     begin
-      Synchronize( procedure begin try if assigned(FOnNewDevice) then FOnNewDevice(HS1x0); except end; end );
+      Synchronize( procedure begin try if assigned(FOnNewDevice) then FOnNewDevice(HS1x0, Info); except end; end );
       Synchronize( procedure begin try if assigned(IPs) then IPs.Add(nIP); except end; end );
+      Info.Free;
     end;
     HS1x0.Free;
   end;

@@ -870,8 +870,6 @@ type
     constructor     Create(nIP: Cardinal); overload;
     destructor      Destroy; override;
 
-    // Custom Commands
-    function        Ping: Boolean;
     // System Commands
     function        System_GetSysinfo: THS1x0_System_GetSysInfoResponse;
     function        System_Reboot: THS1x0_System_RebootResponse;
@@ -1048,11 +1046,6 @@ end;
 function THS1x0.GetnIPv4: Cardinal;
 begin
   Result := StrToIPAddr(FIP);
-end;
-
-function THS1x0.Ping: Boolean;
-begin
-  Result := DoRequest('{"system":{"ping":{}}}') <> '';
 end;
 
 {$ENDREGION}

@@ -53,6 +53,7 @@ type
     Delete1: TMenuItem;
     DeleteALL1: TMenuItem;
     DevTestMenu: TMenuItem;
+    Guirland1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -77,18 +78,19 @@ type
     procedure DevTestMenuClick(Sender: TObject);
     procedure DeleteALL1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Guirland1Click(Sender: TObject);
   private
     { Private declarations }
   protected
     procedure DoScanIP(nIP: Cardinal);
-    procedure DoNewDevice(HS1x0: THS1x0);
+    procedure DoNewDevice(HS1x0: THS1x0; Info: THS1x0_System_GetSysInfoResponse);
     procedure DoDone;
   public
     { Public declarations }
     RowThreadCnt: Integer;
     Scanner : THS1x0Discovery;
     HSTrealTimeList : TObjectList<THSRealTime>;
-    procedure InitRow(nIP: Cardinal);
+    procedure InitRow(nIP: Cardinal; Info: THS1x0_System_GetSysInfoResponse);
     procedure Stop;
     function  MustRefresh(Index: Integer): Boolean;
     procedure SyncGrids(
@@ -132,9 +134,9 @@ begin
   if HSForm.PBar.Position = 255 then HSForm.Caption := 'HS1x0';
 end;
 
-procedure THSForm.DoNewDevice(HS1x0: THS1x0);
+procedure THSForm.DoNewDevice(HS1x0: THS1x0; Info: THS1x0_System_GetSysInfoResponse);
 begin
-  HSForm.InitRow(HS1x0.nIPv4);
+  HSForm.InitRow(HS1x0.nIPv4, Info);
 end;
 
 procedure THSForm.DoDone;
@@ -144,12 +146,13 @@ begin
   if Grid.RowCount > 1 then Grid.Row := 1;
 end;
 
-procedure THSForm.InitRow(nIP: Cardinal);
+procedure THSForm.InitRow(nIP: Cardinal; Info: THS1x0_System_GetSysInfoResponse);
 begin
   var TH := THSRealTime.Create(True);
   TH.Index := Grid.RowCount;
   TH.IP := IpAddrToStr(nIP);
   Grid.Cells[0, Grid.RowCount] := TH.IP;
+  Grid.Cells[1, Grid.RowCount] := Info.Fsystem.Fget_5Fsysinfo.Fmodel + ' ' +  Info.Fsystem.Fget_5Fsysinfo.Falias;
   HSTrealTimeList.Add(TH);
   TH.Priority := tpLowest;
   Grid.RowCount := Grid.RowCount + 1;
@@ -222,7 +225,7 @@ begin
   var Rule: THS1x0_CountDown := Nil;
   var Req: THS1x0_Countdown_EditRuleRequest := Nil;
   var IP := Grid.Cells[0, Grid.Row ];
-  var ID := GridC.Cells[0, Grids.Row ];
+  var ID := GridC.Cells[0, GridC.Row ];
   try
     HS := THS1x0.Create(IP);
     if HS = nil then Exit;
@@ -449,7 +452,7 @@ begin
   end;
 
   Grid.Cells[0,0] := 'IP'; Grid.ColWidths[0] := 80;
-  Grid.Cells[1,0] := 'Alias'; Grid.ColWidths[1] := 128;
+  Grid.Cells[1,0] := 'Alias'; Grid.ColWidths[1] := 180;
   Grid.Cells[2, 0] := 'Power'; Grid.ColWidths[2] := 44;
   Grid.Cells[3, 0] := '  LED'; Grid.ColWidths[3] := 44;
   Grid.Cells[4, 0] := 'Watts';
@@ -480,9 +483,11 @@ end;
 procedure THSForm.GridSelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
 begin
+  (*
   CanSelect := not Scanner.Busy;
   if not CanSelect then
     Exit;
+  *)
   if (ACol = 0) and (ARow = 0)  then
     Exit;
   for var i := 0  to GridD.ColCount do
@@ -510,6 +515,18 @@ begin
     GridD.Cells[0, 6] := 'Rssi :';
     GridD.Cells[1, 6] := Info.Fsystem.Fget_5Fsysinfo.Frssi;
     Info.Free;
+  end;
+  HS1x0.Free;
+end;
+
+procedure THSForm.Guirland1Click(Sender: TObject);
+begin
+  var IP := Grid.Cells[0, Grid.Row ];
+  var HS1x0 := THS1x0.Create(IP);
+  for var i := 0 to 2 do
+  begin
+    HS1x0.System_LedOff;
+    HS1x0.System_LedOn;
   end;
   HS1x0.Free;
 end;
@@ -545,7 +562,7 @@ begin
   Grid.BeginUpdate;
   if (Info <> nil) then
   begin
-    Grid.Cells[1, Index] := Info.Fsystem.Fget_5Fsysinfo.Falias;
+    Grid.Cells[1, Index] := Info.Fsystem.Fget_5Fsysinfo.Fmodel + ' ' +  Info.Fsystem.Fget_5Fsysinfo.Falias;
      if Info.Fsystem.Fget_5Fsysinfo.Frelay_state = 1 then
       Grid.Cells[2, Index] := '   🗲'
      else
@@ -696,11 +713,11 @@ begin
         FreeAndNil(RealTime);
         FreeAndNil(Info);
       except; end;
-      var Refresh: Boolean := False;
-      while ((Start + 1500) > GetTickCount) and not Terminated  and not Refresh do
+      var FastRefresh: Boolean := False;
+      while ((Start + 2000) > GetTickCount) and not Terminated  and not FastRefresh do
       begin
-        Synchronize( procedure begin Refresh := HSForm.MustRefresh(Index); end );
-        sleep(250);
+        Synchronize( procedure begin FastRefresh := HSForm.MustRefresh(Index); end );
+        if not FastRefresh then sleep(250);
       end;
     end;
   finally
