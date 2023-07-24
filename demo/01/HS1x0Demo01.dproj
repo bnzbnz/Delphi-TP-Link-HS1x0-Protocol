@@ -83,7 +83,6 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <DCC_ExeOutput>..\</DCC_ExeOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -131,9 +130,9 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="D:\Dev\Delphi\eBayAPI\EA4D\eBayAPIv4\D11A\eBayAPI4Delphi_D11A.bpl">File D:\Dev\Delphi\eBayAPI\EA4D\eBayAPIv4\D11A\eBayAPI4Delphi_D11A.bpl not found</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="D:\Dev\Delphi\eBayAPI\EA4D\eBayAPIv4\D103R\eBayAPI4Delphi_D103R.bpl">File D:\Dev\Delphi\eBayAPI\EA4D\eBayAPIv4\D103R\eBayAPI4Delphi_D103R.bpl not found</Excluded_Packages>
                 </Excluded_Packages>
                 <Source>
                     <Source Name="MainSource">HS1x0Demo01.dpr</Source>
