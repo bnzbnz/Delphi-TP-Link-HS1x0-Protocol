@@ -443,7 +443,7 @@ begin
   Scanner := THS1x0Discovery.Create(DoScanIP, DoNewDevice, DoDone);
   if (GetKeyState(VK_CONTROL) < 0) then
   begin
-    Scanner.Start(42, 42); // Dev Only 1 Thread
+    Scanner.Start(17, 17); // Dev Only 1 Thread
     SetForegroundWindow(Handle); // ???
   end else begin
     Scanner.Start;

@@ -25,7 +25,7 @@ type
   protected
     { Protected declarations }
     procedure DoScanIP(nIPv4: Cardinal);
-    procedure DoNewDevice(HS1x0: THS1x0);
+    procedure DoNewDevice(HS1x0: THS1x0; Info: THS1x0_System_GetSysInfoResponse);
     procedure DoDone;
   public
     { Public declarations }
@@ -45,8 +45,8 @@ const
 
 procedure THSScanFrm.DoScanIP(nIPv4: Cardinal);
 begin
-  PBar.Position := PBar.Position + 1;
   Caption := 'Scanning IP : ' + IpAddrToStr(nIPv4);
+  PBar.Position := PBar.Position + 1;
 end;
 
 procedure THSScanFrm.DoDone;
@@ -55,13 +55,10 @@ begin
   PBar.Position := 0;
 end;
 
-procedure THSScanFrm.DoNewDevice(HS1x0: THS1x0);
+procedure THSScanFrm.DoNewDevice(HS1x0: THS1x0; Info: THS1x0_System_GetSysInfoResponse);
 begin
-  var Info: THS1x0_System_GetSysInfoResponse := nil;
   var RTime: THS1x0_EMeter_GetRealtimeCVResponse := nil;
   try
-    Info := HS1x0.System_GetSysinfo;
-    if Info = nil then Exit;
     RTime := HS1x0.Emeter_GetRealtime;
     var Watt := -1; // HS100 - no EMeter
     if RTime <> nil then Watt := RTime.Femeter.Fget_5Frealtime.Fpower;
@@ -77,7 +74,6 @@ begin
     ListBox1.Items.AddObject(Str, TObject(HS1x0.nIPv4));
   finally
     RTime.Free;
-    Info.Free;
   end;
 end;
 

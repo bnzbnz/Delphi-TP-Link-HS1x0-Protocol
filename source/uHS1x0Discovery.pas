@@ -21,7 +21,7 @@ type
     StartIP, EndIP: Integer;
     FOnScanIP: THS1x0Discovery_ScanIPEvent;
     FOnNewDevice: THS1x0Discovery_FoundEvent;
-    FOnDone: THS1x0Discovery_DoneEvent;
+    FOnThreadDone: THS1x0Discovery_DoneEvent;
     procedure Execute; override;
   end;
 
@@ -104,35 +104,35 @@ end;
 procedure THS1x0Discovery.Start(FromPort, ToPort: Byte);
 begin
 
-  if (FromPort <> 0) and (ToPort <>255) then
+  if (FromPort <> 0) and (ToPort <> 255) then
   begin
     var Th := TDiscoveryThread.Create(True);
-    //Th.Priority := tpIdle;
+    Th.Priority := tpIdle;
     Th.FreeOnTerminate := False;
-    TH.StartIP := FromPort;
-    TH.EndIP := ToPort;
-    TH.FOnScanIP := FOnScanIP;
-    TH.FOnNewDevice := FOnNewDevice;
-    TH.IPs := IPs;
-    ScanThreadList.Add(TH);
+    Th.StartIP := FromPort;
+    Th.EndIP := ToPort;
+    Th.FOnScanIP := FOnScanIP;
+    Th.FOnNewDevice := FOnNewDevice;
+    Th.IPs := IPs;
+    ScanThreadList.Add(Th);
     Th.Start;
     Exit;
   end;
 
-  FThreadCount:= 8;
+  FThreadCount:= 8; // Binary
   if not IsDebuggerPresent then FThreadCount := 128;
   for var i := 0 to FThreadCount - 1 do
   begin
     var Th := TDiscoveryThread.Create(True);
     Th.Priority := tpIdle;
     Th.FreeOnTerminate := False;
-    TH.StartIP :=  i * (256 div FThreadCount);
-    TH.EndIP := (i + 1) * (256 div FThreadCount) - 1;
-    TH.FOnScanIP := FOnScanIP;
-    TH.FOnNewDevice := FOnNewDevice;
-    TH.FOnDone := DoDone;
-    TH.IPs := IPs;
-    ScanThreadList.Add(TH);
+    Th.StartIP :=  i * (256 div FThreadCount);
+    Th.EndIP := (i + 1) * (256 div FThreadCount) - 1;
+    Th.FOnScanIP := FOnScanIP;
+    Th.FOnNewDevice := FOnNewDevice;
+    Th.FOnThreadDone := DoDone;
+    Th.IPs := IPs;
+    ScanThreadList.Add(Th);
     Th.Start;
   end;
 end;
@@ -163,7 +163,6 @@ end;
 
 procedure TDiscoveryThread.Execute;
 begin
-
 try
   var BaseIp := StrToIpAddr(LocalIP) and $FFFFFF00; // Class C, like a Merc :)
   for var i := StartIP to EndIP do
@@ -173,7 +172,7 @@ try
     Synchronize( procedure begin try if assigned(FOnScanIP) then FOnScanIP(nIP); except end; end );
     var HS1x0 := THS1x0.Create( IpAddrToStr(nIP) );
     var Info := HS1x0.System_GetSysinfo;
-    if  Info <> nil then
+    if Info <> nil then
     begin
       Synchronize( procedure begin try if assigned(FOnNewDevice) then FOnNewDevice(HS1x0, Info); except end; end );
       Synchronize( procedure begin try if assigned(IPs) then IPs.Add(nIP); except end; end );
@@ -182,7 +181,7 @@ try
     HS1x0.Free;
   end;
 finally
-  Synchronize( procedure begin if assigned(FOnDone) then FOnDone; end );
+  Synchronize( procedure begin if assigned(FOnThreadDone) then FOnThreadDone; end );
   Terminate;
 end;
 
