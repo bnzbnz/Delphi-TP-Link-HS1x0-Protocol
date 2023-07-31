@@ -42,7 +42,8 @@ type
     ProcessObjectMS: Int64;
     DurationMS: Int64;
     VarCount: Int64;
-    NilVarCount: Int64;
+    NullVarCount: Int64;
+    EmptyVarCount: Int64;
     ObjCount: Int64;
     ObjListCount: Int64;
     VarListCount: Int64;
@@ -169,7 +170,8 @@ begin
   ObjListCount := 0;
   VarListCount := 0;
   VarVarDicCount := 0;
-  NilVarCount := 0;
+  NullVarCount := 0;
+  EmptyVarCount := 0;
   DecodeCount := 0;
   DecodeMs := 0;
 end;
@@ -183,17 +185,16 @@ begin
 end;
 
 procedure TJsonXBaseExType.InternalClone(T: TJsonXBaseExType);
-begin  // To do : use RTTI Cache
+begin
   if T = nil then exit;
-  var rttictx := TRttiContext.Create();
-  var rttitype := rttictx.GetType(Self.ClassType);
-  for var field in rttitype.GetFields do
+  for var field in GetFields(T) do
+  begin
     if field.FieldType.TypeKind = tkVariant then
     begin
       var v :=  field.GetValue(Self);
       if not VarIsEmpty(v.AsVariant) then field.SetValue(T, v);
     end else
-    if field.FieldType.TypeKind in [tkClass] then
+      if field.FieldType.TypeKind in [tkClass] then
       begin
         var Instance := field.FieldType.AsInstance;
 
@@ -213,9 +214,8 @@ begin  // To do : use RTTI Cache
           field.SetValue(T, TJsonXVarObjDicType(field.GetValue(Self).AsObject).Clone)
         else
          BreakPoint('TODO: Missing Type Cloning');
-
       end;
-  rttictx.Free;
+  end;
 end;
 
 { TJsonXVarListType }

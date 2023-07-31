@@ -551,11 +551,15 @@ begin
       var N := RTTIToJSONName(RN);
 
       case FindVarData(V)^.VType of
-        varEmpty, varNull:
+        varEmpty:
         begin
-            if Assigned(SysStatus) then Inc(SysStatus.NilVarCount);
-            if jxoUnassignedAsNull in SysParams.Options then
-              aJsonObj.InternAddItem(N).VariantValue := Null;
+          if Assigned(SysStatus) then Inc(SysStatus.NullVarCount);
+          if jxoUnassignedAsNull in SysParams.Options then aJsonObj.InternAddItem(N).VariantValue := Null;
+        end;
+		varNull:
+        begin
+          if Assigned(SysStatus) then Inc(SysStatus.NullVarCount);
+		      aJsonObj.InternAddItem(N).VariantValue := Null;
         end;
         varOleStr, varString, varUString:
           aJsonObj.InternAddItem(N).Value := (V);
